@@ -5,6 +5,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 interface IQuestionProps{
     title: string;
     content : string;
+    author?: string;
 }
 
 const styles = makeStyles({
@@ -18,7 +19,7 @@ const QuestionView : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardHeader title={props.title} />
+            <CardHeader title={props.title}/>
             <CardContent>
                 <Typography variant="body1">{props.content}</Typography>
             </CardContent>
