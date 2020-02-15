@@ -6,5 +6,6 @@ namespace KnowledgeBase.Domain.Repository
 {
     public interface IUserRepo
     {
+        
     }
 }

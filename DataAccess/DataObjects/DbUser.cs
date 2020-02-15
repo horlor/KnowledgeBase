@@ -9,7 +9,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
     {
 
         [Required, Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required, MaxLength(100)]
         public string UserName { get; set; }

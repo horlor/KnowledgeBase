@@ -7,7 +7,7 @@ namespace KnowledgeBase.Domain.Repository
 {
     public interface IAnswerRepo
     {
-        Answer FindByID(Guid id);
+        Answer FindByID(int id);
         Answer Store(Answer answer);
         void Update(Answer answer);
         void Delete(Answer answer);

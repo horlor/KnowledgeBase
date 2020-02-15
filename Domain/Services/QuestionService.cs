@@ -19,5 +19,17 @@ namespace KnowledgeBase.Domain.Services
             return questionRepo.List();
         }
 
+        public Question UpdateQuestion(Question question)
+        {
+            return null;
+        }
+
+        public void DeleteQuestion(Question question)
+        {
+            
+        }
+
+        public 
+
     }
 }
