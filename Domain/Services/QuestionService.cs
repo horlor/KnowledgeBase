@@ -26,10 +26,8 @@ namespace KnowledgeBase.Domain.Services
 
         public void DeleteQuestion(Question question)
         {
-            
+
         }
-
-        public 
-
     }
+
 }
