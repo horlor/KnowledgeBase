@@ -11,6 +11,9 @@ namespace KnowledgeBase.Entities
         public string Title { get; set; }
 
         public string Content { get; set; }
+        public string Author { get; set; }
+
+        public int AuthorId { get; set; }
 
         public ICollection<Answer> Answers {get; set;}
 

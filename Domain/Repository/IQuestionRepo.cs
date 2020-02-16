@@ -13,6 +13,7 @@ namespace KnowledgeBase.Domain.Repository
         void Delete(Question question);
         ICollection<Question> List();
         QuestionWithAnswers FindWithAnswersById(int id);
+        ICollection<Answer> FindAnswersforQuestion(Question question);
 
 
     }

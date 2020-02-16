@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.ObjectModel;
+using KnowledgeBase.Domain.Services;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -15,6 +16,14 @@ namespace KnowledgeBase.WebApi.Controllers
     //[EnableCors]
     public class QuestionController : ControllerBase
     {
+
+        private QuestionService questionService;
+
+        public QuestionController()
+        {
+
+        }
+
         [HttpGet]
         public ICollection<Question> GetQuestions()
         {
