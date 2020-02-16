@@ -13,9 +13,10 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [Required, MaxLength(255)]
         public string Title { get; set; }
         [Required]
-        public string Message { get; set; }
-        
-        [Required]
+        public string Content { get; set; }
+
         public DbUser User { get; set; }
+
+        public ICollection<DbAnswer> Answers{ get; set; }
     }
 }
