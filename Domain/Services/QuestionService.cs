@@ -2,6 +2,7 @@
 using KnowledgeBase.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace KnowledgeBase.Domain.Services
@@ -19,12 +20,29 @@ namespace KnowledgeBase.Domain.Services
             return questionRepo.List();
         }
 
-        public Question UpdateQuestion(Question question)
+        public void UpdateQuestion(Question question)
         {
-            return null;
+            //What if the object passed not exists till now
+            questionRepo.Update(question);
         }
 
         public void DeleteQuestion(Question question)
+        {
+            //Maybe I should explicitly delete all answers for this questions
+            questionRepo.Delete(question);
+        }
+
+        public Question AddNewQuestion(Question question)
+        {
+            return  questionRepo.Store(question);
+        }
+
+        public ICollection<Answer> GetAnswersForQuestion()
+        {
+            return new Collection<Answer>();
+        }
+
+        public void AddAnswerToQuestion()
         {
 
         }

@@ -2,14 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeBase.DataAccess;
+using KnowledgeBase.DataAccess.Repos;
+using KnowledgeBase.Domain.Repository;
+using KnowledgeBase.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 
 namespace KnowledgeBase.WebApi
 {
@@ -22,7 +28,7 @@ namespace KnowledgeBase.WebApi
 
         public IConfiguration Configuration { get; }
 
-        public string AllowedOrigins = "_Allowed_";
+        public readonly string AllowedOrigins = "_Allowed_";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,14 +38,20 @@ namespace KnowledgeBase.WebApi
             {
                 options.AddPolicy(AllowedOrigins,
                              builder =>
-        {
-            builder.WithOrigins("http://localhost:3000");
-            builder.AllowAnyHeader();
-            //builder.AllowAnyOrigin();
-            builder.AllowAnyMethod();
-            //builder.AllowCredentials();
-        });
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                        builder.AllowAnyHeader();
+                        //builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        //builder.AllowCredentials();
+                    }); 
             });
+            services.AddDbContext<KnowledgeContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            services.AddScoped<IQuestionRepo, QuestionRepo>();
+            services.AddScoped<QuestionService, QuestionService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

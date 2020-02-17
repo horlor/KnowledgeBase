@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.ObjectModel;
 using KnowledgeBase.Domain.Services;
+using KnowledgeBase.DataAccess.Repos;
+using KnowledgeBase.DataAccess;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -19,17 +21,15 @@ namespace KnowledgeBase.WebApi.Controllers
 
         private QuestionService questionService;
 
-        public QuestionController()
+        public QuestionController(QuestionService questionService)
         {
-
+            this.questionService = questionService;
         }
 
         [HttpGet]
         public ICollection<Question> GetQuestions()
         {
-            var list = new List<Question>();
-            list.Add(new Question() { Author = "author", Content = "This is the true message", Title = "supertitle" });
-            return list;
+            return questionService.GetAllQuestions();
         }
 
         [HttpGet("{id}")]
@@ -40,9 +40,10 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddQuestion([FromBody] Question question)
+        public ActionResult<Question> AddQuestion([FromBody] Question question)
         {
-            throw new NotImplementedException();
+            var q = questionService.AddNewQuestion(question);
+            return Created("api/questions/" + q.Id, q);
         }
 
         [HttpPost("{id}/answers")]

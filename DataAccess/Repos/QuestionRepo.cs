@@ -9,9 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
-    public class QuestionRepository : IQuestionRepo
+    public class QuestionRepo : IQuestionRepo
     {
-        private KnowledgeContext dbcontext = new KnowledgeContext();
+        private KnowledgeContext dbcontext;
+
+        public QuestionRepo(KnowledgeContext context)
+        {
+            dbcontext = context;
+        }
+
 
         public void Delete(Question question)
         {
@@ -52,7 +58,7 @@ namespace KnowledgeBase.DataAccess.Repos
             {
                 Content = question.Content,
                 Title = question.Title,
-                User = dbcontext.Users.Single(u => u.Id == question.AuthorId) //TODO error handling
+                User = dbcontext.Users.SingleOrDefault(u => u.Id == question.AuthorId) //TODO error handling
             };
             dbcontext.Questions.Add(dbQ);
             dbcontext.SaveChanges();
@@ -66,7 +72,7 @@ namespace KnowledgeBase.DataAccess.Repos
             {
                 q.Content = question.Content;
                 q.Title = question.Title;
-                //TODO user changing
+                //TODO changing user
             }
         }
 

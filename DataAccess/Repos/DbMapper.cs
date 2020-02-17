@@ -25,14 +25,15 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             if (dbQuestion == null)
                 return null;
-            return new Question()
+            var q = new Question()
             {
                 Id = dbQuestion.Id,
-                Author = dbQuestion.User.UserName,
-                AuthorId = dbQuestion.User.Id,
+                //Author = dbQuestion.User.UserName,
+                //AuthorId = dbQuestion.User.Id,
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content
             };
+            return q;
         }
 
         internal static QuestionWithAnswers MapDbQuestionWithAnswers(DbQuestion dbQuestion)

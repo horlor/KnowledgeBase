@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace KnowledgeBase.DataAccess.DataObjects
@@ -8,10 +9,11 @@ namespace KnowledgeBase.DataAccess.DataObjects
     public class DbUser
     {
 
-        [Required, Key]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required, MaxLength(100)]
+        [MaxLength(100)]
         public string UserName { get; set; }
 
         public string Password { get; set; }
