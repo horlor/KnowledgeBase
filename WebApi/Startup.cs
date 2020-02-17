@@ -50,6 +50,7 @@ namespace KnowledgeBase.WebApi
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddScoped<IQuestionRepo, QuestionRepo>();
+            services.AddScoped<IAnswerRepo, AnswerRepo>();
             services.AddScoped<QuestionService, QuestionService>();
             
         }

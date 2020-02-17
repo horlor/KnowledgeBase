@@ -14,7 +14,7 @@ namespace KnowledgeBase.Domain.Repository
         ICollection<Question> List();
         QuestionWithAnswers FindWithAnswersById(int id);
         ICollection<Answer> FindAnswersforQuestion(Question question);
-
-
+        ICollection<Answer> FindAnswersforQuestionById(int id);
+        Answer StoreAnswerForQuestion(int id, Answer answer);
     }
 }

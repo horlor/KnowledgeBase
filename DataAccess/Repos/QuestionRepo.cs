@@ -12,10 +12,12 @@ namespace KnowledgeBase.DataAccess.Repos
     public class QuestionRepo : IQuestionRepo
     {
         private KnowledgeContext dbcontext;
+        private IAnswerRepo answerRepo;
 
-        public QuestionRepo(KnowledgeContext context)
+        public QuestionRepo(KnowledgeContext context, IAnswerRepo answerRepo)
         {
             dbcontext = context;
+            this.answerRepo = answerRepo;
         }
 
 
@@ -31,6 +33,13 @@ namespace KnowledgeBase.DataAccess.Repos
             return dbcontext.Answers
                 .Where(a => a.Question.Id == question.Id)
                 .Select(a => DbMapper.MapDbAnswer(a)).ToList();  
+        }
+
+        public ICollection<Answer> FindAnswersforQuestionById(int id)
+        {
+            return dbcontext.Answers
+                .Where(a => a.Question.Id == id)
+                .Select(a => DbMapper.MapDbAnswer(a)).ToList();
         }
 
         public Question FindById(int id)
@@ -65,6 +74,19 @@ namespace KnowledgeBase.DataAccess.Repos
             return DbMapper.MapDbQuestion(dbQ);
         }
 
+        public Answer StoreAnswerForQuestion(int id, Answer answer)
+        {
+            DbAnswer dbAnswer = new DbAnswer()
+            {
+                Content = answer.Content,
+                //TODO user handling
+                Question = dbcontext.Questions.First(q => q.Id == id)
+            };
+            dbcontext.Answers.Add(dbAnswer);
+            dbcontext.SaveChanges();
+            return DbMapper.MapDbAnswer(dbAnswer);
+        }
+
         public void Update(Question question)
         {
             var q = dbcontext.Questions.Single(q => q.Id == question.Id);
@@ -74,6 +96,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 q.Title = question.Title;
                 //TODO changing user
             }
+            dbcontext.SaveChanges();
         }
 
 

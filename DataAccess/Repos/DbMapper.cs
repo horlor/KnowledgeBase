@@ -15,8 +15,8 @@ namespace KnowledgeBase.DataAccess.Repos
             return new Answer()
             {
                 Id = dbAnswer.Id,
-                Author = dbAnswer.User.UserName,
-                AuthorId = dbAnswer.User.Id,
+                //Author = dbAnswer.User.UserName,
+                //AuthorId = dbAnswer.User.Id,
                 Content = dbAnswer.Content
             };
         }
@@ -48,8 +48,8 @@ namespace KnowledgeBase.DataAccess.Repos
             return new QuestionWithAnswers()
             {
                 Id = dbQuestion.Id,
-                Author = dbQuestion.User.UserName,
-                AuthorId = dbQuestion.User.Id,
+                //Author = dbQuestion.User.UserName,
+                //AuthorId = dbQuestion.User.Id,
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content,
                 Answers = answers

@@ -18,7 +18,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [Required]
         public virtual DbQuestion Question { get; set; }
 
-        [Required]
+        //[Required]
         public virtual DbUser User { get; set; }
     }
 }

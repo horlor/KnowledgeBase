@@ -35,8 +35,7 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<QuestionWithAnswers> GetQuestion(int id)
         {
-            return new QuestionWithAnswers();
-
+            return questionService.GetQuestionWithAnswers(id);
         }
 
         [HttpPost]
@@ -47,15 +46,16 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpPost("{id}/answers")]
-        public ActionResult AddAnswerToQuestion(int id, [FromBody] Answer answer)
+        public ActionResult<Answer> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
-            return BadRequest();
+            var a = questionService.AddAnswerToQuestion(id, answer);
+            return Created("api/questions/" + id + "/answers/" + a.Id, a);
         }
 
         [HttpGet("{id}/answers")]
         public ICollection<Answer> GetAnswersForQuestion(int id)
         {
-            return new Collection<Answer>();
+            return questionService.GetAnswersForQuestion(id);
         }
 
 

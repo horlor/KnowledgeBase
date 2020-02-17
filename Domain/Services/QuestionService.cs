@@ -10,6 +10,7 @@ namespace KnowledgeBase.Domain.Services
     public class QuestionService
     {
         private IQuestionRepo questionRepo;
+        private IAnswerRepo answerRepo;
         public QuestionService(IQuestionRepo repo)
         {
             questionRepo = repo;
@@ -37,14 +38,24 @@ namespace KnowledgeBase.Domain.Services
             return  questionRepo.Store(question);
         }
 
-        public ICollection<Answer> GetAnswersForQuestion()
+        public ICollection<Answer> GetAnswersForQuestion(int id)
         {
-            return new Collection<Answer>();
+            return questionRepo.FindAnswersforQuestionById(id);
         }
 
-        public void AddAnswerToQuestion()
+        public Answer AddAnswerToQuestion(int qId, Answer answer)
         {
+            return questionRepo.StoreAnswerForQuestion(qId, answer);
+        }
 
+        public Question GetQuestion(int id)
+        {
+            return questionRepo.FindById(id);
+        }
+
+        public QuestionWithAnswers GetQuestionWithAnswers(int id)
+        {
+            return questionRepo.FindWithAnswersById(id);
         }
     }
 
