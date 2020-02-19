@@ -9,13 +9,6 @@ interface IProps{
 }
 
 
-const useStyles = makeStyles( {
-    divider:{
-        borderTop:"3px solid gray"
-
-    }
-})
-
 const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
 
     return (

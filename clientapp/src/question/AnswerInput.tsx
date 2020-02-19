@@ -8,12 +8,6 @@ interface IProps{
 interface IState{
 
 }
-const classes = {
-    cardaction:{
-        display:"flex"
-    }
-
-}
 
 class AnswerInput extends React.Component<IProps, IState>{
     public render(){

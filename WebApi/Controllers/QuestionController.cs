@@ -27,9 +27,10 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet]
-        public ICollection<Question> GetQuestions()
+        public ActionResult<ICollection<Question>> GetQuestions()
         {
-            return questionService.GetAllQuestions();
+            //return NotFound();
+            return Ok(questionService.GetAllQuestions());
         }
 
         [HttpGet("{id}")]
@@ -53,9 +54,9 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("{id}/answers")]
-        public ICollection<Answer> GetAnswersForQuestion(int id)
+        public ActionResult<ICollection<Answer>> GetAnswersForQuestion(int id)
         {
-            return questionService.GetAnswersForQuestion(id);
+            return Ok(questionService.GetAnswersForQuestion(id));
         }
 
 
