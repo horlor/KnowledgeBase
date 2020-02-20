@@ -1,6 +1,5 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,12 +11,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Box from "@material-ui/core/Box";
 
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+    width:"100%"
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -72,27 +73,28 @@ const NavigationView : React.FC<IProps> = (props) => {
       </List>
     </div>
   );
+
+  const appBar = (
+  <AppBar position="fixed" className={classes.appBar}>
+  <Toolbar>
+    <IconButton
+      color="inherit"
+      aria-label="Open drawer"
+      edge="start"
+      onClick={handleDrawerToggle}
+      className={classes.menuButton}
+    >
+      <MenuIcon />
+    </IconButton>
+    <Typography variant="h6" noWrap>
+      Viknowledge
+    </Typography>
+  </Toolbar>
+</AppBar>);
   
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Viknowledge
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      
+      {appBar}  
       <nav className={classes.drawer}>
         <Hidden smUp>
           <Drawer
@@ -112,7 +114,8 @@ const NavigationView : React.FC<IProps> = (props) => {
             </IconButton>
             {drawer}
           </Drawer>
-        </Hidden><Hidden xsDown>
+        </Hidden>
+        <Hidden xsDown>
           <Drawer
             className={classes.drawer}
             variant="permanent"
@@ -125,10 +128,10 @@ const NavigationView : React.FC<IProps> = (props) => {
           </Drawer>  
         </Hidden>
       </nav>
-      <div>
-          <Toolbar></Toolbar>
+      <Box width={1}>
+          <Toolbar/>
           {props.children}
-      </div>
+      </Box>
     </div>
   );
 }
