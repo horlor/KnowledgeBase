@@ -1,5 +1,5 @@
 import React from 'react';
-import IQuestion from './Question';
+import Question from './Question';
 import QuestionView from './QuestionView';
 import {Container} from '@material-ui/core';
 import axios, { AxiosError } from 'axios';
@@ -8,7 +8,7 @@ interface IProps{
 
 }
 interface IState{
-    questions : IQuestion[];
+    questions : Question[];
     loading : boolean;
     error: string
 }
@@ -21,7 +21,7 @@ class QuestionsPage extends React.Component<IProps,IState>{
 
     public componentDidMount(){
         this.setState({loading:true});
-        axios.get<IQuestion[]>("/api/questions")
+        axios.get<Question[]>("/api/questions")
             .then(resp => this.setState({loading:false,questions:resp.data}))
             .catch(reason => {
                 const Aerror = reason as AxiosError;

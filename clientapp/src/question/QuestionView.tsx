@@ -24,7 +24,7 @@ const QuestionView : React.FC<IQuestionProps> = (props) =>{
                 <Typography variant="body1">{props.content}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Read</Button>
+                <Button size="small" href={`/questions/1`}>Read</Button>
             </CardActions>
         </Card>
     );

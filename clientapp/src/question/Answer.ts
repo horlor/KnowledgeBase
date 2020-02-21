@@ -1,8 +1,8 @@
-interface Question{
+interface Answer{
     id: number;
-    title: string;
     content: string;
     author: string;
     authorid: number;
 }
-export default Question;
+
+export default Answer;

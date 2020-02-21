@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import {TextField,  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Card, Button, CardActionArea } from '@material-ui/core';
+import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField } from '@material-ui/core';
 import Axios from 'axios';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -8,8 +8,9 @@ const useStyles = makeStyles(theme => createStyles({
     },
     formcontrol:{
         width:"100%",
+        margin: "5px"
     },
-    card:{
+    paper:{
         marginTop:"10px",
         width:"100%",
         padding: "10px",
@@ -45,7 +46,7 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
 
     return(
         <Container maxWidth="lg" className={classes.container}>
-            <Card variant="outlined" className={classes.card}>
+            <Paper elevation={1} className={classes.paper}>
                 <Typography variant="h5">Ask your question here</Typography>
                 <FormControl className={classes.formcontrol}>
                     <InputLabel htmlFor="title_input">Title:</InputLabel>
@@ -56,19 +57,18 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
                     <FormHelperText id="title-helper">A short introduction to your question</FormHelperText>
                 </FormControl>
                 <FormControl className={classes.formcontrol}>
-                    <label htmlFor="content_input">Content:</label>
                     <TextField
-                        multiline rows={10} variant="outlined"
+                        multiline
+                        label={"Content"}
+                        rows={10} variant="outlined"
                         id="content_input" aria-describedby="content-helper"
                         className={classes.input}/>
                     <FormHelperText id="content-helper">Write all related information here</FormHelperText>
                 </FormControl>
-                <CardActionArea action={post} >
-                    <Typography variant="button">
-                        Post
-                    </Typography>
-                </CardActionArea>
-            </Card>
+                <Box flex>
+                    <Button size="medium" onClick={post}>Post</Button>
+                </Box>
+            </Paper>
         </Container>
     );
 }
