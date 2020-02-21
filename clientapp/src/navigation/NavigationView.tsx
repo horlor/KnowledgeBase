@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface IProps{
-
+    
 }
 
 const NavigationView : React.FC<IProps> = (props) => {
@@ -65,11 +65,18 @@ const NavigationView : React.FC<IProps> = (props) => {
   const drawer = (
     <div>
       <List>
-        {dummyCategories.map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text}/>
+          <ListItem button component="a" href="/questions">
+            <ListItemText primary={"Questions and Answers"}/>
           </ListItem>
-        ))}
+          <ListItem button component="a" href="/questions/new">
+            <ListItemText primary={"Ask a new question"}/>
+          </ListItem>
+          <ListItem button href="/">
+            <ListItemText primary={"Your Profile"}/>
+          </ListItem>
+          <ListItem button href="/">
+            <ListItemText primary={"Something"}/>
+          </ListItem>
       </List>
     </div>
   );
