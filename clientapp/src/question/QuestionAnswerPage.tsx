@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Divider, makeStyles } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import QuestionView from './QuestionView';
 import AnswerView from './AnswerView';
 import AnswerInput from './AnswerInput';
@@ -17,20 +17,21 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     const [prevId, setPrevId] = useState<number>(0);
     useEffect( () =>{
         let id = parseInt(props.match.params.id);
-        if(id!==prevId){
+        //if the id had not changed, the we don't have to fetch the data once more
+        if(id!==prevId && !isNaN(id)){
             setPrevId(id);
             Axios.get<QuestionWithAnswers>(`/api/questions/${id}`)
             .then(resp => setQuestion(resp.data));
             console.log("api fetch run")
         }
-    },[prevId]);
+    },[prevId,props.match.params.id]);
 
     
     return (
         <Container maxWidth="lg">
             {question?
             <>
-                <QuestionView title={question.title} content={question.content}/>
+                <QuestionView question={question}/>
                 {question.answers.map(ans => <AnswerView content={ans.content} key={ans.id}/>) }
                 <AnswerInput/>
             </>:

@@ -1,11 +1,10 @@
 import React from 'react';
 import {Button, Card, Typography, CardContent, CardActions, CardHeader} from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Question from './Question';
 
 interface IQuestionProps{
-    title: string;
-    content : string;
-    author?: string;
+    question: Question
 }
 
 const styles = makeStyles({
@@ -19,12 +18,12 @@ const QuestionView : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardHeader title={props.title}/>
+            <CardHeader title={props.question.title}/>
             <CardContent>
-                <Typography variant="body1">{props.content}</Typography>
+                <Typography variant="body1">{props.question.content}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" href={`/questions/1`}>Read</Button>
+                <Button size="small" href={`/questions/${props.question.id}`}>Read</Button>
             </CardActions>
         </Card>
     );

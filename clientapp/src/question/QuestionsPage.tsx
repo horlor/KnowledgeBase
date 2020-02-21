@@ -40,7 +40,7 @@ class QuestionsPage extends React.Component<IProps,IState>{
                 <p>Loading</p>:
                 this.state.error !== "" ? <p>{this.state.error}</p>:
 
-                this.state.questions.map(q => <QuestionView title={q.title} content={q.content} author={q.author}/>)
+                this.state.questions.map(q => <QuestionView question={q}  key={q.id}/>)
             }
             </Container>
         );

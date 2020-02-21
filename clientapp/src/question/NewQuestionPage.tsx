@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
-import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField } from '@material-ui/core';
+import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField, responsiveFontSizes } from '@material-ui/core';
 import Axios from 'axios';
+import Question from './Question'
 
 const useStyles = makeStyles(theme => createStyles({
     container:{
@@ -25,23 +26,17 @@ interface IProps{
 
 }
 
-interface IState{
-    title: string;
-    content: string;
-}
 
 const NewQuestionPage : React.FC<IProps> = (props) => {
     const classes = useStyles();
-    const [state, setState] = useState<IState>({title:"", content:""});
+    const [title, setTitle] = useState<string>();
+    const [content, setContent] = useState<string>();
 
-    const post = ()=>{
-        //Axios.post("/api/questions");
-        console.log("CARDACTION HAPPENED");
-    }
-
-    const handleChange = (event : React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>{
-        setState({title: event.target.value, content :""});
-        console.log(state.title);
+    const post = () => {
+        console.log({title: title, content: content})
+        Axios.post<Question>("/api/questions",{title: title, content: content})
+        .then(resp => console.log(resp))
+        .catch(error => console.log(error));
     }
 
     return(
@@ -53,7 +48,7 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
                     <Input 
                         id="title_input" aria-describedby="title-helper" 
                         className={classes.input}
-                        onChange={handleChange} />
+                        onChange={e => setTitle(e.target.value)} />
                     <FormHelperText id="title-helper">A short introduction to your question</FormHelperText>
                 </FormControl>
                 <FormControl className={classes.formcontrol}>
@@ -62,7 +57,8 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
                         label={"Content"}
                         rows={10} variant="outlined"
                         id="content_input" aria-describedby="content-helper"
-                        className={classes.input}/>
+                        className={classes.input}
+                        onChange={e => setContent(e.target.value)}/>
                     <FormHelperText id="content-helper">Write all related information here</FormHelperText>
                 </FormControl>
                 <Box flex>

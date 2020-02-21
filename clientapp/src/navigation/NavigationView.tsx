@@ -68,7 +68,7 @@ const NavigationView : React.FC<IProps> = (props) => {
           <ListItem button component="a" href="/questions">
             <ListItemText primary={"Questions and Answers"}/>
           </ListItem>
-          <ListItem button component="a" href="/questions/new">
+          <ListItem button component="a" href="/newquestion">
             <ListItemText primary={"Ask a new question"}/>
           </ListItem>
           <ListItem button href="/">

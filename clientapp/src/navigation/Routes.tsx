@@ -18,7 +18,7 @@ const Routes : React.FC<IProps> = (props) => {
                 exact={true}    
             />
             <Route 
-                path="/questions/new"
+                path="/newquestion"
                 component={NewQuestionPage}
                 exact={true}
             />
