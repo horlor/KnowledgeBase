@@ -54,7 +54,6 @@ interface IProps{
 }
 
 const NavigationView : React.FC<IProps> = (props) => {
-  const dummyCategories = ['Questions and Answers', 'Post a new question', 'Profile', 'Logout']
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);

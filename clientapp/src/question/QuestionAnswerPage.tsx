@@ -33,7 +33,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
             <>
                 <QuestionView question={question}/>
                 {question.answers.map(ans => <AnswerView content={ans.content} key={ans.id}/>) }
-                <AnswerInput/>
+                <AnswerInput questionId={question.id}/>
             </>:
             <Typography>Loading</Typography>}
         </Container>

@@ -1,29 +1,46 @@
 import React from 'react';
-import { TextField, Card, Typography, Box, Button } from '@material-ui/core';
+import {useState} from 'react';
+import { TextField, Card, Typography, Button, makeStyles } from '@material-ui/core';
+import Axios from 'axios';
+
+const useStyles = makeStyles({
+    textfield: {
+        width:"100%",
+        padding: "5px",
+    },
+    surface:{
+        margin: "5px",
+        padding: "5px",
+    }
+});
 
 interface IProps{
-
+    questionId: number;
 }
 
-interface IState{
 
-}
 
-class AnswerInput extends React.Component<IProps, IState>{
-    public render(){
-        return (
-            <Card style={{margin: "5px", padding: "5px"}}>
-                <Typography variant="h6">Your Answer</Typography>
-                <TextField multiline variant="outlined" rows={5} style={{width:"100%", padding:"10px"}}>
-                </TextField>
-                <Box display="flex">
-                    <Button size='medium' align-flex="center">Post</Button>
-                    <Box flexGrow={1}/>
-                    <Typography align-flex="center">200/200</Typography>
-                </Box>
-            </Card>
-        );
+const AnswerInput : React.FC<IProps> = (props) =>{
+    const classes = useStyles();
+    const [content, setContent] = useState<string>();
+
+    const post = () =>{
+        Axios.post(`/api/questions/${props.questionId}/answers`,{content:content})
+        .then(resp =>{;}) //TODO success and error checking
+        .catch(err => {});
+        //reload the page to see the new answer after posting somehow
     }
+
+    return (
+        <Card className={classes.surface}>
+            <Typography variant="h6">Your Answer</Typography>
+            <TextField multiline rows={5}
+             className={classes.textfield} variant="outlined"
+             onChange={(e)=>setContent(e.target.value)}
+             />
+            <Button size='medium' onClick={post}>Post</Button>
+        </Card>
+    );
 }
 
 export default AnswerInput;

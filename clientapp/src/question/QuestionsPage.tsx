@@ -1,6 +1,6 @@
 import React from 'react';
 import Question from './Question';
-import QuestionView from './QuestionView';
+import QuestionCard from './QuestionCard';
 import {Container} from '@material-ui/core';
 import axios, { AxiosError } from 'axios';
 
@@ -40,7 +40,7 @@ class QuestionsPage extends React.Component<IProps,IState>{
                 <p>Loading</p>:
                 this.state.error !== "" ? <p>{this.state.error}</p>:
 
-                this.state.questions.map(q => <QuestionView question={q}  key={q.id}/>)
+                this.state.questions.map(q => <QuestionCard question={q}  key={q.id}/>)
             }
             </Container>
         );
