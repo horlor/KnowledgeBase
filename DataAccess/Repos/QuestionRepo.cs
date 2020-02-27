@@ -67,7 +67,7 @@ namespace KnowledgeBase.DataAccess.Repos
             {
                 Content = question.Content,
                 Title = question.Title,
-                User = dbcontext.Users.SingleOrDefault(u => u.Id == question.AuthorId) //TODO error handling
+                ///User = dbcontext.Users.SingleOrDefault(u => u.Id == question.AuthorId) //TODO error handling
             };
             dbcontext.Questions.Add(dbQ);
             dbcontext.SaveChanges();

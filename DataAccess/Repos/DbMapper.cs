@@ -55,5 +55,15 @@ namespace KnowledgeBase.DataAccess.Repos
                 Answers = answers
             };
         }
+
+        internal static User MapDbUser(DbUser dbUser)
+        {
+            return new User
+            {
+                Email = dbUser.Email,
+                Name = dbUser.UserName,
+                Id = dbUser.Id,
+            };
+        }
     }
 }

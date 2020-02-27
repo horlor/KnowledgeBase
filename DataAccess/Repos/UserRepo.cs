@@ -1,45 +1,77 @@
 ﻿using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
 using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using KnowledgeBase.DataAccess.DataObjects;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
     public class UserRepo : IUserRepo
     {
-        private KnowledgeContext context;
+        private readonly KnowledgeContext context;
+        private readonly UserManager<DbUser> userManager;
+        private readonly SignInManager<DbUser> signInManager;
 
-        public UserRepo(KnowledgeContext context)
+        public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager)
         {
             this.context = context;
-        }
-        public void Delete(User user)
-        {
-            Delete(user.Id);
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+
         }
 
-        public void Delete(int id)
+        public async Task<IdentityResult> Create(User user, string password)
         {
-            var dbUser = context.Users.First(u => u.Id == id);
-            context.Users.Remove(dbUser);
+            DbUser dbUser = new DbUser()
+            {
+                UserName = user.Name,
+                Email = user.Email
+            };
+            var res = await userManager.CreateAsync(dbUser, password);
+
+            if (res.Succeeded)
+            {
+
+            }
+            await context.SaveChangesAsync();
+            return res;
         }
 
-        public User FindById(int id)
+        public async Task<IdentityResult> Delete(User user)
         {
-            var dbUser = context.Users.First(u => u.Id == id);
-            throw new NotImplementedException();
+            var dbUser = await userManager.FindByNameAsync(user.Name);
+            var res = await userManager.DeleteAsync(dbUser);
+            await context.SaveChangesAsync();
+            return res;
         }
 
-        public User Store(User user)
+        public async Task<User> GetByName(string name)
         {
-            throw new NotImplementedException();
+            var dbUser = await userManager.FindByNameAsync(name);
+            return DbMapper.MapDbUser(dbUser);
         }
 
-        public void Update(User user)
+        public async Task<ICollection<User>> List()
         {
-            throw new NotImplementedException();
+            return await context.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
         }
+
+        public async Task<SignInResult> SignIn(string username, string password)
+        {
+            var dbUser = await userManager.FindByNameAsync(username);
+            if (dbUser == null)
+                return SignInResult.Failed;
+            return await signInManager.CheckPasswordSignInAsync(dbUser, password, false);
+        }
+
+        public async Task SignOut()
+        {
+             await signInManager.SignOutAsync();
+        }
+
     }
 }
