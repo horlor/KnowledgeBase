@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using KnowledgeBase.Domain.Services;
 using KnowledgeBase.DataAccess.Repos;
 using KnowledgeBase.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -27,36 +28,36 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<ICollection<Question>> GetQuestions()
+        public async Task<ICollection<Question>> GetQuestions()
         {
             //return NotFound();
-            return Ok(questionService.GetAllQuestions());
+            return await questionService.GetAllQuestions();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<QuestionWithAnswers> GetQuestion(int id)
+        public async Task<ActionResult<QuestionWithAnswers>> GetQuestion(int id)
         {
-            return questionService.GetQuestionWithAnswers(id);
+            return await questionService.GetQuestionWithAnswers(id);
         }
 
         [HttpPost]
-        public ActionResult<Question> AddQuestion([FromBody] Question question)
+        public async Task<ActionResult<Question>> AddQuestion([FromBody] Question question)
         {
-            var q = questionService.AddNewQuestion(question);
+            var q = await questionService.AddNewQuestion(question);
             return Created("api/questions/" + q.Id, q);
         }
 
         [HttpPost("{id}/answers")]
-        public ActionResult<Answer> AddAnswerToQuestion(int id, [FromBody] Answer answer)
+        public async Task<ActionResult<Answer>> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
-            var a = questionService.AddAnswerToQuestion(id, answer);
+            var a = await questionService.AddAnswerToQuestion(id, answer);
             return Created("api/questions/" + id + "/answers/" + a.Id, a);
         }
 
         [HttpGet("{id}/answers")]
-        public ActionResult<ICollection<Answer>> GetAnswersForQuestion(int id)
+        public async Task<ActionResult<ICollection<Answer>>> GetAnswersForQuestion(int id)
         {
-            return Ok(questionService.GetAnswersForQuestion(id));
+            return Ok( await questionService.GetAnswersForQuestion(id));
         }
 
 

@@ -1,10 +1,12 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
@@ -16,34 +18,37 @@ namespace KnowledgeBase.DataAccess.Repos
             dbcontext = context;
         }
 
-        public void Delete(Answer answer)
+        public async Task Delete(Answer answer)
         {
             var ans = dbcontext.Answers.First(a => a.Id == answer.Id);
             dbcontext.Remove(ans);
+            await dbcontext.SaveChangesAsync();
         }
 
-        public Answer FindById(int id)
+        public async Task<Answer> FindById(int id)
         {
-            return DbMapper.MapDbAnswer(dbcontext.Answers.First(a => a.Id == id));
+            return DbMapper.MapDbAnswer(await dbcontext.Answers.FirstAsync(a => a.Id == id));
         }
 
-        public Answer Store(Answer answer)
+        public async Task<Answer> Store(Answer answer)
         {
             var dbAnswer = new DbAnswer()
             {
                 Content = answer.Content
             };
-            var a = dbcontext.Answers.Add(dbAnswer);
-            dbcontext.SaveChanges();
+            var a = await dbcontext.Answers.AddAsync(dbAnswer);
+            await dbcontext.SaveChangesAsync();
             answer.Id = a.Entity.Id;
             return answer;
         }
 
-        public void Update(Answer answer)
+        public async Task Update(Answer answer)
         {
-            var ans = dbcontext.Answers.First(a => a.Id == answer.Id);
+            var ans = await dbcontext.Answers.FirstAsync(a => a.Id == answer.Id);
             ans.Content = answer.Content;
             //TODO Author - User Pairing
+
+            await dbcontext.SaveChangesAsync();
         }
     }
 }

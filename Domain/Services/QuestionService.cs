@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KnowledgeBase.Domain.Services
 {
@@ -16,46 +17,46 @@ namespace KnowledgeBase.Domain.Services
             questionRepo = repo;
         }
 
-        public ICollection<Question> GetAllQuestions()
+        public async Task<ICollection<Question>> GetAllQuestions()
         {
-            return questionRepo.List();
+            return await questionRepo.List();
         }
 
-        public void UpdateQuestion(Question question)
+        public async Task UpdateQuestion(Question question)
         {
             //What if the object passed not exists till now
-            questionRepo.Update(question);
+            await questionRepo.Update(question);
         }
 
-        public void DeleteQuestion(Question question)
+        public async Task DeleteQuestion(Question question)
         {
             //Maybe I should explicitly delete all answers for this questions
-            questionRepo.Delete(question);
+            await questionRepo.Delete(question);
         }
 
-        public Question AddNewQuestion(Question question)
+         public async Task<Question> AddNewQuestion(Question question)
         {
-            return  questionRepo.Store(question);
+            return await questionRepo.Store(question);
         }
 
-        public ICollection<Answer> GetAnswersForQuestion(int id)
+        public async Task<ICollection<Answer>> GetAnswersForQuestion(int id)
         {
-            return questionRepo.FindAnswersforQuestionById(id);
+            return await questionRepo.FindAnswersforQuestionById(id);
         }
 
-        public Answer AddAnswerToQuestion(int qId, Answer answer)
+        public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer)
         {
-            return questionRepo.StoreAnswerForQuestion(qId, answer);
+            return await questionRepo.StoreAnswerForQuestion(qId, answer);
         }
 
-        public Question GetQuestion(int id)
+        public async Task<Question> GetQuestion(int id)
         {
-            return questionRepo.FindById(id);
+            return await questionRepo.FindById(id);
         }
 
-        public QuestionWithAnswers GetQuestionWithAnswers(int id)
+        public async Task<QuestionWithAnswers> GetQuestionWithAnswers(int id)
         {
-            return questionRepo.FindWithAnswersById(id);
+            return await questionRepo.FindWithAnswersById(id);
         }
     }
 

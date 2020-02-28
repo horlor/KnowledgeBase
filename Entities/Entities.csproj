@@ -5,4 +5,8 @@
     <RootNamespace>KnowledgeBase.Entities</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DomainObjects\" />
+  </ItemGroup>
+
 </Project>

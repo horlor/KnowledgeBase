@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using KnowledgeBase.Entities;
 
 namespace KnowledgeBase.Domain.Repository
 {
     public interface IAnswerRepo
     {
-        Answer FindById(int id);
-        Answer Store(Answer answer);
-        void Update(Answer answer);
-        void Delete(Answer answer);
+        Task<Answer> FindById(int id);
+        Task<Answer> Store(Answer answer);
+        Task Update(Answer answer);
+        Task Delete(Answer answer);
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KnowledgeBase.WebApi
 {
@@ -100,10 +101,12 @@ namespace KnowledgeBase.WebApi
             }
 
             //app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseCors(AllowedOrigins);
-            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

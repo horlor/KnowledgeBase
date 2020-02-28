@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
@@ -21,47 +22,47 @@ namespace KnowledgeBase.DataAccess.Repos
         }
 
 
-        public void Delete(Question question)
+        public async Task Delete(Question question)
         {
-            var q = dbcontext.Questions.Single(q => q.Id == question.Id);
+            var q = await dbcontext.Questions.SingleAsync(q => q.Id == question.Id);
             dbcontext.Questions.Remove(q);
-            dbcontext.SaveChanges();
+            await dbcontext.SaveChangesAsync();
         }
 
-        public ICollection<Answer> FindAnswersforQuestion(Question question)
+        public async Task<ICollection<Answer>> FindAnswersforQuestion(Question question)
         {
-            return dbcontext.Answers
+            return await dbcontext.Answers
                 .Where(a => a.Question.Id == question.Id)
-                .Select(a => DbMapper.MapDbAnswer(a)).ToList();  
+                .Select(a => DbMapper.MapDbAnswer(a)).ToListAsync();  
         }
 
-        public ICollection<Answer> FindAnswersforQuestionById(int id)
+        public async Task<ICollection<Answer>> FindAnswersforQuestionById(int id)
         {
-            return dbcontext.Answers
+            return await dbcontext.Answers
                 .Where(a => a.Question.Id == id)
-                .Select(a => DbMapper.MapDbAnswer(a)).ToList();
+                .Select(a => DbMapper.MapDbAnswer(a)).ToListAsync();
         }
 
-        public Question FindById(int id)
+        public async Task<Question> FindById(int id)
         {
-            var q = dbcontext.Questions.Single(q => q.Id == id);
+            var q = await dbcontext.Questions.SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestion(q);
         }
 
-        public QuestionWithAnswers FindWithAnswersById(int id)
+        public async Task<QuestionWithAnswers> FindWithAnswersById(int id)
         {
-            var q = dbcontext.Questions
+            var q = await dbcontext.Questions
                 .Include(q => q.Answers)
-                .Single(q => q.Id == id);
+                .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestionWithAnswers(q);
         }
 
-        public ICollection<Question> List()
+        public async Task<ICollection<Question>> List()
         {
-            return dbcontext.Questions.Select(q => DbMapper.MapDbQuestion(q)).ToList();
+            return await dbcontext.Questions.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
         }
 
-        public Question Store(Question question)
+        public async Task<Question> Store(Question question)
         {
             var dbQ = new DbQuestion()
             {
@@ -69,12 +70,12 @@ namespace KnowledgeBase.DataAccess.Repos
                 Title = question.Title,
                 ///User = dbcontext.Users.SingleOrDefault(u => u.Id == question.AuthorId) //TODO error handling
             };
-            dbcontext.Questions.Add(dbQ);
-            dbcontext.SaveChanges();
+            await dbcontext.Questions.AddAsync(dbQ);
+            await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbQuestion(dbQ);
         }
 
-        public Answer StoreAnswerForQuestion(int id, Answer answer)
+        public async Task<Answer> StoreAnswerForQuestion(int id, Answer answer)
         {
             DbAnswer dbAnswer = new DbAnswer()
             {
@@ -82,21 +83,21 @@ namespace KnowledgeBase.DataAccess.Repos
                 //TODO user handling
                 Question = dbcontext.Questions.First(q => q.Id == id)
             };
-            dbcontext.Answers.Add(dbAnswer);
-            dbcontext.SaveChanges();
+            await dbcontext.Answers.AddAsync(dbAnswer);
+            await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbAnswer(dbAnswer);
         }
 
-        public void Update(Question question)
+        public async Task Update(Question question)
         {
-            var q = dbcontext.Questions.Single(q => q.Id == question.Id);
+            var q = await dbcontext.Questions.SingleAsync(q => q.Id == question.Id);
             if (q != null)
             {
                 q.Content = question.Content;
                 q.Title = question.Title;
                 //TODO changing user
             }
-            dbcontext.SaveChanges();
+            await dbcontext.SaveChangesAsync();
         }
 
 
