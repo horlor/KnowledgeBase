@@ -21,9 +21,10 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<User> Create(User user, string password)
         {
-            
             var res = await userRepo.Create(user, password);
-            throw new NotImplementedException();
+            if (!res.Succeeded)
+                return null;
+            return await userRepo.GetByName(user.Name);
         }
 
         public async Task<Session> Login(string username, string password)

@@ -32,11 +32,6 @@ namespace KnowledgeBase.DataAccess.Repos
                 Email = user.Email
             };
             var res = await userManager.CreateAsync(dbUser, password);
-
-            if (res.Succeeded)
-            {
-
-            }
             await context.SaveChangesAsync();
             return res;
         }

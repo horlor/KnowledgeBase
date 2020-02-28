@@ -85,6 +85,7 @@ namespace KnowledgeBase.WebApi
 
 
             services.AddScoped<QuestionService, QuestionService>();
+            services.AddScoped<UserService, UserService>();
 
 
 
