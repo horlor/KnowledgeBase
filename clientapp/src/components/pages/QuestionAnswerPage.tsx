@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography } from '@material-ui/core';
-import QuestionView from './QuestionView';
-import AnswerView from './AnswerView';
-import AnswerInput from './AnswerInput';
+import QuestionView from '../question/QuestionView';
+import AnswerView from '../answer/AnswerView';
+import AnswerInput from '../answer/AnswerInput';
 import { RouteComponentProps } from 'react-router';
-import QuestionWithAnswers from './QuestionWithAnswers';
+import QuestionWithAnswers from '../../models/QuestionWithAnswers';
 import Axios from 'axios';
 
 type IProps = RouteComponentProps<{

@@ -1,14 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import QuestionsPage from '../question/QuestionsPage';
-import NewQuestionPage from '../question/NewQuestionPage';
-import QuestionAnswerPage from '../question/QuestionAnswerPage';
+import QuestionsPage from '../pages/QuestionsPage';
+import NewQuestionPage from '../pages/NewQuestionPage';
+import QuestionAnswerPage from '../pages/QuestionAnswerPage';
 
 
 interface IProps{
 
 }
-const Routes : React.FC<IProps> = (props) => {
+
+export const Routes : React.FC<IProps> = (props) => {
     
     return (
         <BrowserRouter>

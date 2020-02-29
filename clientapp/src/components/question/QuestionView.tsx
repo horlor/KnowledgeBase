@@ -1,6 +1,6 @@
 import React from 'react';
 import { Paper, Typography, makeStyles, createStyles } from '@material-ui/core';
-import Question from './Question';
+import Question from '../../models/Question';
 
 interface IProps{
     question: Question

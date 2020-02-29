@@ -62,7 +62,6 @@ namespace KnowledgeBase.DataAccess.Repos
             {
                 Email = dbUser.Email,
                 Name = dbUser.UserName,
-                Id = dbUser.Id,
             };
         }
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions} from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Question from './Question';
+import Question from '../../models/Question';
 
 interface IQuestionProps{
     question: Question;

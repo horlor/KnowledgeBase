@@ -34,7 +34,6 @@ namespace KnowledgeBase.Domain.Services
                 return null;
             var session = new Session();
             session.Token = GenerateJwtToken(username);
-            session.Success = true;
             session.UserName = username;
             return session;
         }

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField, responsiveFontSizes } from '@material-ui/core';
 import Axios from 'axios';
-import Question from './Question'
+import Question from '../../models/Question'
 
 const useStyles = makeStyles(theme => createStyles({
     container:{

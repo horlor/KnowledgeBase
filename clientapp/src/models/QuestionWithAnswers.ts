@@ -5,7 +5,6 @@ interface QuestionWithAnswers{
     title: string;
     content: string;
     author: string;
-    authorid: number;
     answers: Answer[];
 
 }

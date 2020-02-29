@@ -8,6 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
+import AccountCircle from '@material-ui/icons/AccountCircle'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -28,6 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    display: "flex"
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -95,6 +97,12 @@ const NavigationView : React.FC<IProps> = (props) => {
     <Typography variant="h6" noWrap>
       Viknowledge
     </Typography>
+    <Box flexGrow={1}/>
+    <IconButton
+      color="inherit"
+    >
+      <AccountCircle/>
+    </IconButton>
   </Toolbar>
 </AppBar>);
   

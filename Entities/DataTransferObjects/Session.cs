@@ -6,10 +6,8 @@ namespace KnowledgeBase.Entities
 {
     public class Session
     {
+      
         public string UserName { get; set; }
-        public bool Success { get; set; }
-        
-        public string Error { get; set; }
         public object Token { get; set; }
     }
 }
