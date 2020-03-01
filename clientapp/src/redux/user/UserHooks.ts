@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
 import { RootState } from "../Store";
 
-const useLoggedIn = () =>
+export const useLoggedIn = () =>
     useSelector((state : RootState) => state.user.loggedIn);

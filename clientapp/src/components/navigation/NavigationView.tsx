@@ -8,11 +8,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
-import AccountCircle from '@material-ui/icons/AccountCircle'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
+import LoginButton from './LoginButton';
+
 
 
 const drawerWidth = 240;
@@ -98,11 +99,7 @@ const NavigationView : React.FC<IProps> = (props) => {
       Viknowledge
     </Typography>
     <Box flexGrow={1}/>
-    <IconButton
-      color="inherit"
-    >
-      <AccountCircle/>
-    </IconButton>
+    <LoginButton/>
   </Toolbar>
 </AppBar>);
   
@@ -144,7 +141,10 @@ const NavigationView : React.FC<IProps> = (props) => {
       </nav>
       <Box width={1}>
           <Toolbar/>
-          {props.children}
+          <Box flex justifyItems="center" justifyContent="center">
+            {props.children}
+          </Box>
+
       </Box>
     </div>
   );
