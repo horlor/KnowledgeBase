@@ -3,13 +3,14 @@ import QuestionReducer from "./question/QuestionReducer";
 import { UserReducer } from "./user/UserReducer";
 
 const rootReducer = combineReducers({
-    questions: QuestionReducer,
+    question: QuestionReducer,
+    user: UserReducer,
 });
 
-export const createAppStore = () =>  configureStore({
-    reducer: QuestionReducer
+
+export const AppStore = configureStore({
+    reducer: rootReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>
-
-export default createAppStore;
+export type AppDispatch = typeof AppStore.dispatch;
