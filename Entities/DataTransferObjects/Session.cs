@@ -6,7 +6,7 @@ namespace KnowledgeBase.Entities
 {
     public class Session
     {
-      
+        
         public string UserName { get; set; }
         public object Token { get; set; }
     }

@@ -32,3 +32,6 @@ export const useQuestionsState = () =>{
     },[dispatch]); //It won't change just to make React happy
     return {questions, error, loading};
 }
+
+export const useQuestionAnswersState = (questionId: number) => {
+}
