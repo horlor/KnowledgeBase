@@ -9,11 +9,16 @@ export interface RegisterRequest{
     username: string,
     password: string,
     email: string,
-    firstName: string,
-    lastName: string,
 }
 
 export interface RequestResult{
     success: boolean,
     error?: ErrorModel
 }
+
+export interface RegisterResponse{
+    username: string,
+    success: boolean,
+    errors: ErrorModel[],    
+}
+

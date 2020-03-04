@@ -1,8 +1,8 @@
 import {useSelector, useDispatch} from "react-redux";
 import { RootState, AppDispatch } from "../Store";
-import { LoadQuestionsFromApi } from "../../api/QuestionApi";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi } from "../../api/QuestionApi";
 import { useEffect } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure } from "./QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure } from "./QuestionReducer";
 import ErrorModel from "../../models/ErrorModel";
 import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
 import { AxiosError } from "axios";
@@ -33,5 +33,18 @@ export const useQuestionsState = () =>{
     return {questions, error, loading};
 }
 
+
 export const useQuestionAnswersState = (questionId: number) => {
+    const dispatch = useDispatch();
+    const question = useSelector((state: RootState) => state.question.questionwithanswers);
+    const error = useSelector((state: RootState) => state.question.error);
+    const loading = useSelector((state: RootState) => state.question.loading);
+    useEffect(()=>{
+        dispatch(FetchQAStarted);
+        LoadQuestionAnswerFromApi(questionId)
+        .then(resp => dispatch(FetchQASuccess(resp)))
+        .catch(ex => dispatch(FetchQAFailure(CatchIntoErrorModel(ex))));
+    },[dispatch,questionId]);
+    return {question,loading, error};
+
 }

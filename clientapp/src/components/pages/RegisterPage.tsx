@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { IframeHTMLAttributes, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,7 +13,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {Link as RouterLink} from "react-router-dom"
 import { useForm } from 'react-hook-form';
+import { useRegisterHook } from '../../redux/user/UserHooks';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -37,8 +40,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface IFormData{
-    firstname: string,
-    lastname: string,
     username: string,
     email: string,
     password: string,
@@ -47,7 +48,30 @@ interface IFormData{
 
 const RegisterPage : React.FC = () => {
     const classes = useStyles();
-    const {register, handleSubmit, errors} = useForm<IFormData>();
+    const {register, handleSubmit, errors, watch} = useForm<IFormData>({mode:"onBlur"});
+    const {loading, success, registerFun, errorList, retry} = useRegisterHook();
+    const [passwordError, setPasswordError] = useState<string>();
+
+    const onSubmit  = (data: IFormData) =>{
+        registerFun({
+            username: data.username,
+            email: data.email,
+            password: data.password
+        });
+    }
+
+    const passwordValidate = () =>{
+        setPasswordError(undefined)
+        let pw1 = watch("password");
+        let pw2 = watch("password2");
+        if(pw1 !== pw2)
+            setPasswordError("The passwords do not match");
+        console.log(watch())
+    }
+
+    const handleClose = () =>{
+        retry();
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -58,9 +82,9 @@ const RegisterPage : React.FC = () => {
             <Typography component="h1" variant="h5">
             Sign up
             </Typography>
-            <form className={classes.form}>
+            <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+               {/* <Grid item xs={12} sm={6}>
                 <TextField
                     autoComplete="fname"
                     name="firstName"
@@ -84,7 +108,7 @@ const RegisterPage : React.FC = () => {
                     autoComplete="lname"
                     inputRef={register}
                 />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
                     <TextField
                         variant="outlined"
@@ -103,12 +127,15 @@ const RegisterPage : React.FC = () => {
                 <TextField
                     variant="outlined"
                     required
+                    error={!!errors.email}
+                    helperText={errors.email?"Please enter a valid email address":""}
                     fullWidth
                     id="email"
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    inputRef={register()}
+                    inputRef={register({pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm , 
+                                 })}
                 />
                 </Grid>
                 <Grid item xs={12}>
@@ -120,7 +147,10 @@ const RegisterPage : React.FC = () => {
                     label="Password"
                     type="password"
                     id="password"
+                    error={!!errors.password}
+                    helperText={errors.password?"The password must have an upper and a lower case letter and a number, and must be 8 charachters long.":""}
                     autoComplete="current-password"
+                    inputRef={register({pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ })}
                 />
                 </Grid>
                 <Grid item xs={12}>
@@ -128,11 +158,15 @@ const RegisterPage : React.FC = () => {
                     variant="outlined"
                     required
                     fullWidth
-                    name="password"
+                    name="password2"
                     label="Password Again"
                     type="password"
                     id="password2"
                     autoComplete="current-password"
+                    inputRef={register}
+                    error={!!passwordError}
+                    helperText={passwordError}
+                    onBlur={passwordValidate}
                 />
                 </Grid>
                 <Grid item xs={12}>
@@ -153,7 +187,7 @@ const RegisterPage : React.FC = () => {
             </Button>
             <Grid container justify="flex-end">
                 <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to="/login" variant="body2">
                     Already have an account? Sign in
                 </Link>
                 </Grid>
@@ -163,7 +197,26 @@ const RegisterPage : React.FC = () => {
         <Box mt={5}>
             {/**Copyright info could be here */}
         </Box>
-        </Container>
+        <Dialog
+        open={!errorList}
+        onClose={handleClose}
+        aria-labelledby="alert-register-title"
+        aria-describedby="alert-register-description"
+      >
+        <DialogTitle id="alert-register-title">Registration not successful</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-register-description">
+            Let Google help apps determine location. This means sending anonymous location data to
+            Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 }
 

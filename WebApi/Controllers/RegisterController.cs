@@ -22,12 +22,13 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<RegisterResult>> Register([FromBody] RegisterRequest request)
         {
-            var res = await userService.Create(request.ToUser(), request.Password);
-            if (res == null)
-                return BadRequest();
-            return Created($"/api/users/{res.Name}", res);
+            var res = await userService.Register(request.ToUser(), request.Password);
+            if (res.Success)
+                return Ok(res);
+            return BadRequest(res);
+           
         }
 
     }

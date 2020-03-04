@@ -4,10 +4,10 @@ using System.Text;
 
 namespace KnowledgeBase.Entities
 {
-    public class Session
+    public class LoginResponse
     {
-        
-        public string UserName { get; set; }
+        public string Username { get; set; }
+        public bool Success { get; set; }
         public object Token { get; set; }
     }
 }

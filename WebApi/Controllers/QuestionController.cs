@@ -27,6 +27,7 @@ namespace KnowledgeBase.WebApi.Controllers
             this.questionService = questionService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ICollection<Question>> GetQuestions()
         {

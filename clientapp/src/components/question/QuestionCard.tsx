@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions} from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Question from '../../models/Question';
+import { Link } from 'react-router-dom';
 
 interface IQuestionProps{
     question: Question;
@@ -20,10 +21,10 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
         <Card variant="outlined" className={classes.card}>
             <CardHeader title={props.question.title}/>
             <CardContent>
-                <Typography variant="body1">{props.question.content}</Typography>
+                <Typography variant="body1">{`${props.question.content.slice(0,400)}...`}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" href={`/questions/${props.question.id}`}>Read</Button>
+                <Button size="small" component={Link} to={`/questions/${props.question.id}`}>Read</Button>
             </CardActions>
         </Card>
     );

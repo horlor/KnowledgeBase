@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
 import LoginButton from './LoginButton';
+import { Link } from 'react-router-dom';
 
 
 
@@ -67,16 +68,16 @@ const NavigationView : React.FC<IProps> = (props) => {
   const drawer = (
     <div>
       <List>
-          <ListItem button component="a" href="/questions">
+          <ListItem button component={Link} to="/questions">
             <ListItemText primary={"Questions and Answers"}/>
           </ListItem>
-          <ListItem button component="a" href="/newquestion">
+          <ListItem button component={Link} to="/newquestion">
             <ListItemText primary={"Ask a new question"}/>
           </ListItem>
-          <ListItem button href="/">
+          <ListItem button component={Link} to="/">
             <ListItemText primary={"Your Profile"}/>
           </ListItem>
-          <ListItem button href="/">
+          <ListItem button component={Link} to="/">
             <ListItemText primary={"Something"}/>
           </ListItem>
       </List>

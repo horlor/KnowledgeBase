@@ -12,10 +12,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Paper } from '@material-ui/core';
-import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form';
 import { useLoginState } from '../../redux/user/UserHooks';
 import { Redirect } from 'react-router';
-import { userInfo } from 'os';
+import {Link as RouterLink} from 'react-router-dom';
 
 interface IProps{
 
@@ -39,6 +39,9 @@ const useStyles = makeStyles(theme => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    error:{
+        color: theme.palette.error.main,
+    }
   }));
 
 
@@ -49,13 +52,13 @@ interface IFormData{
 
 export const LoginPage : React.FC<IProps> = (props) =>{
     const classes = useStyles();
-    const {register, watch, handleSubmit, errors} = useForm<IFormData>();
-    const {loggedIn, loginFun, logoutFun} =  useLoginState();
+    const {register, handleSubmit} = useForm<IFormData>();
+    const {loggedIn, loginFun, error} =  useLoginState();
     const onSubmit = async (data: IFormData) =>{
         await loginFun(data.username, data.password);
     }
     if(loggedIn) //TODO something more normal handling if the user is loggedin
-        return <p>You are already logged in, do you want to logout?</p>
+        return <Redirect to="/"/>
     return (
         <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -90,6 +93,10 @@ export const LoginPage : React.FC<IProps> = (props) =>{
                 autoComplete="current-password"
                 inputRef={register}
             />
+            {
+                error?
+                <Typography className={classes.error}>The username or the password is not right</Typography>:""
+            }
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -105,12 +112,12 @@ export const LoginPage : React.FC<IProps> = (props) =>{
             </Button>
             <Grid container>
                 <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to="#" variant="body2">
                     Forgot password?
                 </Link>
                 </Grid>
                 <Grid item>
-                <Link href="/register" variant="body2">
+                <Link component={RouterLink} to="/register" variant="body2">
                     {"Don't have an account? Sign Up"}
                 </Link>
                 </Grid>

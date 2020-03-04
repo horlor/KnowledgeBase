@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using KnowledgeBase.Entities.DataTransferObjects;
 
 namespace KnowledgeBase.Domain.Services
 {
@@ -19,22 +20,36 @@ namespace KnowledgeBase.Domain.Services
             this.userRepo = repo;
         }
 
-        public async Task<User> Create(User user, string password)
+        public async Task<RegisterResult> Register(User user, string password)
         {
             var res = await userRepo.Create(user, password);
-            if (!res.Succeeded)
-                return null;
-            return await userRepo.GetByName(user.Name);
+            var result = new RegisterResult();
+            if (res.Succeeded)
+            {
+                result.Success = true;
+                result.Username = user.Name;
+            }
+            else
+            {
+                result.Success = false;
+                foreach (var item in res.Errors)
+                {
+                    result.Errors.Add(new Error(item.Code, item.Description));
+                }
+            }
+            return result;
         }
 
-        public async Task<Session> Login(string username, string password)
+        public async Task<LoginResponse> Login(string username, string password)
         {
-            var res = await userRepo.SignIn(username, password);
-            if (res != SignInResult.Success)
-                return null;
-            var session = new Session();
-            session.Token = GenerateJwtToken(username);
-            session.UserName = username;
+            var result = await userRepo.SignIn(username, password);
+            var session = new LoginResponse() { Success = false };
+            if (result == SignInResult.Success)
+            {
+                session.Success = true;
+                session.Token = GenerateJwtToken(username);
+                session.Username = username;
+            }
             return session;
         }
 

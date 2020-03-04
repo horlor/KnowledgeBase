@@ -103,10 +103,11 @@ namespace KnowledgeBase.WebApi
             //app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseCors(AllowedOrigins);
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(AllowedOrigins);
 
             app.UseEndpoints(endpoints =>
             {

@@ -5,6 +5,7 @@ import NewQuestionPage from '../pages/NewQuestionPage';
 import QuestionAnswerPage from '../pages/QuestionAnswerPage';
 import { LoginPage } from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import NavigationView from './NavigationView';
 
 
 interface IProps{
@@ -15,6 +16,7 @@ export const Routes : React.FC<IProps> = (props) => {
     
     return (
         <BrowserRouter>
+            <NavigationView>
             <Route 
                 path="/questions"
                 component={QuestionsPage}
@@ -40,6 +42,7 @@ export const Routes : React.FC<IProps> = (props) => {
                 component={RegisterPage}
                 exact
             />
+            </NavigationView>
         </BrowserRouter>
     );
 };

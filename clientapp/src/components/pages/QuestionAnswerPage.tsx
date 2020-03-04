@@ -6,6 +6,10 @@ import AnswerInput from '../answer/AnswerInput';
 import { RouteComponentProps } from 'react-router';
 import QuestionWithAnswers from '../../models/QuestionWithAnswers';
 import Axios from 'axios';
+import { useQuestionAnswersState } from '../../redux/question/QuestionHooks';
+import LoadingView from '../common/LoadingView';
+import ErrorView from '../common/ErrorView';
+import ErrorModel from '../../models/ErrorModel'
 
 type IProps = RouteComponentProps<{
     id: string;
@@ -13,20 +17,15 @@ type IProps = RouteComponentProps<{
 
 
 const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
-    const [question, setQuestion] = useState<QuestionWithAnswers>();
-    const [prevId, setPrevId] = useState<number>(0);
-    useEffect( () =>{
-        let id = parseInt(props.match.params.id);
-        //if the id had not changed, the we don't have to fetch the data once more
-        if(id!==prevId && !isNaN(id)){
-            setPrevId(id);
-            Axios.get<QuestionWithAnswers>(`/api/questions/${id}`)
-            .then(resp => setQuestion(resp.data));
-            console.log("api fetch run")
-        }
-    },[prevId,props.match.params.id]);
+    //fetch the id from the path
+    let id = parseInt(props.match.params.id);
+    //a custom hook to handle logic separetaly
+    const {question, loading, error} = useQuestionAnswersState(id);
 
-    
+    if(loading)
+        return <LoadingView/>;
+    if(error)
+        return <ErrorView title={error.code} message={error.description}/>
     return (
         <Container maxWidth="lg">
             {question?

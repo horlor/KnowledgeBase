@@ -22,12 +22,12 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Session>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
             var session = await userService.Login(request.Username, request.Password);
-            if (session == null)
-                return Unauthorized();
-            return session;
+            if (session.Success)
+                return Ok(session);
+            return Unauthorized(session);
         }
     }
 }
