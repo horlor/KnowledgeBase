@@ -1,14 +1,13 @@
-import React, { IframeHTMLAttributes, useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Paper from "@material-ui/core/Paper";
+import Progress from "@material-ui/core/CircularProgress";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,7 +15,6 @@ import Container from '@material-ui/core/Container';
 import {Link as RouterLink} from "react-router-dom"
 import { useForm } from 'react-hook-form';
 import { useRegisterHook } from '../../redux/user/UserHooks';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -37,6 +35,19 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error:{
+    color: "red",
+  },
+  progressSpace:{
+    display:"flex",
+    alignItems:"center",
+    justifyContent: "center"
+  },
+  success:{
+    backgroundColor:theme.palette.success.main,
+    color:theme.palette.text.primary,
+    margin: theme.spacing(3, 0, 2),
+  }
 }));
 
 interface IFormData{
@@ -48,8 +59,8 @@ interface IFormData{
 
 const RegisterPage : React.FC = () => {
     const classes = useStyles();
-    const {register, handleSubmit, errors, watch} = useForm<IFormData>({mode:"onBlur"});
-    const {loading, success, registerFun, errorList, retry} = useRegisterHook();
+    const {register, handleSubmit, errors, watch, } = useForm<IFormData>({mode:"onBlur"});
+    const {loading, success, registerFun, errorList} = useRegisterHook();
     const [passwordError, setPasswordError] = useState<string>();
 
     const onSubmit  = (data: IFormData) =>{
@@ -69,10 +80,6 @@ const RegisterPage : React.FC = () => {
         console.log(watch())
     }
 
-    const handleClose = () =>{
-        retry();
-    }
-
     return (
         <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
@@ -84,31 +91,6 @@ const RegisterPage : React.FC = () => {
             </Typography>
             <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
-               {/* <Grid item xs={12} sm={6}>
-                <TextField
-                    autoComplete="fname"
-                    name="firstName"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
-                    inputRef={register}
-                />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="lname"
-                    inputRef={register}
-                />
-                </Grid> */}
                 <Grid item xs={12}>
                     <TextField
                         variant="outlined"
@@ -176,6 +158,20 @@ const RegisterPage : React.FC = () => {
                 />
                 </Grid>
             </Grid>
+            {errorList.map(e => <Typography className={classes.error}>{e.description}</Typography>)}
+            <div className={classes.progressSpace} >
+            {loading?
+              <Progress/>
+            :
+            success?
+              <Button
+                fullWidth
+                variant="contained"
+                className={classes.success}
+                component={RouterLink}
+                to="/login"
+                 >Login now</Button>
+            :
             <Button
                 type="submit"
                 fullWidth
@@ -185,6 +181,8 @@ const RegisterPage : React.FC = () => {
             >
                 Sign Up
             </Button>
+            }
+            </div>
             <Grid container justify="flex-end">
                 <Grid item>
                 <Link component={RouterLink} to="/login" variant="body2">
@@ -197,25 +195,6 @@ const RegisterPage : React.FC = () => {
         <Box mt={5}>
             {/**Copyright info could be here */}
         </Box>
-        <Dialog
-        open={!errorList}
-        onClose={handleClose}
-        aria-labelledby="alert-register-title"
-        aria-describedby="alert-register-description"
-      >
-        <DialogTitle id="alert-register-title">Registration not successful</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-register-description">
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 }

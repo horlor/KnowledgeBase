@@ -3,8 +3,9 @@ import { RootState, AppDispatch } from "../Store";
 import { Login, Logout, Register } from "../../api/UserApi";
 import { UserLoginAction, UserLogoutAction } from "./UserReducer";
 import ErrorModel from "../../models/ErrorModel";
-import { RegisterRequest } from "../../models/LoginModels";
+import { RegisterRequest, RegisterResponse } from "../../models/LoginModels";
 import { useState } from "react";
+import Axios from "axios";
 
 export const useLoggedIn = () =>
     useSelector((state : RootState) => state.user.loggedIn);
@@ -43,12 +44,17 @@ export const useRegisterHook = ()=>{
     const registerFun = async (reg : RegisterRequest) =>{
         retry();
         setLoading(true);
-        let result = await Register(reg);
+        Axios.post<RegisterResponse>("/api/register",reg,{validateStatus:(status)=>true}) //Need to accept everything because somewhy Axios doesn't provide the failed response's data
+        .then(response => {
+            if(response.status === 200){
+                setSuccess(true);
+            }
+            else{
+                setErrors(response.data.errors);
+            }
+        });
         setLoading(false);
-        if(result.errors)
-            setErrors(result.errors);
-        if(result.success)
-            setSuccess(result.success);
+    
     }
 
     return {loading, success, registerFun, errorList, retry};
