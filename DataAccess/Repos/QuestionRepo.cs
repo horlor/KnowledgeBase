@@ -31,21 +31,22 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<ICollection<Answer>> FindAnswersforQuestion(Question question)
         {
-            return await dbcontext.Answers
-                .Where(a => a.Question.Id == question.Id)
-                .Select(a => DbMapper.MapDbAnswer(a)).ToListAsync();  
+            return await FindAnswersforQuestionById(question.Id);  
         }
 
         public async Task<ICollection<Answer>> FindAnswersforQuestionById(int id)
         {
             return await dbcontext.Answers
                 .Where(a => a.Question.Id == id)
+                .Include(a => a.User)
                 .Select(a => DbMapper.MapDbAnswer(a)).ToListAsync();
         }
 
         public async Task<Question> FindById(int id)
         {
-            var q = await dbcontext.Questions.SingleAsync(q => q.Id == id);
+            var q = await dbcontext.Questions
+                .Include(q =>q.User)                
+                .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestion(q);
         }
 
@@ -53,13 +54,17 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             var q = await dbcontext.Questions
                 .Include(q => q.Answers)
+                    .ThenInclude(a => a.User)
+                .Include(q => q.User)
                 .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestionWithAnswers(q);
         }
 
         public async Task<ICollection<Question>> List()
         {
-            return await dbcontext.Questions.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
+            return await dbcontext.Questions
+                .Include(q => q.User)
+                .Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
         }
 
         public async Task<Question> Store(Question question)
@@ -68,8 +73,11 @@ namespace KnowledgeBase.DataAccess.Repos
             {
                 Content = question.Content,
                 Title = question.Title,
-                ///User = dbcontext.Users.SingleOrDefault(u => u.Id == question.AuthorId) //TODO error handling
             };
+            var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == question.Author);
+            if (user == null)
+                return null;
+            dbQ.User = user;
             await dbcontext.Questions.AddAsync(dbQ);
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbQuestion(dbQ);
@@ -80,9 +88,13 @@ namespace KnowledgeBase.DataAccess.Repos
             DbAnswer dbAnswer = new DbAnswer()
             {
                 Content = answer.Content,
-                //TODO user handling
-                Question = dbcontext.Questions.First(q => q.Id == id)
             };
+            var question = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == id);
+            var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == answer.Author);
+            if (question == null || user == null)
+                return null;
+            dbAnswer.Question = question;
+            dbAnswer.User = user;
             await dbcontext.Answers.AddAsync(dbAnswer);
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbAnswer(dbAnswer);

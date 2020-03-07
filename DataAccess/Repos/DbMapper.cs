@@ -15,8 +15,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return new Answer()
             {
                 Id = dbAnswer.Id,
-                //Author = dbAnswer.User.UserName,
-                //AuthorId = dbAnswer.User.Id,
+                Author = dbAnswer.User.UserName,
                 Content = dbAnswer.Content
             };
         }
@@ -28,8 +27,7 @@ namespace KnowledgeBase.DataAccess.Repos
             var q = new Question()
             {
                 Id = dbQuestion.Id,
-                //Author = dbQuestion.User.UserName,
-                //AuthorId = dbQuestion.User.Id,
+                Author = dbQuestion.User?.UserName,
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content
             };
@@ -48,8 +46,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return new QuestionWithAnswers()
             {
                 Id = dbQuestion.Id,
-                //Author = dbQuestion.User.UserName,
-                //AuthorId = dbQuestion.User.Id,
+                Author = dbQuestion.User?.UserName,
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content,
                 Answers = answers

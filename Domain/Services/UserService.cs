@@ -59,7 +59,6 @@ namespace KnowledgeBase.Domain.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, name)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Secret key for JWT $42&"));

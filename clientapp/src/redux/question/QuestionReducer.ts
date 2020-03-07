@@ -29,7 +29,7 @@ export const FetchQAFailure = createAction<ErrorModel>("fetch-questionanswer-fai
 
 export const QuestionReducer = createReducer(initialState, builder => builder
     .addCase(AddAnswerAction, (state, action)=>{
-        state.questionwithanswers?.answers.concat(action.payload);
+        state.questionwithanswers?.answers.push(action.payload);
     })
     .addCase(AddQuestionAction, (state, action)=>{
         state.questions.push(action.payload);

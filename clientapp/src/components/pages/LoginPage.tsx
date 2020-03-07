@@ -130,3 +130,5 @@ export const LoginPage : React.FC<IProps> = (props) =>{
     );
       
 }
+
+export default LoginPage;

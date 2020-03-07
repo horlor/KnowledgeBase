@@ -19,7 +19,7 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardHeader title={props.question.title}/>
+            <CardHeader title={props.question.title} subheader={`by ${props.question.author}`}/>
             <CardContent>
                 <Typography variant="body1">{`${props.question.content.slice(0,400)}...`}</Typography>
             </CardContent>

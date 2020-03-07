@@ -1,4 +1,4 @@
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState, AppDispatch } from "../Store";
 import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi } from "../../api/QuestionApi";
 import { useEffect } from "react";
@@ -36,7 +36,7 @@ export const useQuestionsState = () =>{
 
 export const useQuestionAnswersState = (questionId: number) => {
     const dispatch = useDispatch();
-    const question = useSelector((state: RootState) => state.question.questionwithanswers);
+    const question = useSelector((state: RootState) => state.question.questionwithanswers,shallowEqual,);
     const error = useSelector((state: RootState) => state.question.error);
     const loading = useSelector((state: RootState) => state.question.loading);
     useEffect(()=>{

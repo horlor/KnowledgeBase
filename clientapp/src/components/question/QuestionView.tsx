@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, makeStyles, createStyles } from '@material-ui/core';
+import { Paper, Typography, makeStyles, createStyles, Divider } from '@material-ui/core';
 import Question from '../../models/Question';
 
 interface IProps{
@@ -19,7 +19,9 @@ const QuestionView : React.FC<IProps> = props=>{
     return(
         <Paper className={classes.surface} variant="outlined">
             <Typography variant="h4">{props.question.title}</Typography>
-            <Typography variant="body2" align="justify">{props.question.content}</Typography>
+            <Typography variant="subtitle1" >{`       by ${props.question.author}`}</Typography>
+            <Divider/>
+            <Typography variant="body1" align="justify">{props.question.content}</Typography>
         </Paper>
     );
 }

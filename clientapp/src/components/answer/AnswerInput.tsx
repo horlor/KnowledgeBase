@@ -1,7 +1,8 @@
 import React from 'react';
 import {useState} from 'react';
-import { TextField, Card, Typography, Button, makeStyles } from '@material-ui/core';
+import { TextField, Card, Typography, Button, makeStyles, CircularProgress } from '@material-ui/core';
 import Axios from 'axios';
+import { useAnswerInputHook } from '../../hooks/AnswerHooks';
 
 const useStyles = makeStyles({
     textfield: {
@@ -23,14 +24,13 @@ interface IProps{
 const AnswerInput : React.FC<IProps> = (props) =>{
     const classes = useStyles();
     const [content, setContent] = useState<string>();
+    const {loggedIn, user, error, loading, postAnswer} = useAnswerInputHook(props.questionId);
 
-    const post = () =>{
-        Axios.post(`/api/questions/${props.questionId}/answers`,{content:content})
-        .then(resp =>{;}) //TODO success and error checking
-        .catch(err => {});
-        //reload the page to see the new answer after posting somehow
-    }
-
+    if(!loggedIn)
+        return (
+        <Card className={classes.surface}>
+            <Typography variant="h6">Please login or register to post an answer</Typography>
+        </Card>);
     return (
         <Card className={classes.surface}>
             <Typography variant="h6">Your Answer</Typography>
@@ -38,7 +38,9 @@ const AnswerInput : React.FC<IProps> = (props) =>{
              className={classes.textfield} variant="outlined"
              onChange={(e)=>setContent(e.target.value)}
              />
-            <Button size='medium' onClick={post}>Post</Button>
+             {loading?
+             <CircularProgress/>:
+            <Button size='medium' onClick={()=>{if(content) postAnswer(content)}}>Post</Button>}
         </Card>
     );
 }

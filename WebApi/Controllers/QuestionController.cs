@@ -17,7 +17,7 @@ namespace KnowledgeBase.WebApi.Controllers
     [Route("api/questions")]
     [ApiController]
     //[EnableCors]
-    public class QuestionController : ControllerBase
+    public class QuestionController : BaseController
     {
 
         private QuestionService questionService;
@@ -27,11 +27,9 @@ namespace KnowledgeBase.WebApi.Controllers
             this.questionService = questionService;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ICollection<Question>> GetQuestions()
         {
-            //return NotFound();
             return await questionService.GetAllQuestions();
         }
 
@@ -41,16 +39,24 @@ namespace KnowledgeBase.WebApi.Controllers
             return await questionService.GetQuestionWithAnswers(id);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Question>> AddQuestion([FromBody] Question question)
         {
+            //So no one can post in someone else's name
+            if (UserName != question.Author)
+                return Conflict();
             var q = await questionService.AddNewQuestion(question);
             return Created("api/questions/" + q.Id, q);
         }
 
+        [Authorize]
         [HttpPost("{id}/answers")]
         public async Task<ActionResult<Answer>> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
+            //So no one can post in someone else's name
+            if (UserName != answer.Author)
+                return Conflict();
             var a = await questionService.AddAnswerToQuestion(id, answer);
             return Created("api/questions/" + id + "/answers/" + a.Id, a);
         }

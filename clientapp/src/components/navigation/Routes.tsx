@@ -3,9 +3,10 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import QuestionsPage from '../pages/QuestionsPage';
 import NewQuestionPage from '../pages/NewQuestionPage';
 import QuestionAnswerPage from '../pages/QuestionAnswerPage';
-import { LoginPage } from '../pages/LoginPage';
+import  LoginPage  from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import NavigationView from './NavigationView';
+import WelcomePage from '../pages/WelcomePage';
 
 
 interface IProps{
@@ -42,6 +43,12 @@ export const Routes : React.FC<IProps> = (props) => {
                 component={RegisterPage}
                 exact
             />
+            <Route
+                path="/"
+                component={WelcomePage}
+                exact
+            />
+            
             </NavigationView>
         </BrowserRouter>
     );
