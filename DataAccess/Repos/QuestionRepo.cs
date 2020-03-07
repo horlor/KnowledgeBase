@@ -112,6 +112,24 @@ namespace KnowledgeBase.DataAccess.Repos
             await dbcontext.SaveChangesAsync();
         }
 
+        public async Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize)
+        {
+            return await dbcontext.Questions
+                .Include(q => q.User)
+                .Skip(pagenum * pagesize)
+                .Take(pagesize)
+                .Select(q => DbMapper.MapDbQuestion(q))
+                .ToListAsync();
+        }
 
+        public async Task<int> Count()
+        {
+            return await dbcontext.Questions.CountAsync();
+        }
+        
+        public async Task<int> GetPageCount(int pagesize)
+        {
+            return (int)(Math.Ceiling((float)(await Count()) / pagesize));
+        }
     }
 }

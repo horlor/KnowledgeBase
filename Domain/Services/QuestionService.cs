@@ -58,6 +58,16 @@ namespace KnowledgeBase.Domain.Services
         {
             return await questionRepo.FindWithAnswersById(id);
         }
+
+        public async Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize)
+        {
+            return await questionRepo.GetQuestionsPaged(pagenum, pagesize);
+        }
+
+        public async Task<int> GetPageCount(int pagesize)
+        {
+            return await questionRepo.GetPageCount(pagesize);
+        }
     }
 
 }

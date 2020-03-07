@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace KnowledgeBase.WebApi.Controllers
@@ -13,8 +12,7 @@ namespace KnowledgeBase.WebApi.Controllers
         protected string UserName { 
             get
             {
-                //Somewhy sub is not in the list :D (even though i put in it)
-                return User.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+                return User.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
             } 
         }
     }

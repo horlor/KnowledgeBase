@@ -15,6 +15,9 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using KnowledgeBase.WebApi.ServiceHelpers;
+using KnowledgeBase.Domain.Interfaces;
 
 namespace KnowledgeBase.WebApi
 {
@@ -64,6 +67,10 @@ namespace KnowledgeBase.WebApi
                 options.Password.RequireLowercase = true;
             });
 
+            //Handling wierd JWT handling of microsoft, ie. changing claim types
+            //More on: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(cfg =>
                {
@@ -76,6 +83,7 @@ namespace KnowledgeBase.WebApi
                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
                        ClockSkew = TimeSpan.Zero
                    };
+                   
                }
             );
 
@@ -83,6 +91,8 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<IQuestionRepo, QuestionRepo>();
             services.AddScoped<IAnswerRepo, AnswerRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
+
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
 
             services.AddScoped<QuestionService, QuestionService>();

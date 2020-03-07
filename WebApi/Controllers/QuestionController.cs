@@ -11,6 +11,8 @@ using KnowledgeBase.Domain.Services;
 using KnowledgeBase.DataAccess.Repos;
 using KnowledgeBase.DataAccess;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using KnowledgeBase.Entities.DataTransferObjects;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -28,9 +30,15 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ICollection<Question>> GetQuestions()
+        public async Task<QuestionsWithPaging> GetQuestions([FromQuery] int pageNum = 0, [FromQuery] int pageSize = 10)
         {
-            return await questionService.GetAllQuestions();
+            var questions = await questionService.GetQuestionsPaged(pageNum, pageSize);
+            var pages = await questionService.GetPageCount(pageSize);
+            return new QuestionsWithPaging()
+            {
+                Questions = questions,
+                Pages = pages
+            };
         }
 
         [HttpGet("{id}")]
@@ -67,7 +75,17 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok( await questionService.GetAnswersForQuestion(id));
         }
 
+        [HttpGet("claim")]
+        public ICollection<string> Claims()
+        {
+            List<string> list = new List<string>();
+            foreach(var item in User.Claims)
+            {
+                list.Add(item.Type);
+            }
+            return list;
+        }
 
-
+        
     }
 }
