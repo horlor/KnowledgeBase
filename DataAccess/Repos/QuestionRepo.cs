@@ -116,7 +116,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             return await dbcontext.Questions
                 .Include(q => q.User)
-                .Skip(pagenum * pagesize)
+                .Skip((pagenum -1) * pagesize)
                 .Take(pagesize)
                 .Select(q => DbMapper.MapDbQuestion(q))
                 .ToListAsync();

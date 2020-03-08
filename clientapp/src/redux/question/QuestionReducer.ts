@@ -1,11 +1,13 @@
 import { createReducer, createAction } from "@reduxjs/toolkit";
-import Question from "../../models/Question";
+import Question, { PagedQuestions } from "../../models/Question";
 import QuestionWithAnswers from "../../models/QuestionWithAnswers";
 import Answer from "../../models/Answer";
 import ErrorModel from "../../models/ErrorModel";
 
 export interface IQuestionStore{
     questions: Question[],
+    currentPage: number,
+    pages: number,
     questionwithanswers? : QuestionWithAnswers,
     loading: boolean,
     error?: ErrorModel
@@ -13,6 +15,8 @@ export interface IQuestionStore{
 
 const initialState : IQuestionStore = {
     questions : [],
+    currentPage: 1,
+    pages: 0,
     questionwithanswers : undefined,
     loading : false
 }
@@ -20,7 +24,7 @@ const initialState : IQuestionStore = {
 export const AddQuestionAction = createAction<Question>("add-question");
 export const AddAnswerAction = createAction<Answer>("add-answer");
 export const FetchQuestionsStarted = createAction("fetch-questions-started");
-export const FetchQuestionsSuccess = createAction<Question[]>("fetch-questions-success");
+export const FetchQuestionsSuccess = createAction<PagedQuestions>("fetch-questions-success");
 export const FetchQuestionsFailure = createAction<ErrorModel>("fetch-questions-failure");
 export const FetchQAStarted = createAction("fetch-questionanswer-started");
 export const FetchQASuccess = createAction<QuestionWithAnswers>("fetch-questionanswer-success");
@@ -41,7 +45,9 @@ export const QuestionReducer = createReducer(initialState, builder => builder
     })
     .addCase(FetchQuestionsSuccess, (state, action)=>{
         state.loading = false;
-        state.questions = action.payload;
+        state.questions = action.payload.questions;
+        state.currentPage = action.payload.currentPage;
+        state.pages = action.payload.pages;
     })
     .addCase(FetchQuestionsFailure, (state, action) =>{
         state.error = action.payload;

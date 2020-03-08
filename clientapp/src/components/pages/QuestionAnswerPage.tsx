@@ -6,7 +6,7 @@ import AnswerInput from '../answer/AnswerInput';
 import { RouteComponentProps } from 'react-router';
 import QuestionWithAnswers from '../../models/QuestionWithAnswers';
 import Axios from 'axios';
-import { useQuestionAnswersState } from '../../redux/question/QuestionHooks';
+import { useQuestionAnswerHook } from '../../hooks/QuestionHooks';
 import LoadingView from '../common/LoadingView';
 import ErrorView from '../common/ErrorView';
 import ErrorModel from '../../models/ErrorModel'
@@ -20,7 +20,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     //fetch the id from the path
     let id = parseInt(props.match.params.id);
     //a custom hook to handle logic separetaly
-    const {question, loading, error} = useQuestionAnswersState(id);
+    const {question, loading, error} = useQuestionAnswerHook(id);
 
     if(loading)
         return <LoadingView/>;

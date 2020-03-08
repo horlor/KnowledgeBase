@@ -1,9 +1,9 @@
 import {useSelector, useDispatch} from "react-redux";
-import { RootState, AppDispatch } from "../Store";
-import { Login, Logout, Register } from "../../api/UserApi";
-import { UserLoginAction, UserLogoutAction } from "./UserReducer";
-import ErrorModel from "../../models/ErrorModel";
-import { RegisterRequest, RegisterResponse } from "../../models/LoginModels";
+import { RootState, AppDispatch } from "../redux/Store";
+import { Login, Logout, Register } from "../api/UserApi";
+import { UserLoginAction, UserLogoutAction } from "../redux/user/UserReducer";
+import ErrorModel from "../models/ErrorModel";
+import { RegisterRequest, RegisterResponse } from "../models/LoginModels";
 import { useState } from "react";
 import Axios from "axios";
 
@@ -44,7 +44,7 @@ export const useRegisterHook = ()=>{
     const registerFun = async (reg : RegisterRequest) =>{
         retry();
         setLoading(true);
-        Axios.post<RegisterResponse>("/api/register",reg,{validateStatus:(status)=>true}) //Need to accept everything because somewhy Axios doesn't provide the failed response's data
+        Axios.post<RegisterResponse>("/api/users/register",reg,{validateStatus:(status)=>true}) //Need to accept everything because somewhy Axios doesn't provide the failed response's data
         .then(response => {
             if(response.status === 200){
                 setSuccess(true);

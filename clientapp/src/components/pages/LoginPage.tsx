@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Paper } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useLoginState } from '../../redux/user/UserHooks';
+import { useLoginState } from '../../hooks/UserHooks';
 import { Redirect } from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 

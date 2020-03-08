@@ -30,14 +30,15 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<QuestionsWithPaging> GetQuestions([FromQuery] int pageNum = 0, [FromQuery] int pageSize = 10)
+        public async Task<QuestionsWithPaging> GetQuestions([FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
         {
             var questions = await questionService.GetQuestionsPaged(pageNum, pageSize);
             var pages = await questionService.GetPageCount(pageSize);
             return new QuestionsWithPaging()
             {
                 Questions = questions,
-                Pages = pages
+                Pages = pages,
+                CurrentPage = pageNum
             };
         }
 

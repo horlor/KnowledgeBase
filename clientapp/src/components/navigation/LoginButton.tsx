@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import IconButton from "@material-ui/core/IconButton"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import Button from "@material-ui/core/Button"
-import {useLoginState} from "../../redux/user/UserHooks";
+import {useLoginState} from "../../hooks/UserHooks";
 import CloseIcon from "@material-ui/icons/Close"
 import { Menu, MenuItem, Icon } from "@material-ui/core";
 import { Link } from "react-router-dom";

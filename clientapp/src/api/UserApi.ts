@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ISession, RegisterRequest, RequestResult, RegisterResponse } from '../models/LoginModels';
 
 export const Login = async (username: string, password: string): Promise<ISession> =>{
-    let resp = await axios.post<ISession>(`/api/login`,{username: username, password: password});
+    let resp = await axios.post<ISession>(`/api/users/login`,{username: username, password: password});
     if(resp.data.token){
         axios.defaults.headers.common["Authorization"] = "Bearer " + resp.data.token;
     }

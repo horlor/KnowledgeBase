@@ -1,11 +1,11 @@
 import axios from 'axios';
-import Question from '../models/Question';
+import Question, { PagedQuestions } from '../models/Question';
 import QuestionWithAnswers from '../models/QuestionWithAnswers';
 import Answer from '../models/Answer';
 import { rejects } from 'assert';
 
-export const LoadQuestionsFromApi = async (): Promise<Question[]>=>{
-    var response = await axios.get<Question[]>("/api/questions");
+export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
+    var response = await axios.get<PagedQuestions>(`/api/questions?$pagenum=${pageNum}&$pageSize=${pageSize}`);
     return response.data;
 }
 
