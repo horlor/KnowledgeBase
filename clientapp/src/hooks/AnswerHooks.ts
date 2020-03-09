@@ -3,11 +3,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../redux/Store'
 import Answer from '../models/Answer';
 import { CreateAnswerToQuestion } from '../api/QuestionApi';
-import { AddAnswerAction } from '../redux/question/QuestionReducer';
+import { AddAnswerAction } from '../redux/reducers/QuestionReducer';
 
 export const useAnswerInputHook = (id: number)=>{
-    const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
-    const user = useSelector((state: RootState) => state.user.username);
+    const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+    const user = useSelector((state: RootState) => state.login.username);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);

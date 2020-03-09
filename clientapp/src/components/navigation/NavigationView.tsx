@@ -74,8 +74,8 @@ const NavigationView : React.FC<IProps> = (props) => {
           <ListItem button component={Link} to="/newquestion">
             <ListItemText primary={"Ask a new question"}/>
           </ListItem>
-          <ListItem button component={Link} to="/">
-            <ListItemText primary={"Your Profile"}/>
+          <ListItem button component={Link} to="/users">
+            <ListItemText primary={"Users"}/>
           </ListItem>
           <ListItem button component={Link} to="/">
             <ListItemText primary={"Something"}/>
@@ -142,7 +142,7 @@ const NavigationView : React.FC<IProps> = (props) => {
       </nav>
       <Box width={1}>
           <Toolbar/>
-          <Box flex justifyItems="center" justifyContent="center">
+          <Box display="flex" justifyItems="center" justifyContent="center">
             {props.children}
           </Box>
 

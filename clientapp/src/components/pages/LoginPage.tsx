@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Paper } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useLoginState } from '../../hooks/UserHooks';
+import { useLoginHook } from '../../hooks/LoginHooks';
 import { Redirect } from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -53,7 +53,7 @@ interface IFormData{
 export const LoginPage : React.FC<IProps> = (props) =>{
     const classes = useStyles();
     const {register, handleSubmit} = useForm<IFormData>();
-    const {loggedIn, loginFun, error} =  useLoginState();
+    const {loggedIn, loginFun, error} =  useLoginHook();
     const onSubmit = async (data: IFormData) =>{
         await loginFun(data.username, data.password);
     }

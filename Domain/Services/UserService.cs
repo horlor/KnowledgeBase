@@ -5,9 +5,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using KnowledgeBase.Entities.DataTransferObjects;
 using KnowledgeBase.Domain.Interfaces;
 
@@ -30,7 +27,7 @@ namespace KnowledgeBase.Domain.Services
             if (res.Succeeded)
             {
                 result.Success = true;
-                result.Username = user.Name;
+                result.Username = user.UserName;
             }
             else
             {
@@ -54,6 +51,26 @@ namespace KnowledgeBase.Domain.Services
                 session.Username = username;
             }
             return session;
+        }
+
+        public async Task<User> GetUser(string username)
+        {
+            return await userRepo.GetByName(username);
+        }
+
+        public async Task<UserDetailed> GetUserDetailed(string username)
+        {
+            return await userRepo.GetDetailedByName(username);
+        }
+
+        public async Task<ICollection<User>> GetAllUsers()
+        {
+            return await userRepo.GetAllUser();
+        }
+
+        public async Task<UserDetailed> UpdateUser(UserDetailed user)
+        {
+            return await userRepo.UpdateUser(user);
         }
 
     }

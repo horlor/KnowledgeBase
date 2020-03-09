@@ -28,7 +28,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             DbUser dbUser = new DbUser()
             {
-                UserName = user.Name,
+                UserName = user.UserName,
                 Email = user.Email
             };
             var res = await userManager.CreateAsync(dbUser, password);
@@ -38,7 +38,7 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<IdentityResult> Delete(User user)
         {
-            var dbUser = await userManager.FindByNameAsync(user.Name);
+            var dbUser = await userManager.FindByNameAsync(user.UserName);
             var res = await userManager.DeleteAsync(dbUser);
             await context.SaveChangesAsync();
             return res;
@@ -66,6 +66,32 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task SignOut()
         {
              await signInManager.SignOutAsync();
+        }
+
+        public async Task<UserDetailed> GetDetailedByName(string name)
+        {
+            var dbUser = await userManager.FindByNameAsync(name);
+            return DbMapper.MapDbUserDetailed(dbUser);
+        }
+
+        public async Task<ICollection<User>> GetAllUser()
+        {
+            return await userManager.Users
+                .Select(u => DbMapper.MapDbUser(u))
+                .ToListAsync();
+        }
+
+        public async Task<UserDetailed> UpdateUser(UserDetailed user)
+        {
+            var dbUser = await userManager.FindByNameAsync(user.UserName);
+            if (dbUser == null)
+                return null;
+            dbUser.Email = user.Email;
+            dbUser.FirstName = user.FirstName;
+            dbUser.LastName = user.LastName;
+            dbUser.Introduction = user.Introduction;
+            await context.SaveChangesAsync();
+            return DbMapper.MapDbUserDetailed(dbUser);
         }
 
     }

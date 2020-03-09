@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link as RouterLink} from "react-router-dom"
 import { useForm } from 'react-hook-form';
-import { useRegisterHook } from '../../hooks/UserHooks';
+import { useRegisterHook } from '../../hooks/LoginHooks';
 
 const useStyles = makeStyles(theme => ({
   paper: {

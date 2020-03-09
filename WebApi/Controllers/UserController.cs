@@ -12,7 +12,7 @@ namespace KnowledgeBase.WebApi.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
 
         private UserService userService;
@@ -39,6 +39,35 @@ namespace KnowledgeBase.WebApi.Controllers
             if (res.Success)
                 return Ok(res);
             return BadRequest(res);
+
+        }
+
+        [HttpGet]
+        public async Task<ICollection<User>> GetAllUser()
+        {
+            return await userService.GetAllUsers();
+        }
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<UserDetailed>> GetUser([FromRoute] string username)
+        {
+            var user =  await userService.GetUserDetailed(username);
+            if (user == null)
+                return NotFound();
+            return Ok(user);
+        }
+
+        [HttpPut("{username}")]
+        public async Task<ActionResult<UserDetailed>> UpdateUser([FromRoute] string username, [FromBody] UserDetailed userD)
+        {
+            var user = await userService.GetUser(username);
+            if (user == null)
+                return NotFound();
+            //Somebody trying to edit in someone other's name
+            if (username != UserName)
+                return Conflict();
+            var ret = await userService.UpdateUser(userD);
+            return Ok(ret);
 
         }
 

@@ -61,7 +61,7 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
                         onChange={e => setContent(e.target.value)}/>
                     <FormHelperText id="content-helper">Write all related information here</FormHelperText>
                 </FormControl>
-                <Box flex>
+                <Box display="flex">
                     <Button size="medium" onClick={post}>Post</Button>
                 </Box>
             </Paper>

@@ -52,9 +52,8 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Question>> AddQuestion([FromBody] Question question)
         {
-            //So no one can post in someone else's name
-            if (UserName != question.Author)
-                return Conflict();
+            //Or just change the author in the object here ?
+            question.Author = UserName;
             var q = await questionService.AddNewQuestion(question);
             return Created("api/questions/" + q.Id, q);
         }
@@ -76,16 +75,6 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok( await questionService.GetAnswersForQuestion(id));
         }
 
-        [HttpGet("claim")]
-        public ICollection<string> Claims()
-        {
-            List<string> list = new List<string>();
-            foreach(var item in User.Claims)
-            {
-                list.Add(item.Type);
-            }
-            return list;
-        }
 
         
     }

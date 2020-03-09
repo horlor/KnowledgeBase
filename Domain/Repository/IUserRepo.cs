@@ -18,6 +18,10 @@ namespace KnowledgeBase.Domain.Repository
 
         Task SignOut();
 
+        Task<UserDetailed> GetDetailedByName(string name);
+
+        Task<ICollection<User>> GetAllUser();
+        Task<UserDetailed> UpdateUser(UserDetailed user);
 
     }
 

@@ -1,26 +1,26 @@
 import { createReducer, createAction } from "@reduxjs/toolkit";
 
-export interface IUserStore{
+export interface ILoginStore{
     loggedIn : boolean,
     username?: string
 }
 
-export const UserLoginAction = createAction<string>("user-login");
-export const UserLogoutAction = createAction("user-logout");
+export const LoginAction = createAction<string>("user-login");
+export const LogoutAction = createAction("user-logout");
 
-const initialstate : IUserStore = {
+const initialstate : ILoginStore = {
     loggedIn:false,
     username: undefined,
 }
 
 //The reducer - using builder to provide type checking
 //Notice that thanks to Immer the created function is pure, regardless the changes on the state object
-export const UserReducer = createReducer(initialstate, builder => builder
-    .addCase(UserLoginAction, (state, action) =>{
+export const LoginReducer = createReducer(initialstate, builder => builder
+    .addCase(LoginAction, (state, action) =>{
         state.loggedIn = true;
         state.username = action.payload;
     })
-    .addCase(UserLogoutAction, (state, action) =>{
+    .addCase(LogoutAction, (state, action) =>{
         state.loggedIn = false;
         state.username = undefined;
     })

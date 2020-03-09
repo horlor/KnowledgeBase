@@ -2,7 +2,7 @@ import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
 import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi } from "../api/QuestionApi";
 import { useEffect } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure } from "../redux/question/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { AxiosError } from "axios";

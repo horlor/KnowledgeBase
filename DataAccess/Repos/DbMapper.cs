@@ -55,11 +55,29 @@ namespace KnowledgeBase.DataAccess.Repos
 
         internal static User MapDbUser(DbUser dbUser)
         {
+            if (dbUser == null)
+                return null;
             return new User
             {
                 Email = dbUser.Email,
-                Name = dbUser.UserName,
+                UserName = dbUser.UserName,
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
             };
         }
+
+        internal static UserDetailed MapDbUserDetailed(DbUser dbUser)
+        {
+            if (dbUser == null)
+                return null;
+            return new UserDetailed
+            {
+                UserName = dbUser.UserName,
+                Email = dbUser.Email,
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                Introduction = dbUser.Introduction,
+            };
+        } 
     }
 }

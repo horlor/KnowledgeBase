@@ -12,7 +12,7 @@ namespace KnowledgeBase.Entities.DataTransferObjects
 
         public User ToUser()
         {
-            return new User() { Name = Username, Email = Email };
+            return new User() { UserName = Username, Email = Email };
     }
 
     }
