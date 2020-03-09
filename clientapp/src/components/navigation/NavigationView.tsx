@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
 import LoginButton from './LoginButton';
+import Logo from "../common/logodark.svg"
 import { Link } from 'react-router-dom';
 
 
@@ -54,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface IProps{
-    
+    drawer: JSX.Element
 }
 
 const NavigationView : React.FC<IProps> = (props) => {
@@ -65,64 +66,52 @@ const NavigationView : React.FC<IProps> = (props) => {
     setMobileOpen(!mobileOpen)
   }
   //This is the layout of the drawer
-  const drawer = (
-    <div>
-      <List>
-          <ListItem button component={Link} to="/questions">
-            <ListItemText primary={"Questions and Answers"}/>
-          </ListItem>
-          <ListItem button component={Link} to="/newquestion">
-            <ListItemText primary={"Ask a new question"}/>
-          </ListItem>
-          <ListItem button component={Link} to="/users">
-            <ListItemText primary={"Users"}/>
-          </ListItem>
-          <ListItem button component={Link} to="/">
-            <ListItemText primary={"Something"}/>
-          </ListItem>
-      </List>
-    </div>
-  );
+  const drawer = props.drawer;
 
   const appBar = (
-  <AppBar position="fixed" className={classes.appBar}>
-  <Toolbar>
-    <IconButton
-      color="inherit"
-      aria-label="Open drawer"
-      edge="start"
-      onClick={handleDrawerToggle}
-      className={classes.menuButton}
-    >
-      <MenuIcon />
-    </IconButton>
-    <Typography variant="h6" noWrap>
-      Viknowledge
-    </Typography>
-    <Box flexGrow={1}/>
-    <LoginButton/>
-  </Toolbar>
-</AppBar>);
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="Open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          className={classes.menuButton}
+        >
+          <MenuIcon />
+        </IconButton>
+        {/*<img src={Logo} alt="logo"></img>*/}
+        <Typography variant="h6" noWrap component={Link} to="/">
+          Viknowledge
+        </Typography>
+        <Box flexGrow={1} />
+        <LoginButton />
+      </Toolbar>
+    </AppBar>
+  );
   
   return (
     <div className={classes.root}>
-      {appBar}  
+      {appBar}
       <nav className={classes.drawer}>
         <Hidden smUp>
           <Drawer
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={theme.direction === "rtl" ? "right" : "left"}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{
-              paper: classes.drawerPaper,
+              paper: classes.drawerPaper
             }}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true // Better open performance on mobile.
             }}
           >
-            <IconButton onClick={handleDrawerToggle} className={classes.closeMenuButton}>
-              <CloseIcon/>
+            <IconButton
+              onClick={handleDrawerToggle}
+              className={classes.closeMenuButton}
+            >
+              <CloseIcon />
             </IconButton>
             {drawer}
           </Drawer>
@@ -132,20 +121,19 @@ const NavigationView : React.FC<IProps> = (props) => {
             className={classes.drawer}
             variant="permanent"
             classes={{
-              paper: classes.drawerPaper,
+              paper: classes.drawerPaper
             }}
           >
             <div className={classes.toolbar} />
             {drawer}
-          </Drawer>  
+          </Drawer>
         </Hidden>
       </nav>
       <Box width={1}>
-          <Toolbar/>
-          <Box display="flex" justifyItems="center" justifyContent="center">
-            {props.children}
-          </Box>
-
+        <Toolbar />
+        <Box display="flex" justifyItems="center" justifyContent="center">
+          {props.children}
+        </Box>
       </Box>
     </div>
   );

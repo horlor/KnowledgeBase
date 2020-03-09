@@ -1,7 +1,7 @@
 import React from 'react';
 import Container from '@material-ui/core/Container'
 import { Typography, Paper, makeStyles, Box } from '@material-ui/core';
-import logo from './logo.svg';
+import logo from '../common/logo.svg';
 
 const useStyles= makeStyles(theme =>({
     paper:{

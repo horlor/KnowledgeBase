@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ISession, RegisterRequest, RequestResult, RegisterResponse } from '../models/LoginModels';
-import { User } from '../models/User';
+import { User, UserDetailed } from '../models/User';
 
 export const Login = async (username: string, password: string): Promise<ISession> =>{
     let resp = await axios.post<ISession>(`/api/users/login`,{username: username, password: password});
@@ -21,5 +21,10 @@ export const Register = async( reg: RegisterRequest): Promise<RegisterResponse> 
 
 export const LoadUsersFromApi = async () =>{
     let response = await axios.get<User[]>("/api/users");
+    return response.data;
+}
+
+export const LoadUserDetailedFromApi = async (username: string) =>{
+    let response = await axios.get<UserDetailed>(`/api/users/${username}`);
     return response.data;
 }

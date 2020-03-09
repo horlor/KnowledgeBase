@@ -14,13 +14,14 @@ const useStyles = makeStyles( theme => ({
 interface IProps{
     username: string,
     email: string,
+    onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 const UserCard : React.FC<IProps> = (props) =>{
     const classes = useStyles();
 
     return (
-        <Card className={classes.surface}>
+        <Card className={classes.surface} onClick={props.onClick}>
             <Box display="flex" flexDirection="row">
                 <Box className={classes.gridbox}>
                     <Avatar>

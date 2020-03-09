@@ -8,6 +8,7 @@ import RegisterPage from '../pages/RegisterPage';
 import NavigationView from './NavigationView';
 import WelcomePage from '../pages/WelcomePage';
 import UserPage from '../pages/UserPage';
+import Menu from './Menu';
 
 
 interface IProps{
@@ -18,7 +19,7 @@ export const Routes : React.FC<IProps> = (props) => {
     
     return (
         <BrowserRouter>
-            <NavigationView>
+            <NavigationView drawer={<Menu/>}>
             <Route 
                 path="/questions"
                 component={QuestionsPage}

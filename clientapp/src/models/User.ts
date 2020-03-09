@@ -4,3 +4,7 @@ export interface User{
     firstName: string,
     lastName: string
 }
+
+export interface UserDetailed extends User{
+    introduction: string,
+}

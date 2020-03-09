@@ -7,7 +7,7 @@ import { RegisterRequest, RegisterResponse } from "../models/LoginModels";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
-export const useLoggedIn = () =>
+export const useLoginState = () =>
     useSelector((state : RootState) => state.login.loggedIn);
 
 export const useLoginHook =  () =>{
