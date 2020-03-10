@@ -5,7 +5,7 @@ import Answer from '../models/Answer';
 import { rejects } from 'assert';
 
 export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
-    var response = await axios.get<PagedQuestions>(`/api/questions?$pagenum=${pageNum}&$pageSize=${pageSize}`);
+    var response = await axios.get<PagedQuestions>(`/api/questions?pagenum=${pageNum}&pageSize=${pageSize}`);
     return response.data;
 }
 

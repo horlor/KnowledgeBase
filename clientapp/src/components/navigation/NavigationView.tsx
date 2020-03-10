@@ -52,6 +52,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: 'auto',
     marginLeft: 0,
   },
+  title:{
+    color: "white",
+    fontStyle: "normal"
+  }
 }));
 
 interface IProps{
@@ -81,7 +85,7 @@ const NavigationView : React.FC<IProps> = (props) => {
           <MenuIcon />
         </IconButton>
         {/*<img src={Logo} alt="logo"></img>*/}
-        <Typography variant="h6" noWrap component={Link} to="/">
+        <Typography className={classes.title} variant="h6" noWrap component={Link} to="/">
           Viknowledge
         </Typography>
         <Box flexGrow={1} />

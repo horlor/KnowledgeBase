@@ -21,7 +21,6 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     let id = parseInt(props.match.params.id);
     //a custom hook to handle logic separetaly
     const {question, loading, error} = useQuestionAnswerHook(id);
-
     if(loading)
         return <LoadingView/>;
     if(error)

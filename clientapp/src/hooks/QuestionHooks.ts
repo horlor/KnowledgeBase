@@ -19,7 +19,7 @@ export const useSelectLoading = () =>
 
 
 
-export const useQuestionsHook = () =>{
+export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
     var questions = useSelector((state : RootState) => state.question.questions);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
@@ -27,11 +27,12 @@ export const useQuestionsHook = () =>{
     var pageCount = useSelector((state: RootState) => state.question.pages);
     var dispatch = useDispatch();
     useEffect(()=>{
+        console.log(page);
         dispatch(FetchQuestionsStarted());
-        LoadQuestionsFromApi()
+        LoadQuestionsFromApi(page, pageSize)
         .then(resp => dispatch(FetchQuestionsSuccess(resp)))
         .catch(ex => dispatch(FetchQuestionsFailure(CatchIntoErrorModel(ex))))
-    },[dispatch]); //It won't change just to make React happy
+    },[dispatch, page, pageSize]); //It won't change just to make React happy
     return {questions, error, loading, currentPage, pageCount};
 }
 
