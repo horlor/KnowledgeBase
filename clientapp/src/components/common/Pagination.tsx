@@ -11,7 +11,13 @@ const start = 1;
 const shown = 2;
 
 
-const PageButton = withStyles({root:{minWidth:"0px"}})(Button)
+const PageButton = withStyles(
+    {root:
+        {minWidth:"0px"},
+    label:{
+        fontSize:"1.2rem"
+    }
+                    })(Button)
 
 const Pagination : React.FC<IProps> = (props) => {
     let show_start : boolean = (props.current-shown) > start;
@@ -23,7 +29,7 @@ const Pagination : React.FC<IProps> = (props) => {
         arraybefore.push(i);
 
     let arrayAfter : number [] = [];
-    for(let i=props.current+1;i<=props.current+shown && i< props.pageNum; i++)
+    for(let i=props.current+1;i<=props.current+shown && i<= props.pageNum; i++)
         arrayAfter.push(i);
     const points = <PageButton disabled>...</PageButton>
 
@@ -43,14 +49,14 @@ const Pagination : React.FC<IProps> = (props) => {
                :
                ""
             }
-            {   arraybefore.map(item => <PageButton onChange={()=>ChangePage(item)}>{item}</PageButton> ) }
+            {   arraybefore.map(item => <PageButton onClick={()=>ChangePage(item)}>{item}</PageButton> ) }
             <PageButton disabled>{props.current}</PageButton>
-            {   arrayAfter.map(item => <PageButton onChange={()=>ChangePage(item)}>{item}</PageButton> )}
+            {   arrayAfter.map(item => <PageButton onClick={()=>ChangePage(item)}>{item}</PageButton> )}
             {
             show_end?
             <>
             {arrayAfter[arrayAfter.length-1] !== props.pageNum-1 ? points : ""}
-            <PageButton onChange={()=>ChangePage(props.pageNum)}>{props.pageNum}</PageButton>
+            <PageButton onClick={()=>ChangePage(props.pageNum)}>{props.pageNum}</PageButton>
             </>
             :
             ""
