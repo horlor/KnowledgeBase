@@ -14,25 +14,23 @@ namespace KnowledgeBase.DataAccess
 
         public DbSet<DbAnswer> Answers { get; set; }
         public DbSet<DbQuestion> Questions { get; set; }
+        public DbSet<DbTopic> Topics { get; set; }
+        public DbSet<DbUserTopic> UserTopics { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*
-            modelBuilder.Entity<DbQuestion>().HasData(
-                new DbQuestion()
-                {
-                    Id = 1,
-                    Title="This is a question about something extremely important",
-                    Content= "Curabitur auctor bibendum dui, at posuere lorem tempor eu. Aenean porttitor vulputate ex, in ultricies mi dictum nec. Fusce maximus faucibus tortor, quis vestibulum augue ornare eu. Vestibulum ullamcorper diam sit amet urna vulputate efficitur. Ut ac finibus felis, sagittis blandit eros. Maecenas vulputate aliquet quam eu sodales. Vestibulum aliquet blandit mauris eu porttitor. Aliquam in porttitor nulla. Praesent ac tellus sapien. Morbi tempor varius eleifend. Pellentesque est tellus, maximus quis porttitor eu, sagittis ut libero. Cras ut tincidunt magna, vitae tempor mauris. Sed imperdiet dolor id dui luctus mollis. Etiam sit amet mattis est."
-                }, 
-                new DbQuestion()
-                {
-                    Id =2,
-                    Title = "This is a question about something extremely important",
-                    Content = "Curabitur auctor bibendum dui, at posuere lorem tempor eu. Aenean porttitor vulputate ex, in ultricies mi dictum nec. Fusce maximus faucibus tortor, quis vestibulum augue ornare eu. Vestibulum ullamcorper diam sit amet urna vulputate efficitur. Ut ac finibus felis, sagittis blandit eros. Maecenas vulputate aliquet quam eu sodales. Vestibulum aliquet blandit mauris eu porttitor. Aliquam in porttitor nulla. Praesent ac tellus sapien. Morbi tempor varius eleifend. Pellentesque est tellus, maximus quis porttitor eu, sagittis ut libero. Cras ut tincidunt magna, vitae tempor mauris. Sed imperdiet dolor id dui luctus mollis. Etiam sit amet mattis est."
-                }
-            );*/
+            modelBuilder.Entity<DbUserTopic>()
+                .HasKey(t => new { t.TopicId, t.UserId });
+            modelBuilder.Entity<DbUserTopic>()
+                .HasOne(ut => ut.User)
+                .WithMany(u => u.UserTopics)
+                .HasForeignKey(ut => ut.UserId);
+            modelBuilder.Entity<DbUserTopic>()
+                .HasOne(ut => ut.Topic)
+                .WithMany(t => t.UserTopics)
+                .HasForeignKey(ut => ut.TopicId);
+
             base.OnModelCreating(modelBuilder);
         }
 

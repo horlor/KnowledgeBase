@@ -78,6 +78,15 @@ namespace KnowledgeBase.DataAccess.Repos
                 LastName = dbUser.LastName,
                 Introduction = dbUser.Introduction,
             };
-        } 
+        }
+
+        internal static Topic MapDbTopic(DbTopic dbTopic)
+        {
+            return new Topic()
+            {
+                Id = dbTopic.Id,
+                Name = dbTopic.Name,
+            };
+        }
     }
 }

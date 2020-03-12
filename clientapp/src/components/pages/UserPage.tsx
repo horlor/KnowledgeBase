@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Hidden } from '@material-ui/core';
 import { useUserListHook } from '../../hooks/UserHooks';
 import LoadingView from '../common/LoadingView';
 import ErrorView from '../common/ErrorView';
@@ -30,13 +30,16 @@ const UserPage : React.FC<IProps> = (props) =>{
                     />)
                 }
             </Box>
-            <Box flexGrow={1}>
+            <Hidden mdDown>
+                <Box flexGrow={1}>
                 {selectedLoading?<LoadingView/>:
                     selectedUser?
                     <UserDetailView user={selectedUser}/>
                     :<></>
                 }
-            </Box>
+                </Box>
+            </Hidden>
+
         </Box>
     );
 }

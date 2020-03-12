@@ -69,6 +69,7 @@ namespace KnowledgeBase.WebApi
 
             //Handling wierd JWT handling of microsoft, ie. changing claim types
             //More on: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
+            //
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

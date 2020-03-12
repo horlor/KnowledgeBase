@@ -17,6 +17,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [MaxLength(1000)]
         public string Introduction { get; set; }
 
+        public virtual ICollection<DbUserTopic> UserTopics { get; set; }
 
         public virtual ICollection<DbQuestion> Questions { get; set; }
 

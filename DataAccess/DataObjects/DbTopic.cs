@@ -6,12 +6,14 @@ using System.Text;
 
 namespace KnowledgeBase.DataAccess.DataObjects
 {
-    public class DbTag
+    public class DbTopic
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual DbTag Ancestor { get; set; }
+        public virtual DbTopic Ancestor { get; set; }
+
+        public virtual ICollection<DbUserTopic> UserTopics { get; set; }
     }
 }

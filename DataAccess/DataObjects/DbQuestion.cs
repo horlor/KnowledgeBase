@@ -18,6 +18,8 @@ namespace KnowledgeBase.DataAccess.DataObjects
 
         public DbUser User { get; set; }
 
+        public DbTopic Topic { get; set; }
+
         public ICollection<DbAnswer> Answers{ get; set; }
     }
 }

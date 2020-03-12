@@ -4,14 +4,16 @@ using KnowledgeBase.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KnowledgeBase.DataAccess.Migrations
 {
     [DbContext(typeof(KnowledgeContext))]
-    partial class KnowledgeContextModelSnapshot : ModelSnapshot
+    [Migration("20200312161518_Adding_topics_to_DAL")]
+    partial class Adding_topics_to_DAL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,15 +64,10 @@ namespace KnowledgeBase.DataAccess.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
-                    b.Property<int?>("TopicId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TopicId");
 
                     b.HasIndex("UserId");
 
@@ -335,10 +332,6 @@ namespace KnowledgeBase.DataAccess.Migrations
 
             modelBuilder.Entity("KnowledgeBase.DataAccess.DataObjects.DbQuestion", b =>
                 {
-                    b.HasOne("KnowledgeBase.DataAccess.DataObjects.DbTopic", "Topic")
-                        .WithMany()
-                        .HasForeignKey("TopicId");
-
                     b.HasOne("KnowledgeBase.DataAccess.DataObjects.DbUser", "User")
                         .WithMany("Questions")
                         .HasForeignKey("UserId");
