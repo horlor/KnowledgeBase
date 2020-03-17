@@ -7,5 +7,7 @@ namespace KnowledgeBase.Entities
     public class UserDetailed : User
     {
         public string Introduction { get; set; }
+
+        public ICollection<Topic> Topics { get; set; }
     }
 }

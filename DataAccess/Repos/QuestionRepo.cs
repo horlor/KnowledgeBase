@@ -108,8 +108,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 q.Content = question.Content;
                 q.Title = question.Title;
                 //TODO changing user
+                await dbcontext.SaveChangesAsync();
             }
-            await dbcontext.SaveChangesAsync();
         }
 
         public async Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize)

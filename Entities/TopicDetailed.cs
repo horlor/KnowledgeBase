@@ -4,10 +4,8 @@ using System.Text;
 
 namespace KnowledgeBase.Entities
 {
-    public class Tag
+    public class TopicDetailed : Topic
     {
-        public string Name { get; set; }
-
-        public Tag Ancestor { get; set; }
+        public Topic Ancestor { get; set; }
     }
 }

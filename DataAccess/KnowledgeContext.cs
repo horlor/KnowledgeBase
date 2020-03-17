@@ -31,6 +31,11 @@ namespace KnowledgeBase.DataAccess
                 .WithMany(t => t.UserTopics)
                 .HasForeignKey(ut => ut.TopicId);
 
+            modelBuilder.Entity<DbTopic>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
+
+
             base.OnModelCreating(modelBuilder);
         }
 

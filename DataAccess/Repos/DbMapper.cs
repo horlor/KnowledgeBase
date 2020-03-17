@@ -82,10 +82,25 @@ namespace KnowledgeBase.DataAccess.Repos
 
         internal static Topic MapDbTopic(DbTopic dbTopic)
         {
+            if (dbTopic == null)
+                return null;
             return new Topic()
             {
                 Id = dbTopic.Id,
                 Name = dbTopic.Name,
+            };
+        }
+
+        internal static TopicDetailed MapDbTopicDetailed(DbTopic dbTopic)
+        {
+            if (dbTopic == null)
+                return null;
+            var ancestor = MapDbTopic(dbTopic.Ancestor);
+            return new TopicDetailed()
+            {
+                Id = dbTopic.Id,
+                Name = dbTopic.Name,
+                Ancestor = ancestor,
             };
         }
     }

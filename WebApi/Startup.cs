@@ -92,13 +92,15 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<IQuestionRepo, QuestionRepo>();
             services.AddScoped<IAnswerRepo, AnswerRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<ITopicRepo, TopicRepo>();
 
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
 
+            //To create services for the Controllers
             services.AddScoped<QuestionService, QuestionService>();
             services.AddScoped<UserService, UserService>();
-
+            services.AddScoped<TopicService, TopicService>();
 
 
         }

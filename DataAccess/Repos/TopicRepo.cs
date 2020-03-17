@@ -18,9 +18,9 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             this.dbcontext = context;
         }
-        public async Task Delete(Topic topic)
+        public async Task Delete(int id)
         {
-            var dbTopic = await dbcontext.Topics.FirstAsync(t => t.Id == topic.Id);
+            var dbTopic = await dbcontext.Topics.FirstAsync(t => t.Id == id);
             dbcontext.Topics.Remove(dbTopic);
             await dbcontext.SaveChangesAsync();
         }
@@ -29,6 +29,15 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             var dbTopic = await dbcontext.Topics.FirstAsync(t => t.Id == id);
             return DbMapper.MapDbTopic(dbTopic);
+        }
+
+        public async Task<TopicDetailed> FindDetailedByID(int id)
+        {
+            var dbTopic = await
+                dbcontext.Topics
+                    .Include(t => t.Ancestor)
+                    .FirstOrDefaultAsync(t => t.Id == id);
+            return DbMapper.MapDbTopicDetailed(dbTopic);
         }
 
         public async Task<Topic> FindByName(string name)
@@ -44,24 +53,42 @@ namespace KnowledgeBase.DataAccess.Repos
                 .ToListAsync();
         }
 
-        public async Task<Topic> Store(Topic topic)
+        public async Task<Topic> Store(TopicDetailed topic)
         {
+            DbTopic ancTopic = (topic.Ancestor == null)?null: await dbcontext.Topics.SingleOrDefaultAsync(t => t.Id == topic.Ancestor.Id);
             var dbTopic = new DbTopic()
             {
                 Name = topic.Name,
+                Ancestor = ancTopic,
             };
             var res = await dbcontext.Topics.AddAsync(dbTopic);
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbTopic(res.Entity);
-            
         }
 
-        public async Task<Topic> Update(Topic topic)
+        public async Task<Topic> Store(Topic topic, int ancestorId)
         {
-            var dbTopic = await dbcontext.Topics.FirstAsync(t => t.Id == topic.Id);
+            var ancestor = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == ancestorId);
+            var dbTopic = new DbTopic()
+            {
+                Name = topic.Name,
+                Ancestor = ancestor,
+            };
+            var res = await dbcontext.Topics.AddAsync(dbTopic);
+            await dbcontext.SaveChangesAsync();
+            return DbMapper.MapDbTopic(res.Entity);
+        }
+
+        public async Task<Topic> Update(TopicDetailed topic)
+        {
+            var dbTopic = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == topic.Id);
             if (dbTopic is null)
                 return null;
+            var ancestor = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == topic.Ancestor.Id);
+            if (ancestor != null)
+                dbTopic.Ancestor = ancestor;
             dbTopic.Name = topic.Name;
+            await dbcontext.SaveChangesAsync();
             return topic;
         }
     }

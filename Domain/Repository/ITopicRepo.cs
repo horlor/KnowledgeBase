@@ -8,11 +8,13 @@ namespace KnowledgeBase.Domain.Repository
 {
     public interface ITopicRepo
     {
-        Task<Topic> Store(Topic topic);
-        Task<Topic> Update(Topic topic);
-        Task Delete(Topic topic);
+        Task<Topic> Store(TopicDetailed topic);
+        Task<Topic> Store(Topic topic, int ancestorId);
+        Task<Topic> Update(TopicDetailed topic);
+        Task Delete(int id);
         Task<Topic> FindById(int id);
         Task<Topic> FindByName(string name);
         Task<ICollection<Topic>> List();
+        Task<TopicDetailed> FindDetailedByID(int id);
     }
 }
