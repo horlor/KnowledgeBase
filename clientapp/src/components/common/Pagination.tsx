@@ -49,9 +49,9 @@ const Pagination : React.FC<IProps> = (props) => {
                :
                ""
             }
-            {   arraybefore.map(item => <PageButton onClick={()=>ChangePage(item)}>{item}</PageButton> ) }
+            {   arraybefore.map(item => <PageButton key={item} onClick={()=>ChangePage(item)}>{item}</PageButton> ) }
             <PageButton disabled>{props.current}</PageButton>
-            {   arrayAfter.map(item => <PageButton onClick={()=>ChangePage(item)}>{item}</PageButton> )}
+            {   arrayAfter.map(item => <PageButton key={item} onClick={()=>ChangePage(item)}>{item}</PageButton> )}
             {
             show_end?
             <>

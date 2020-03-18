@@ -9,6 +9,7 @@ import NavigationView from './NavigationView';
 import WelcomePage from '../pages/WelcomePage';
 import UserPage from '../pages/UserPage';
 import Menu from './Menu';
+import UserDetailPage from '../pages/UserDetailPage';
 
 
 interface IProps{
@@ -51,10 +52,16 @@ export const Routes : React.FC<IProps> = (props) => {
                 exact
             />
             <Route
+                path="/users/:username"
+                component={UserDetailPage}
+                
+            />
+            <Route
                 path="/users"
                 component={UserPage}
                 exact
             />
+
             </NavigationView>
         </BrowserRouter>
     );

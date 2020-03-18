@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Hidden } from '@material-ui/core';
+import { Box, Hidden, Grid } from '@material-ui/core';
 import { useUserListHook } from '../../hooks/UserHooks';
 import LoadingView from '../common/LoadingView';
 import ErrorView from '../common/ErrorView';
@@ -14,33 +14,25 @@ interface IProps
 
 const UserPage : React.FC<IProps> = (props) =>{
     const {users, error, loading,
-        selectedError, selectedLoading, selectedUser, switchSelected} = useUserListHook();
+             switchSelected} = useUserListHook();
     if(loading)
         return <LoadingView></LoadingView>;
     if(error)
         return <ErrorView title={error.code} message={error.description}/>;
     return (
-        <Box display="flex" flexDirection="row" justifyContent="spacearound" width="100%">
-            <Box width="360px" flexShrink={0}>
+        <Grid container>
                 {
                     users.map( user => 
-                    <UserCard key={user.userName}
-                         username={user.userName} email={user.email}
-                        onClick={()=>switchSelected(user.userName)}
-                    />)
-                }
-            </Box>
-            <Hidden mdDown>
-                <Box flexGrow={1}>
-                {selectedLoading?<LoadingView/>:
-                    selectedUser?
-                    <UserDetailView user={selectedUser}/>
-                    :<></>
-                }
-                </Box>
-            </Hidden>
+                        <Grid item xs={12} md={6}  lg={4} xl={3} key={user.userName}>
 
-        </Box>
+                    <UserCard 
+                         user={user}
+                         to={`/users/${user.userName}`}
+                    />
+                    </Grid>
+                    )
+                }
+        </Grid>
     );
 }
 

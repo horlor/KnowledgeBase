@@ -11,9 +11,6 @@ export const useUserListHook = ()=>{
     const users = useSelector((state: RootState)=> state.user.users);
     const error = useSelector((state: RootState) => state.user.error);
     const loading = useSelector((state: RootState) => state.user.loading);
-    const selectedUser = useSelector((state: RootState)=> state.user.selectedUser);
-    const selectedError = useSelector((state: RootState) => state.user.selectedError);
-    const selectedLoading = useSelector((state: RootState) => state.user.selectedLoading);
 
     useEffect(()=>{
         dispatch(FetchUsersStarted());
@@ -27,11 +24,32 @@ export const useUserListHook = ()=>{
     }, [dispatch])
 
     const switchSelected = (username: string) =>{
-        dispatch(FetchSelectedUserStarted());
-        LoadUserDetailedFromApi(username)
-        .then(resp => dispatch(FetchSelectedUserSuccess(resp)))
-        .catch(error => dispatch(FetchSelectedUserFailure(CatchIntoErrorModel(error))));
+
     }
 
-    return { users, error, loading, selectedError, selectedUser, selectedLoading, switchSelected};
+    return { users, error, loading, switchSelected};
+}
+
+export const useSelectedUserHook = (username: string)=>{
+    const dispatch : AppDispatch = useDispatch();
+    const user = useSelector((state: RootState) =>state.user.selectedUser);
+    const loading = useSelector((state: RootState) => state.user.selectedLoading);
+    const error = useSelector((state: RootState) => state.user.selectedError);
+    console.log("WTF");
+    useEffect( () =>{
+        const fetch = async() =>{
+            dispatch(FetchSelectedUserStarted());
+            try{
+                var user = await LoadUserDetailedFromApi(username);
+                dispatch(FetchSelectedUserSuccess(user));
+            }
+            catch (exc){
+                dispatch(FetchSelectedUserFailure(CatchIntoErrorModel(exc)));
+            }
+        }
+        fetch();
+    },[dispatch, username])
+
+    return {user, loading, error};
+
 }
