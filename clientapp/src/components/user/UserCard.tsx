@@ -16,6 +16,9 @@ const useStyles = makeStyles( theme => ({
     },
     section:{
       margin: theme.spacing(1),
+    },
+    headerFont:{
+      fontWeight: "bold",
     }
 }));
 
@@ -45,8 +48,10 @@ const UserCard : React.FC<IProps> = (props) =>{
           </Box>
           <Divider />
           <Box className={classes.section}>
-            <Chip variant="outlined" label="C#" />
-            <Chip variant="outlined" label="Java" />
+            <Typography className={classes.headerFont}>Primary topics:</Typography>
+              {props.user.topics.map(topic =>
+                  <Chip key={topic.id} label={topic.name} />
+                )}
           </Box>
         </Card>
       </Link>

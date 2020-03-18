@@ -70,13 +70,18 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<UserDetailed> GetDetailedByName(string name)
         {
-            var dbUser = await userManager.FindByNameAsync(name);
+            var dbUser = await userManager.Users
+               .Include(u => u.UserTopics)
+                    .ThenInclude(ut => ut.Topic)
+                .FirstOrDefaultAsync(u => u.UserName == name);
             return DbMapper.MapDbUserDetailed(dbUser);
         }
 
         public async Task<ICollection<User>> GetAllUser()
         {
             return await userManager.Users
+                .Include(u => u.UserTopics)
+                    .ThenInclude(ut => ut.Topic)
                 .Select(u => DbMapper.MapDbUser(u))
                 .ToListAsync();
         }

@@ -49,9 +49,9 @@ const UserDetailPage : React.FC<IProps> = (props: IProps) =>{
             <Typography>{user.introduction}</Typography>
             <Divider/>
             <Typography className={classes.header}>Known topics:</Typography>
-            <Chip variant="outlined" label="C#"/>
-            <Chip variant="outlined" label="Asp.Net"/>
-            <Chip variant="outlined" label="React"/>
+              {user.topics.map(topic =>
+                  <Chip variant="outlined" key={topic.id} label={topic.name} />
+                )}
             </Paper>
         </Container>
     );

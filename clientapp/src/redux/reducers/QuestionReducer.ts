@@ -1,6 +1,5 @@
 import { createReducer, createAction } from "@reduxjs/toolkit";
-import Question, { PagedQuestions } from "../../models/Question";
-import QuestionWithAnswers from "../../models/QuestionWithAnswers";
+import Question, { PagedQuestions, QuestionWithAnswers } from "../../models/Question";
 import Answer from "../../models/Answer";
 import ErrorModel from "../../models/ErrorModel";
 

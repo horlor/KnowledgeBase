@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, makeStyles, createStyles, Divider } from '@material-ui/core';
+import { Paper, Typography, makeStyles, createStyles, Divider, Chip, Box } from '@material-ui/core';
 import Question from '../../models/Question';
 
 interface IProps{
@@ -8,9 +8,13 @@ interface IProps{
 
 const useStyles = makeStyles(theme =>({
     surface:{
-        margin:"5px",
-        padding:"20px",
+        margin:theme.spacing(1),
+        padding:theme.spacing(2),
         border: `3px solid ${theme.palette.primary.main}`
+    },
+    chip:{
+        marginLeft: theme.spacing(1),
+        marginBottom: "2px",
     }
 }));
 
@@ -19,7 +23,8 @@ const QuestionView : React.FC<IProps> = props=>{
     return(
         <Paper className={classes.surface} variant="outlined">
             <Typography variant="h4">{props.question.title}</Typography>
-            <Typography variant="subtitle1" >{`       by ${props.question.author}`}</Typography>
+            <Typography display="inline" variant="subtitle1" >{`by ${props.question.author}`}</Typography>
+            <Chip className={classes.chip} variant="outlined" label={props.question.topic.name}/>
             <Divider/>
             <Typography variant="body1" align="justify">{props.question.content}</Typography>
         </Paper>

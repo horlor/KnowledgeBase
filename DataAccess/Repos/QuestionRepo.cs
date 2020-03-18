@@ -45,7 +45,8 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task<Question> FindById(int id)
         {
             var q = await dbcontext.Questions
-                .Include(q =>q.User)                
+                .Include(q =>q.User)
+                .Include(q => q.Topic)
                 .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestion(q);
         }
@@ -56,6 +57,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 .Include(q => q.Answers)
                     .ThenInclude(a => a.User)
                 .Include(q => q.User)
+                .Include(q => q.Topic)
                 .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestionWithAnswers(q);
         }
@@ -64,6 +66,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             return await dbcontext.Questions
                 .Include(q => q.User)
+                .Include(q => q.Topic)
                 .Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
         }
 
@@ -116,6 +119,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             return await dbcontext.Questions
                 .Include(q => q.User)
+                .Include(q => q.Topic)
                 .Skip((pagenum -1) * pagesize)
                 .Take(pagesize)
                 .Select(q => DbMapper.MapDbQuestion(q))

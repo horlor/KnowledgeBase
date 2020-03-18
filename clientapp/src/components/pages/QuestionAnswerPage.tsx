@@ -4,12 +4,11 @@ import QuestionView from '../question/QuestionView';
 import AnswerView from '../answer/AnswerView';
 import AnswerInput from '../answer/AnswerInput';
 import { RouteComponentProps } from 'react-router';
-import QuestionWithAnswers from '../../models/QuestionWithAnswers';
-import Axios from 'axios';
 import { useQuestionAnswerHook } from '../../hooks/QuestionHooks';
 import LoadingView from '../common/LoadingView';
 import ErrorView from '../common/ErrorView';
 import ErrorModel from '../../models/ErrorModel'
+import {QuestionWithAnswers} from '../../models/Question'
 
 type IProps = RouteComponentProps<{
     id: string;
