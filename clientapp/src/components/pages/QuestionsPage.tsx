@@ -14,7 +14,6 @@ type IProps = RouteComponentProps<{
 const QuestionsPage : React.FC<IProps> = (props) => {
     const queryParams = new URLSearchParams(props.location.search);
     const page = parseInt(queryParams.get("page") || "1");
-    console.log(page);
     const {questions, error, loading, currentPage, pageCount} = useQuestionsHook(page);
     if(loading)
         return <LoadingView/>;

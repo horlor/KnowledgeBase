@@ -30,7 +30,7 @@ const WelcomePage : React.FC<IProps> = (props) =>{
     return (
         <Container maxWidth="xl">
             <Paper className={classes.paper}>
-                <Box flex flexDirection="row" className={classes.box}>
+                <Box display="flex" flexDirection="row" className={classes.box}>
                     <img src={logo} width="10%" height="10%" alt="logo" className={classes.logo}/>
                     <Typography variant="h3" className={classes.title}>Welcome to Viknowledge</Typography>
                 </Box>

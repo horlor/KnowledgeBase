@@ -17,3 +17,7 @@ export const CreateAnswerToQuestion = async (id : number, answer: Answer) : Prom
     var response = await axios.post<Answer>(`/api/questions/${id}/answers`, answer);
     return response.data;
 }
+
+export const CreateQuestionToApi = async (question: Question) => {
+    await axios.post("/api/questions",question);
+}

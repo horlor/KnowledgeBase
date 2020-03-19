@@ -1,11 +1,14 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi } from "../api/QuestionApi";
-import { useEffect } from "react";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi } from "../api/QuestionApi";
+import { useEffect, useState } from "react";
 import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { AxiosError } from "axios";
+import { Topic } from "../models/Topic";
+import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
+import Question from "../models/Question";
 
 ///Selector hooks to use int the components without depending them directly on redux
 export const useSelectQuestions = () =>
@@ -50,4 +53,35 @@ export const useQuestionAnswerHook = (questionId: number) => {
     },[dispatch,questionId]);
     return {question,loading, error};
 
+}
+
+export const useNewQuestionHook = () => {
+    const dispatch = useDispatch();
+    const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+    const username = useSelector((state : RootState) => state.login.username);
+    const topics = useSelector((state: RootState) => state.topic.topics)
+    const [postError, setPostError] = useState<ErrorModel |undefined>(undefined);
+    const [postLoading, setPostLoading] = useState(false);
+
+    useEffect(() =>{
+        dispatch(LoadTopicsThunk());
+    },[dispatch])
+
+    const post = async (title: string, content: string, topic: Topic) => {
+        const q : Question = {
+            title: title,
+            content: content,
+            topic: topic,
+            author: username?username:'',
+            id:0,
+        }
+        try{
+            await CreateQuestionToApi(q);
+        }
+        catch(exc){
+            setPostError(CatchIntoErrorModel(exc));
+        }
+    }
+
+    return {topics,  loggedIn, post, postLoading, postError};
 }

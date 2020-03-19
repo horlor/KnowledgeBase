@@ -81,6 +81,8 @@ namespace KnowledgeBase.DataAccess.Repos
             if (user == null)
                 return null;
             dbQ.User = user;
+            var topic = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == question.Topic.Id);
+            dbQ.Topic = topic;
             await dbcontext.Questions.AddAsync(dbQ);
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbQuestion(dbQ);

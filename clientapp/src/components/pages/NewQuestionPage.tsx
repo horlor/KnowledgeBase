@@ -1,7 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
-import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField, responsiveFontSizes } from '@material-ui/core';
+import {  Typography, FormControl, InputLabel, Input, FormHelperText, Container, makeStyles, createStyles, Paper, Button, Box, FormLabel, TextField, CircularProgress, Select } from '@material-ui/core';
 import Axios from 'axios';
 import Question from '../../models/Question'
+import { useForm } from 'react-hook-form';
+import { useNewQuestionHook } from '../../hooks/QuestionHooks';
+import { Topic } from '../../models/Topic';
+import NotLoggedInView from '../common/NotLoggedInView';
 
 const useStyles = makeStyles(theme => createStyles({
     container:{
@@ -9,15 +13,19 @@ const useStyles = makeStyles(theme => createStyles({
     },
     formcontrol:{
         width:"100%",
-        margin: "5px"
+        margin: theme.spacing(1)
     },
     paper:{
-        marginTop:"10px",
+        marginTop:theme.spacing(2),
         width:"100%",
-        padding: "10px",
+        padding: theme.spacing(2),
     },
     input:{
         width:"100%",
+    },
+    topicSelect:{
+        width:"240px",
+        marginLeft: theme.spacing(2)
     }
 }));
 
@@ -26,44 +34,77 @@ interface IProps{
 
 }
 
+interface IFormData{
+    content: string,
+    title: string,
+    topic: number
+}
+
 
 const NewQuestionPage : React.FC<IProps> = (props) => {
     const classes = useStyles();
-    const [title, setTitle] = useState<string>();
-    const [content, setContent] = useState<string>();
+    const {register, handleSubmit} = useForm<IFormData>({mode:"onBlur"});
+    const {topics, loggedIn, post, postLoading, postError} = useNewQuestionHook();
 
-    const post = () => {
-        console.log({title: title, content: content})
-        Axios.post<Question>("/api/questions",{title: title, content: content})
-        .then(resp => console.log(resp))
-        .catch(error => console.log(error));
+    const onSubmit = (data: IFormData) => {
+        //Cannot get Array.find to correctly use types
+        // eslint-disable-next-line eqeqeq
+        let topic = topics?.find(t => t.id == data.topic);
+        if(topic !== undefined)
+            post(data.title, data.content, topic);
     }
-
+    if(!loggedIn)
+        return <NotLoggedInView/>
     return(
         <Container maxWidth="lg" className={classes.container}>
             <Paper elevation={1} className={classes.paper}>
-                <Typography variant="h5">Ask your question here</Typography>
-                <FormControl className={classes.formcontrol}>
-                    <InputLabel htmlFor="title_input">Title:</InputLabel>
-                    <Input 
-                        id="title_input" aria-describedby="title-helper" 
-                        className={classes.input}
-                        onChange={e => setTitle(e.target.value)} />
-                    <FormHelperText id="title-helper">A short introduction to your question</FormHelperText>
-                </FormControl>
-                <FormControl className={classes.formcontrol}>
-                    <TextField
-                        multiline
-                        label={"Content"}
-                        rows={10} variant="outlined"
-                        id="content_input" aria-describedby="content-helper"
-                        className={classes.input}
-                        onChange={e => setContent(e.target.value)}/>
-                    <FormHelperText id="content-helper">Write all related information here</FormHelperText>
-                </FormControl>
-                <Box display="flex">
-                    <Button size="medium" onClick={post}>Post</Button>
-                </Box>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Typography variant="h5">Ask your question here</Typography>
+                    <FormControl className={classes.formcontrol}>
+                        <InputLabel htmlFor="title_input">Title:</InputLabel>
+                        <Input 
+                            id="title_input" aria-describedby="title-helper" 
+                            name="title"
+                            className={classes.input}
+                            inputRef={register} />
+                        <FormHelperText id="title-helper">A short introduction to your question</FormHelperText>
+                    </FormControl>
+                    <FormControl className={classes.formcontrol}>
+                        <TextField
+                            multiline
+                            label={"Content"}
+                            rows={10} variant="outlined"
+                            id="content_input" aria-describedby="content-helper"
+                            className={classes.input}
+                            name="content"
+                            inputRef={register}/>
+                        <FormHelperText id="content-helper">Write all related information here</FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <Box display="flex" flexDirection="row" alignItems="center">
+                        <Typography >Topic: </Typography>
+                        <Select
+                            id="topic-native-select"
+                            inputRef={register}
+                            native
+                            label="Topic"
+                            className={classes.topicSelect}
+                            name="topic"
+                        >
+                            {topics?.map(topic => <option key={topic.id} value={topic.id}>{topic.name}</option>)}
+                        </Select>
+                    </Box>
+                    </FormControl>
+                    
+                    <Box display="flex">
+                        {postLoading?<CircularProgress/>:(
+                            (postError=== undefined)?
+                        <Button type="submit" size="medium">Post</Button>
+                        :
+                        <Typography color="error">{postError.code}</Typography>)
+                        }
+                    </Box>
+                </form>
             </Paper>
         </Container>
     );
