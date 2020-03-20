@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { Login, Logout, Register } from "../api/UserApi";
+import { Login, Logout, Register, LoginFromStorage } from "../api/UserApi";
 import { LoginAction, LogoutAction } from "../redux/reducers/LoginReducer";
 import ErrorModel from "../models/ErrorModel";
 import { RegisterRequest, RegisterResponse } from "../models/LoginModels";
@@ -15,12 +15,16 @@ export const useLoginHook =  () =>{
     const dispatch : AppDispatch = useDispatch();
     const [error, setError] = useState<boolean>(false);
 
-    const loginFun = async (username: string, password: string) =>{
+    const loginFun = async (username: string, password: string, stayLoggedIn = false) =>{
         setError(false);
         if(!loggedIn){
-            Login(username, password)
-            .then(res => dispatch(LoginAction(res.username)))
-            .catch(error => {setError(true);}) 
+            try{
+                let resp = await Login(username, password, stayLoggedIn);
+                dispatch(LoginAction(resp.username));
+            }
+            catch(exc){
+                setError(true);
+            }
         }       
     }
     const logoutFun = () => {
@@ -60,3 +64,12 @@ export const useRegisterHook = ()=>{
     return {loading, success, registerFun, errorList, retry};
 }
 
+
+export const useCheckSavedLoginHook = () =>{
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        let user = LoginFromStorage();
+        if(user)
+            dispatch(LoginAction(user));
+    },[dispatch])
+}

@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme => ({
 interface IFormData{
     username: string,
     password: string,
+    remember : boolean,
 }
 
 export const LoginPage : React.FC<IProps> = (props) =>{
@@ -55,7 +56,7 @@ export const LoginPage : React.FC<IProps> = (props) =>{
     const {register, handleSubmit} = useForm<IFormData>();
     const {loggedIn, loginFun, error} =  useLoginHook();
     const onSubmit = async (data: IFormData) =>{
-        await loginFun(data.username, data.password);
+        await loginFun(data.username, data.password, data.remember);
     }
     if(loggedIn) //TODO something more normal handling if the user is loggedin
         return <Redirect to="/"/>
@@ -98,7 +99,7 @@ export const LoginPage : React.FC<IProps> = (props) =>{
                 <Typography className={classes.error}>The username or the password is not right</Typography>:""
             }
             <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox inputRef={register} name="remember" color="primary"/>}
                 label="Remember me"
             />
             <Button

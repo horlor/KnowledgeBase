@@ -10,6 +10,7 @@ import WelcomePage from '../pages/WelcomePage';
 import UserPage from '../pages/UserPage';
 import Menu from './Menu';
 import UserDetailPage from '../pages/UserDetailPage';
+import { useCheckSavedLoginHook } from '../../hooks/LoginHooks';
 
 
 interface IProps{
@@ -17,7 +18,7 @@ interface IProps{
 }
 
 export const Routes : React.FC<IProps> = (props) => {
-    
+    useCheckSavedLoginHook();
     return (
         <BrowserRouter>
             <NavigationView drawer={<Menu/>}>
