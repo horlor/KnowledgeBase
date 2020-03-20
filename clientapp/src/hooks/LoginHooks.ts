@@ -68,8 +68,8 @@ export const useRegisterHook = ()=>{
 export const useCheckSavedLoginHook = () =>{
     const dispatch = useDispatch();
     useEffect(()=>{
-        let user = LoginFromStorage();
-        if(user)
-            dispatch(LoginAction(user));
+            let user = LoginFromStorage();
+            if(user)
+                dispatch(LoginAction(user));
     },[dispatch])
 }

@@ -11,6 +11,7 @@ import UserPage from '../pages/UserPage';
 import Menu from './Menu';
 import UserDetailPage from '../pages/UserDetailPage';
 import { useCheckSavedLoginHook } from '../../hooks/LoginHooks';
+import ProfilePage from '../pages/ProfilePage';
 
 
 interface IProps{
@@ -60,6 +61,11 @@ export const Routes : React.FC<IProps> = (props) => {
             <Route
                 path="/users"
                 component={UserPage}
+                exact
+            />
+            <Route
+                path="/profile"
+                component={ProfilePage}
                 exact
             />
 

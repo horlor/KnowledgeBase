@@ -1,6 +1,10 @@
 import React from 'react';
-import { Paper, Box, Avatar, Typography, Divider, Chip, makeStyles } from '@material-ui/core';
+import { Paper, Box, Avatar, Typography, Divider, Chip, makeStyles, Container, Button, IconButton } from '@material-ui/core';
 import { UserDetailed } from '../../models/User';
+import EditIcon from '@material-ui/icons/Edit';
+
+
+
 
 const useStyles = makeStyles( theme => ({
     surface:{
@@ -18,34 +22,50 @@ const useStyles = makeStyles( theme => ({
 
 interface IProps{
     user: UserDetailed,
-
+    editable?: boolean,
+    onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
     
 }
 
 const UserDetailView : React.FC<IProps> = (props) => {
+
     const classes = useStyles();
     return (
+        <Container maxWidth="xl">
         <Paper className={classes.surface}>
-            <Box display="flex" flexDirection="row" alignItems="center">
-                <Avatar className={classes.avatar}>
-                    {props.user.userName.toUpperCase().slice(0,1)}
-                </Avatar>
-                <Typography variant="h4">{props.user.userName}</Typography>
-            </Box>
-            <Divider/>
-            <Typography>{`Name: ${props.user.firstName} ${props.user.lastName}`}</Typography>
-            <Typography>{`Email: ${props.user.email}`}</Typography>
-            <Divider/>
-            <Typography className={classes.header}>Introduction</Typography>
-            <Typography>{props.user.introduction}</Typography>
-            <Divider/>
-            <Typography className={classes.header}>Known topics:</Typography>
-            <Chip variant="outlined" label="C#"/>
-            <Chip variant="outlined" label="Asp.Net"/>
-            <Chip variant="outlined" label="React"/>
+        <Box display="flex" flexDirection="row" alignItems="center">
+            <Avatar className={classes.avatar}>
+                {props.user.userName.toUpperCase().slice(0,1)}
+            </Avatar>
+            <Typography variant="h4">{props.user.userName}</Typography>
+            <Box flexGrow={1}/>
+            {(props.editable)?
+            <IconButton onClick={props.onEditClick}>
+                <EditIcon/>
+            </IconButton>
+            :
+            ""}
+        </Box>
+        <Divider/>
+        <Typography>{`Name: ${props.user.firstName} ${props.user.lastName}`}</Typography>
+        <Typography>{`Email: ${props.user.email}`}</Typography>
+        <Divider/>
+        <Typography className={classes.header}>Introduction</Typography>
+        <Typography>{props.user.introduction}</Typography>
+        <Divider/>
+        <Typography className={classes.header}>Known topics:</Typography>
+          {props.user.topics.map(topic =>
+              <Chip variant="outlined" key={topic.id} label={topic.name} />
+            )}
         </Paper>
+    </Container>
     );
 
 }
+
+UserDetailView.defaultProps={
+    editable:false,
+    onEditClick: ()=>{},
+};
 
 export default UserDetailView;

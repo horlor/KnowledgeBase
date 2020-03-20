@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
 using KnowledgeBase.Entities;
 using KnowledgeBase.Entities.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +43,7 @@ namespace KnowledgeBase.WebApi.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ICollection<User>> GetAllUser()
         {
@@ -56,20 +58,33 @@ namespace KnowledgeBase.WebApi.Controllers
                 return NotFound();
             return Ok(user);
         }
-
-        [HttpPut("{username}")]
-        public async Task<ActionResult<UserDetailed>> UpdateUser([FromRoute] string username, [FromBody] UserDetailed userD)
+        
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<ActionResult> UpdateUser(UserUpdateRequest request)
         {
-            var user = await userService.GetUser(username);
-            if (user == null)
-                return NotFound();
-            //Somebody trying to edit in someone other's name
-            if (username != UserName)
-                return Conflict();
-            var ret = await userService.UpdateUser(userD);
-            return Ok(ret);
-
+            var user = new UserDetailed
+            {
+                UserName = UserName,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                Topics = request.Topics,
+                Introduction = request.Introduction,
+            };
+            var ret = await userService.UpdateUser(user);
+            if (ret == null)
+                return BadRequest();
+            return Ok();
         }
 
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<UserDetailed> GetCurrentUser()
+        {
+            Console.WriteLine(UserName);
+            var user = await userService.GetUserDetailed(UserName);
+            return user;
+        }
     }
 }

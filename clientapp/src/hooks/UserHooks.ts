@@ -1,9 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/Store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FetchUsersStarted, FetchUsersSuccess, FetchUsersFailure, FetchSelectedUserStarted, FetchSelectedUserFailure, FetchSelectedUserSuccess } from "../redux/reducers/UserReducer";
 import { LoadUsersFromApi, LoadUserDetailedFromApi } from "../api/UserApi";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
+import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
+import { UserUpdateRequest, UserDetailed } from "../models/User";
+import { LoadProfileThunk } from "../redux/reducers/UserThunks";
+import { useForm } from "react-hook-form";
 
 
 export const useUserListHook = ()=>{
@@ -52,4 +56,30 @@ export const useSelectedUserHook = (username: string)=>{
 
     return {user, loading, error};
 
+}
+
+
+export const useProfileHook = () =>{
+    interface IFormData{
+        firstname: string,
+        lastname: string,
+        email: string,
+        introduction: string,
+    }
+
+    const username = useSelector((state: RootState) => state.login.username);
+    const topics = useSelector((state: RootState) => state.topic.topics);
+    const profile = useSelector((state: RootState) => state.user.profile);
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(LoadTopicsThunk());
+        dispatch(LoadProfileThunk());
+        
+    },[dispatch])
+
+    const save = (request: UserUpdateRequest) =>{
+
+    }
+    return {topics, save, profile};
 }

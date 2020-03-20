@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
 using KnowledgeBase.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,7 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok(topic);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDetailed topic)
         {
@@ -42,6 +44,7 @@ namespace KnowledgeBase.WebApi.Controllers
             return  Created("/api/topics/"+created.Id, created);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTopic([FromRoute] int id)
         {
@@ -49,6 +52,7 @@ namespace KnowledgeBase.WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<Topic>> UpdateTopic(TopicDetailed topicDetailed)
         {

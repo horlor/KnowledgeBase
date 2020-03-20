@@ -1,8 +1,10 @@
 import { createReducer, createAction } from "@reduxjs/toolkit";
+import { UserDetailed } from "../../models/User";
+import ErrorModel from "../../models/ErrorModel";
 
 export interface ILoginStore{
     loggedIn : boolean,
-    username?: string
+    username?: string,
 }
 
 export const LoginAction = createAction<string>("user-login");

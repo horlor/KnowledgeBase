@@ -11,3 +11,11 @@ export interface User{
 export interface UserDetailed extends User{
     introduction: string,
 }
+
+export interface UserUpdateRequest{
+    email: string,
+    firstName: string,
+    lastName: string
+    topics: Topic[],
+    introduction: string,
+}

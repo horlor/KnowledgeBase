@@ -8,7 +8,6 @@ interface IProps{
 const useStyles = makeStyles({
     container :{
         display: "flex",
-        alignContent :"space-around",
         justifyContent: "center",
         width: "100%"
         

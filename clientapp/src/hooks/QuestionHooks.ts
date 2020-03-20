@@ -30,7 +30,6 @@ export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
     var pageCount = useSelector((state: RootState) => state.question.pages);
     var dispatch = useDispatch();
     useEffect(()=>{
-        console.log(page);
         dispatch(FetchQuestionsStarted());
         LoadQuestionsFromApi(page, pageSize)
         .then(resp => dispatch(FetchQuestionsSuccess(resp)))

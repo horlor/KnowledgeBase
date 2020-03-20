@@ -23,6 +23,10 @@ const Menu : React.FC<IProps> = (props) => {
                 <ListItem button component={Link} to="/newquestion">
                     <ListItemText primary={"Ask a new question"}/>
                 </ListItem>
+                <ListItem button component={Link} to="/profile">
+                    <ListItemText primary={"Profile"}/>
+                </ListItem>
+                
             </>
             :
             <>

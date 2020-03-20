@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DomainObjects\" />
+    <Compile Remove="DomainObjects\**" />
+    <EmbeddedResource Remove="DomainObjects\**" />
+    <None Remove="DomainObjects\**" />
   </ItemGroup>
 
 </Project>

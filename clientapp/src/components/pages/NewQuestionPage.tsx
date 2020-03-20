@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => createStyles({
     topicSelect:{
         width:"240px",
         marginLeft: theme.spacing(2)
-    }
+    },
 }));
 
 

@@ -12,13 +12,13 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     public class UserRepo : IUserRepo
     {
-        private readonly KnowledgeContext context;
+        private readonly KnowledgeContext dbcontext;
         private readonly UserManager<DbUser> userManager;
         private readonly SignInManager<DbUser> signInManager;
 
         public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager)
         {
-            this.context = context;
+            this.dbcontext = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
 
@@ -32,7 +32,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 Email = user.Email
             };
             var res = await userManager.CreateAsync(dbUser, password);
-            await context.SaveChangesAsync();
+            await dbcontext.SaveChangesAsync();
             return res;
         }
 
@@ -40,7 +40,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             var dbUser = await userManager.FindByNameAsync(user.UserName);
             var res = await userManager.DeleteAsync(dbUser);
-            await context.SaveChangesAsync();
+            await dbcontext.SaveChangesAsync();
             return res;
         }
 
@@ -52,7 +52,7 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<ICollection<User>> List()
         {
-            return await context.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
+            return await dbcontext.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
         }
 
         public async Task<SignInResult> SignIn(string username, string password)
@@ -88,14 +88,31 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<UserDetailed> UpdateUser(UserDetailed user)
         {
-            var dbUser = await userManager.FindByNameAsync(user.UserName);
+            var dbUser = await dbcontext.Users
+                .Include(u => u.UserTopics)
+                .SingleOrDefaultAsync(u => u.UserName == user.UserName);
             if (dbUser == null)
                 return null;
             dbUser.Email = user.Email;
             dbUser.FirstName = user.FirstName;
             dbUser.LastName = user.LastName;
             dbUser.Introduction = user.Introduction;
-            await context.SaveChangesAsync();
+
+            dbUser.UserTopics.Clear();
+
+            foreach(var item in user.Topics)
+            {
+                var dbTopic = await dbcontext.Topics.SingleOrDefaultAsync(t => t.Id == item.Id);
+                if (dbTopic != null)
+                    dbUser.UserTopics.Add(new DbUserTopic()
+                    {
+                        Topic = dbTopic,
+                        TopicId = dbTopic.Id,
+                        User = dbUser,
+                        UserId = dbUser.Id,
+                    });
+            }
+            await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbUserDetailed(dbUser);
         }
 
