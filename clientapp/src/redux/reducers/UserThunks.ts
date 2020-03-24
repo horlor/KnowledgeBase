@@ -1,9 +1,8 @@
 import { AppDispatch } from "../Store"
-import { ThunkAction } from "@reduxjs/toolkit";
-import { LoadTopicsFromApi } from "../../api/TopicApi";
 import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
-import { FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure } from "./UserReducer";
-import { LoadProfileFromApi } from "../../api/UserApi";
+import { FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure, ChangeProfileEdit } from "./UserReducer";
+import { LoadProfileFromApi, UpdateProfileToApi } from "../../api/UserApi";
+import { UserUpdateRequest } from "../../models/User";
 
 export const LoadProfileThunk = () => {
     return async (dispatch: AppDispatch) =>{
@@ -17,3 +16,11 @@ export const LoadProfileThunk = () => {
         }
     }
 } 
+
+export const UpdateProfileThunk = (request: UserUpdateRequest) =>{
+    return async (dispatch : AppDispatch) =>{
+        await UpdateProfileToApi(request);
+        dispatch(ChangeProfileEdit(false));
+        dispatch(LoadProfileThunk());
+    }
+}

@@ -10,9 +10,8 @@ interface IProps{
 }
 
 const ProfilePage : React.FC<IProps> = (props) =>{
-    const { profile, topics } = useProfileHook();
+    const { profile, topics, save, edit, setEdit } = useProfileHook();
     const {error, loading, user} = profile;
-    const [edit, setEdit] = useState(false);
     if(error){
         return <ErrorView title={error.code} message={error.description}/>;
     }
@@ -21,7 +20,7 @@ const ProfilePage : React.FC<IProps> = (props) =>{
     else if(!edit)
             return <UserDetailView user={user} editable={true} onEditClick={()=> setEdit(true)}/>
         else
-            return <EditProfileView user={user} availableTopics={topics?topics:[]}/>
+            return <EditProfileView user={user} availableTopics={topics?topics:[]} onSubmit={save}/>
 }
 
 export default ProfilePage;
