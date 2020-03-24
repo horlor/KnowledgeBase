@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/Store";
 import { useEffect, useState } from "react";
-import { FetchUsersStarted, FetchUsersSuccess, FetchUsersFailure, FetchSelectedUserStarted, FetchSelectedUserFailure, FetchSelectedUserSuccess, ChangeProfileEdit } from "../redux/reducers/UserReducer";
+import { FetchUsersStarted, FetchUsersSuccess, FetchUsersFailure, FetchSelectedUserStarted, FetchSelectedUserFailure, FetchSelectedUserSuccess } from "../redux/reducers/UserReducer";
 import { LoadUsersFromApi, LoadUserDetailedFromApi, UpdateProfileToApi } from "../api/UserApi";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { UserUpdateRequest, UserDetailed } from "../models/User";
-import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/UserThunks";
 import { useForm } from "react-hook-form";
+import ErrorModel from "../models/ErrorModel";
+import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
+import { ChangeProfileEdit } from "../redux/reducers/ProfileReducer";
 
 
 export const useUserListHook = ()=>{
@@ -58,25 +60,3 @@ export const useSelectedUserHook = (username: string)=>{
 
 }
 
-
-export const useProfileHook = () =>{
-    const topics = useSelector((state: RootState) => state.topic.topics);
-    const profile = useSelector((state: RootState) => state.user.profile);
-    const edit = useSelector((state: RootState) => state.user.profile.edit);
-    const dispatch = useDispatch();
-
-    useEffect(()=>{
-        dispatch(LoadTopicsThunk());
-        dispatch(LoadProfileThunk());
-        
-    },[dispatch])
-
-    const save = (request: UserUpdateRequest) =>{
-        dispatch(UpdateProfileThunk(request));
-    }
-
-    const setEdit =(b: boolean) =>{
-        dispatch(ChangeProfileEdit(b));
-    }
-    return {topics, save, profile, edit, setEdit};
-}

@@ -1,8 +1,9 @@
-import { AppDispatch } from "../Store"
-import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
-import { FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure, ChangeProfileEdit } from "./UserReducer";
-import { LoadProfileFromApi, UpdateProfileToApi } from "../../api/UserApi";
 import { UserUpdateRequest } from "../../models/User";
+import { AppDispatch } from "../Store";
+import { UpdateProfileToApi, LoadProfileFromApi } from "../../api/UserApi";
+import { ChangeProfileEdit, FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure } from "./ProfileReducer";
+import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
+
 
 export const LoadProfileThunk = () => {
     return async (dispatch: AppDispatch) =>{

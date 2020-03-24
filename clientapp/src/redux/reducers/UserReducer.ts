@@ -9,12 +9,6 @@ export interface IUserState{
     selectedUser: UserDetailed | undefined,
     selectedLoading: boolean,
     selectedError: ErrorModel | undefined,
-    profile: {
-        user: UserDetailed | undefined,
-        loading: boolean,
-        error: ErrorModel |undefined,
-        edit: boolean,
-    }
 }
 
 const initialState : IUserState =  {
@@ -24,12 +18,6 @@ const initialState : IUserState =  {
     selectedUser: undefined,
     selectedLoading : false,
     selectedError : undefined,
-    profile : {
-        user: undefined,
-        loading: false,
-        error: undefined,
-        edit: false,
-    }
 }
 
 export const FetchUsersStarted = createAction("fetch-users-started");
@@ -38,10 +26,8 @@ export const FetchUsersFailure = createAction<ErrorModel>("fetch-users-fail");
 export const FetchSelectedUserStarted = createAction("fetch-selectedUser-started");
 export const FetchSelectedUserSuccess = createAction<UserDetailed>("fetch-selectedUser-success");
 export const FetchSelectedUserFailure = createAction<ErrorModel>("fetch-selectedUser-failure");
-export const FetchProfileStarted = createAction("fetch-profile-started");
-export const FetchProfileSuccess = createAction<UserDetailed>("fetch-profile-success");
-export const FetchProfileFailure = createAction<ErrorModel>("fetch-profile-failure");
-export const ChangeProfileEdit = createAction<boolean>("change-profile-edit");
+
+
 
 export const UserReducer = createReducer(initialState, builder => builder
     .addCase(FetchUsersStarted, (state, action)=>{
@@ -67,22 +53,6 @@ export const UserReducer = createReducer(initialState, builder => builder
     .addCase(FetchSelectedUserFailure, (state, action) =>{
         state.selectedLoading = false;
         state.selectedError = action.payload;
-    })
-    .addCase(FetchProfileStarted, (state, action) =>{
-        state.profile.error = undefined;
-        state.profile.user = undefined;
-        state.profile.loading = true;
-    })
-    .addCase(FetchProfileSuccess, (state, action)=>{
-        state.profile.user = action.payload;
-        state.profile.loading  = false;
-    })
-    .addCase(FetchProfileFailure, (state, action)=>{
-        state.profile.loading  = false;
-        state.profile.error = action.payload;
-    })
-    .addCase(ChangeProfileEdit, (state, action) =>{
-        state.profile.edit = action.payload;
     })
     
 );

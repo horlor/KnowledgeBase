@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button } from '@material-ui/core';
+import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog } from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { useForm } from 'react-hook-form';
-import { useProfileHook } from '../../hooks/UserHooks';
 import { Topic } from '../../models/Topic';
 import { UserDetailed, UserUpdateRequest } from '../../models/User';
 
@@ -141,7 +139,6 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                 </Box> 
             </form>
             </Paper>
-
         </Container>
     );
     }

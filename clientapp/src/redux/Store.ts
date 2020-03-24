@@ -3,12 +3,14 @@ import QuestionReducer from "./reducers/QuestionReducer";
 import { LoginReducer } from "./reducers/LoginReducer";
 import { UserReducer } from "./reducers/UserReducer";
 import { TopicReducer } from "./reducers/TopicReducer";
+import { ProfileReducer } from "./reducers/ProfileReducer";
 
 const rootReducer = combineReducers({
     question: QuestionReducer,
     login: LoginReducer,
     user: UserReducer,
     topic: TopicReducer,
+    profile: ProfileReducer
 });
 
 
