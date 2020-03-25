@@ -1,16 +1,16 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RootState } from "../redux/Store";
 import { useEffect } from "react";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
 import { UserUpdateRequest } from "../models/User";
-import { ChangeProfileEdit } from "../redux/reducers/ProfileReducer";
+import { ChangeProfileEdit, PutProfileErrorClose } from "../redux/reducers/ProfileReducer";
 
 
 export const useProfileHook = () =>{
     const topics = useSelector((state: RootState) => state.topic.topics);
     const profile = useSelector((state: RootState) => state.profile);
-    const edit = useSelector((state: RootState) => state.profile.edit);
+    const edit = profile.edit;
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -26,5 +26,10 @@ export const useProfileHook = () =>{
     const setEdit =(b: boolean) =>{
         dispatch(ChangeProfileEdit(b));
     }
-    return {topics, save, profile, edit, setEdit};
+
+    const closeError = () =>{
+        dispatch(PutProfileErrorClose());
+    }
+
+    return {topics, save, profile, edit, setEdit, closeError};
 }

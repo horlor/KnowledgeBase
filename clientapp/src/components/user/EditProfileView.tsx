@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog } from '@material-ui/core';
-import {Autocomplete} from '@material-ui/lab'
+import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog, CircularProgress, Snackbar, Backdrop, DialogTitle, DialogActions, DialogContentText, DialogContent } from '@material-ui/core';
+import {Autocomplete, Alert} from '@material-ui/lab'
 import { useForm } from 'react-hook-form';
 import { Topic } from '../../models/Topic';
 import { UserDetailed, UserUpdateRequest } from '../../models/User';
+import ErrorModel from '../../models/ErrorModel';
 
 const useStyles = makeStyles(theme =>({
     paper:{
@@ -34,7 +35,11 @@ const useStyles = makeStyles(theme =>({
 interface IProps{
     availableTopics: Topic[],
     user: UserDetailed,
-    onSubmit: (request: UserUpdateRequest) =>void
+    onSubmit: (request: UserUpdateRequest) =>void,
+    onDrop?: () => void
+    saveLoading: boolean,
+    saveError?: ErrorModel,
+    onErrorClose?: ()=>void,
 }
 
 
@@ -48,7 +53,7 @@ interface IFormData{
 const EditProfileView : React.FC<IProps> = (props) =>{
     const classes = useStyles();
     const user = props.user;
-    const {register, handleSubmit, setValue} = useForm<IFormData>();
+    const {register, handleSubmit, errors} = useForm<IFormData>({mode:"onBlur"});
     //Getting topics from user - it must be the same reference to AutoComplete work correct
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [topicsLoaded, setTopicsLoaded] = useState(false);
@@ -103,7 +108,10 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     <TextField className={classes.textfield}
                             label="Email"
                             name="email"
-                            inputRef={register}
+                            error={!!errors.email}
+                            helperText={errors.email?"Please enter a valid email address":""}
+                            inputRef={register({pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm , 
+                        })}
                             defaultValue={user.email}
                     />
                 </Box>
@@ -133,12 +141,22 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     />
                 </Box>
                 <Box display="flex" flexDirection="row" className={classes.saveRow}>
-                    <Button type="submit" color="primary" variant="outlined">Save</Button>
+                    {props.saveLoading?<CircularProgress/>:
+                    <Button type="submit" color="primary" variant="outlined">Save</Button>}
                     <Box flexGrow={1}></Box>
-                    <Button color="secondary" variant="outlined">Don't save</Button>
+                    <Button color="secondary" variant="outlined" onClick={props.onDrop}>Don't save</Button>
                 </Box> 
             </form>
             </Paper>
+            <Dialog open={!!props.saveError} onClose={props.onErrorClose}>
+                    <DialogTitle>Error occured during the save</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>{props.saveError?.description}</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={props.onErrorClose}>Ok</Button>
+                    </DialogActions>
+            </Dialog>
         </Container>
     );
     }

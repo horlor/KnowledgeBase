@@ -24,6 +24,10 @@ export const FetchProfileStarted = createAction("fetch-profile-started");
 export const FetchProfileSuccess = createAction<UserDetailed>("fetch-profile-success");
 export const FetchProfileFailure = createAction<ErrorModel>("fetch-profile-failure");
 export const ChangeProfileEdit = createAction<boolean>("change-profile-edit");
+export const PutProfileStarted = createAction("put-profile-started");
+export const PutProfileSuccess = createAction("put-profile-success");
+export const PutProfileFailure = createAction<ErrorModel>("put-profile-failure");
+export const PutProfileErrorClose = createAction("put-profile-error-close");
 
 export const ProfileReducer = createReducer(initialState, builder => builder
     .addCase(FetchProfileStarted, (state, action) =>{
@@ -41,5 +45,20 @@ export const ProfileReducer = createReducer(initialState, builder => builder
     })
     .addCase(ChangeProfileEdit, (state, action) =>{
         state.edit = action.payload;
+    })
+    .addCase(PutProfileStarted, (state, action) =>{
+        state.saveLoading = true;
+        state.saveError = undefined;
+    })
+    .addCase(PutProfileSuccess, (state, action) =>{
+        state.saveLoading = false;
+        state.edit = false;
+    })
+    .addCase(PutProfileFailure, (state, action) =>{
+        state.saveLoading = false;
+        state.saveError = action.payload;
+    })
+    .addCase(PutProfileErrorClose, (state, action) =>{
+        state.saveError = undefined;
     })
 );

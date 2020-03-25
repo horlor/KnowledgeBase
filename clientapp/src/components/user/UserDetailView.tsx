@@ -17,6 +17,10 @@ const useStyles = makeStyles( theme => ({
     },
     avatar:{
         margin: theme.spacing(1),
+    },
+    introTypo:{
+        //To allow whitespaces in the introduction
+        whiteSpace:"pre-wrap"
     }
 }));
 
@@ -51,7 +55,7 @@ const UserDetailView : React.FC<IProps> = (props) => {
         <Typography>{`Email: ${props.user.email}`}</Typography>
         <Divider/>
         <Typography className={classes.header}>Introduction</Typography>
-        <Typography>{props.user.introduction}</Typography>
+        <Typography className={classes.introTypo}>{props.user.introduction}</Typography>
         <Divider/>
         <Typography className={classes.header}>Known topics:</Typography>
           {props.user.topics.map(topic =>

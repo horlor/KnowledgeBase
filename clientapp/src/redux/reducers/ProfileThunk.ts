@@ -1,7 +1,7 @@
 import { UserUpdateRequest } from "../../models/User";
 import { AppDispatch } from "../Store";
 import { UpdateProfileToApi, LoadProfileFromApi } from "../../api/UserApi";
-import { ChangeProfileEdit, FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure } from "./ProfileReducer";
+import { ChangeProfileEdit, FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure, PutProfileStarted, PutProfileSuccess, PutProfileFailure } from "./ProfileReducer";
 import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
 
 
@@ -20,8 +20,19 @@ export const LoadProfileThunk = () => {
 
 export const UpdateProfileThunk = (request: UserUpdateRequest) =>{
     return async (dispatch : AppDispatch) =>{
-        await UpdateProfileToApi(request);
-        dispatch(ChangeProfileEdit(false));
-        dispatch(LoadProfileThunk());
+            dispatch(PutProfileStarted());
+            try{
+                //await UpdateProfileToApi(request);
+                throw new Error("huhuhuh");
+                dispatch(PutProfileSuccess());
+                dispatch(LoadProfileThunk());
+            }
+            catch(exc){
+                dispatch(PutProfileFailure(CatchIntoErrorModel(exc)))
+            }
     }
+}
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
 }

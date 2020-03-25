@@ -82,7 +82,6 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpGet("profile")]
         public async Task<UserDetailed> GetCurrentUser()
         {
-            Console.WriteLine(UserName);
             var user = await userService.GetUserDetailed(UserName);
             return user;
         }

@@ -12,7 +12,7 @@ interface IProps{
 }
 
 const ProfilePage : React.FC<IProps> = (props) =>{
-    const { profile, topics, save, edit, setEdit } = useProfileHook();
+    const { profile, topics, save, edit, setEdit, closeError } = useProfileHook();
     const {error, loading, user} = profile;
     return (
         <>
@@ -20,7 +20,10 @@ const ProfilePage : React.FC<IProps> = (props) =>{
             error?<ErrorView title={error.code} message={error.description}/>:
             (!user)?<LoadingView/>:
             (!edit)?<UserDetailView user={user} editable={true} onEditClick={()=> setEdit(true)}/>:
-            <EditProfileView user={user} availableTopics={topics?topics:[]} onSubmit={save}/>
+            <EditProfileView user={user} availableTopics={topics?topics:[]} onSubmit={save}
+             saveLoading={profile.saveLoading} saveError={profile.saveError}
+             onDrop={()=> setEdit(false)} onErrorClose={closeError}
+             />
         }
 
         </>
