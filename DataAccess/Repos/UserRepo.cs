@@ -15,13 +15,14 @@ namespace KnowledgeBase.DataAccess.Repos
         private readonly KnowledgeContext dbcontext;
         private readonly UserManager<DbUser> userManager;
         private readonly SignInManager<DbUser> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager)
+        public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             this.dbcontext = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
-
+            this.roleManager = roleManager;
         }
 
         public async Task<IdentityResult> Create(User user, string password)
@@ -29,9 +30,11 @@ namespace KnowledgeBase.DataAccess.Repos
             DbUser dbUser = new DbUser()
             {
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
             };
             var res = await userManager.CreateAsync(dbUser, password);
+            if(res.Succeeded)
+                await userManager.AddToRoleAsync(dbUser, "User");
             await dbcontext.SaveChangesAsync();
             return res;
         }
@@ -115,6 +118,7 @@ namespace KnowledgeBase.DataAccess.Repos
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbUserDetailed(dbUser);
         }
+
 
     }
 }

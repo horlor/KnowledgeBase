@@ -36,6 +36,7 @@ namespace KnowledgeBase.DataAccess
                 .IsUnique();
 
 
+
             base.OnModelCreating(modelBuilder);
         }
 

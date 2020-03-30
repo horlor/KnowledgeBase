@@ -8,6 +8,13 @@ namespace KnowledgeBase.DataAccess.DataObjects
 {
     public class DbUser : IdentityUser
     {  
+        public DbUser()
+        {
+            FirstName = "";
+            LastName = "";
+            Introduction = "";
+        }
+
         [MaxLength(100)]
         public string FirstName { get; set; }
 

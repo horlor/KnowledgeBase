@@ -63,6 +63,7 @@ namespace KnowledgeBase.WebApi.Controllers
         public async Task<ActionResult<Answer>> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
             //So no one can post in someone else's name
+            //Jó ez, de lehet a DTO-s megoldás is
             if (UserName != answer.Author)
                 return Conflict();
             var a = await questionService.AddAnswerToQuestion(id, answer);

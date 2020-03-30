@@ -96,6 +96,7 @@ namespace KnowledgeBase.WebApi
 
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
+            services.AddTransient<DataSeeder, DataSeeder>();
 
             //To create services for the Controllers
             services.AddScoped<QuestionService, QuestionService>();
@@ -106,7 +107,7 @@ namespace KnowledgeBase.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataSeeder seeder)
         {
             if (env.IsDevelopment())
             {
@@ -121,11 +122,14 @@ namespace KnowledgeBase.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
+            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            seeder.Seed();
         }
     }
 }
