@@ -17,6 +17,8 @@ namespace KnowledgeBase.DataAccess
         public DbSet<DbTopic> Topics { get; set; }
         public DbSet<DbUserTopic> UserTopics { get; set; }
 
+        public DbSet<DbNotification> Notifications { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -52,8 +52,8 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Question>> AddQuestion([FromBody] Question question)
         {
-            //Or just change the author in the object here ?
-            question.Author = UserName;
+            if (question.Author != UserName)
+                return Conflict();
             var q = await questionService.AddNewQuestion(question);
             return Created("api/questions/" + q.Id, q);
         }

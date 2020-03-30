@@ -48,7 +48,7 @@ export const useRegisterHook = ()=>{
     const registerFun = async (reg : RegisterRequest) =>{
         retry();
         setLoading(true);
-        Axios.post<RegisterResponse>("/api/users/register",reg,{validateStatus:(status)=>true}) //Need to accept everything because somewhy Axios doesn't provide the failed response's data
+        Axios.post<RegisterResponse>("/api/profile/register",reg,{validateStatus:(status)=>true}) //Need to accept everything because somewhy Axios doesn't provide the failed response's data
         .then(response => {
             if(response.status === 200){
                 setSuccess(true);

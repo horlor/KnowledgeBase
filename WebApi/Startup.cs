@@ -93,6 +93,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<IAnswerRepo, AnswerRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ITopicRepo, TopicRepo>();
+            services.AddScoped<INotificationRepo, NotificationRepo>();
 
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
@@ -102,6 +103,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<QuestionService, QuestionService>();
             services.AddScoped<UserService, UserService>();
             services.AddScoped<TopicService, TopicService>();
+            services.AddScoped<NotificationService, NotificationService>();
 
 
         }

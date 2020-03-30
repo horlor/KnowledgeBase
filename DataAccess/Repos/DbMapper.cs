@@ -117,5 +117,18 @@ namespace KnowledgeBase.DataAccess.Repos
                 Ancestor = ancestor,
             };
         }
+
+        internal static Notification MapDbNotification(DbNotification dbNotification)
+        {
+            if (dbNotification == null)
+                return null;
+            return new Notification()
+            {
+                Id = dbNotification.Id,
+                Title = dbNotification.Title,
+                Content = dbNotification.Content,
+                QuestionId = dbNotification.QuestionId,
+            };
+        }
     }
 }

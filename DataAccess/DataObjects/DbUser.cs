@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,6 +28,8 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public virtual ICollection<DbQuestion> Questions { get; set; }
 
         public virtual ICollection<DbAnswer> Answers { get; set; }
+
+        public virtual ICollection<DbNotification> Notifications { get; set; }
 
     }
 }

@@ -119,6 +119,16 @@ namespace KnowledgeBase.DataAccess.Repos
             return DbMapper.MapDbUserDetailed(dbUser);
         }
 
+        public async Task<ICollection<User>> GetUsersByTopic(Topic topic)
+        {
+            //TODO check for topic
+            return await dbcontext.Users
+                .Include(u => u.UserTopics)
+                    .ThenInclude(ut => ut.Topic)
+                .Select(u => DbMapper.MapDbUser(u))
+                .ToListAsync();
+        }
+
 
     }
 }

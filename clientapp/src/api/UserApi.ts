@@ -3,7 +3,7 @@ import { ISession, RegisterRequest, RequestResult, RegisterResponse } from '../m
 import { User, UserDetailed, UserUpdateRequest } from '../models/User';
 
 export const Login = async (username: string, password: string, stayLoggedIn : boolean): Promise<ISession> =>{
-    let resp = await axios.post<ISession>(`/api/users/login`,{username: username, password: password});
+    let resp = await axios.post<ISession>(`/api/profile/login`,{username: username, password: password});
     if(resp.data.token){
         axios.defaults.headers.common["Authorization"] = "Bearer " + resp.data.token;
         if(stayLoggedIn){
@@ -48,10 +48,10 @@ export const LoadUserDetailedFromApi = async (username: string) =>{
 }
 
 export const LoadProfileFromApi = async () => {
-    let response = await axios.get<UserDetailed>("/api/users/profile");
+    let response = await axios.get<UserDetailed>("/api/profile");
     return response.data;
 }
 
 export const UpdateProfileToApi = async (request : UserUpdateRequest) =>{
-    await axios.put("/api/users/profile",request)
+    await axios.put("/api/profile",request)
 }

@@ -22,6 +22,7 @@ namespace KnowledgeBase.Domain.Repository
 
         Task<ICollection<User>> GetAllUser();
         Task<UserDetailed> UpdateUser(UserDetailed user);
+        Task<ICollection<User>> GetUsersByTopic(Topic topic);
 
     }
 

@@ -11,10 +11,11 @@ namespace KnowledgeBase.Domain.Services
     public class QuestionService
     {
         private IQuestionRepo questionRepo;
-        private IAnswerRepo answerRepo;
-        public QuestionService(IQuestionRepo repo)
+        private NotificationService notificationService;
+        public QuestionService(IQuestionRepo repo, NotificationService notificationService)
         {
             questionRepo = repo;
+            this.notificationService = notificationService;
         }
 
         public async Task<ICollection<Question>> GetAllQuestions()
@@ -34,9 +35,12 @@ namespace KnowledgeBase.Domain.Services
             await questionRepo.Delete(question);
         }
 
-         public async Task<Question> AddNewQuestion(Question question)
+         public async Task<Question> AddNewQuestion(Question q)
         {
-            return await questionRepo.Store(question);
+            var question =  await questionRepo.Store(q);
+            //Purposefully not awaiting this call(it's not needed for the return, and can take really long time)
+            var _ = notificationService.CreateNewQuestionNotification(question);
+            return question;
         }
 
         public async Task<ICollection<Answer>> GetAnswersForQuestion(int id)

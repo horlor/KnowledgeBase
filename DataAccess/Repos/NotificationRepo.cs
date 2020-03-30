@@ -1,0 +1,88 @@
+﻿using KnowledgeBase.DataAccess.DataObjects;
+using KnowledgeBase.Domain.Repository;
+using KnowledgeBase.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace KnowledgeBase.DataAccess.Repos
+{
+    public class NotificationRepo : INotificationRepo
+    {
+        private KnowledgeContext dbcontext;
+
+        public NotificationRepo(KnowledgeContext context)
+        {
+            dbcontext = context;
+        }
+
+        public async Task<Notification> CreateForUser(string username, Notification notification)
+        {
+            var dbUser = await dbcontext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (dbUser == null)
+                return null;
+            var dbQuestion = await dbcontext.Questions.FirstOrDefaultAsync(q => q.Id == notification.QuestionId);
+            if (dbQuestion == null)
+                return null;
+            DbNotification dbNotification = new DbNotification
+            {
+                User = dbUser,
+                UserId = dbUser.Id,
+                Question = dbQuestion,
+                QuestionId = dbQuestion.Id,
+                Content = notification.Content,
+                Title = notification.Title,
+            };
+            var ret = await dbcontext.Notifications.AddAsync(dbNotification);
+            await dbcontext.SaveChangesAsync();
+            return DbMapper.MapDbNotification(ret.Entity);
+        }
+
+        public async Task<Notification> CreateWithUserId(string userId, Notification notification)
+        {
+            DbNotification dbNotification = new DbNotification
+            {
+                UserId = userId,
+                QuestionId = notification.QuestionId,
+                Content = notification.Content,
+                Title = notification.Title,
+            };
+            var ret = await dbcontext.Notifications.AddAsync(dbNotification);
+            await dbcontext.SaveChangesAsync();
+            return DbMapper.MapDbNotification(ret.Entity);
+        }
+
+        public async Task<ICollection<Notification>> GetByUsername(string username)
+        {
+            return await dbcontext.Notifications
+                .Include(n => n.User)
+                .Where(n => n.User.UserName == username)
+                .Select(n => DbMapper.MapDbNotification(n))
+                .ToListAsync();
+        }
+
+        public async Task Remove(Notification notification)
+        {
+            var dbNotification = await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id);
+            dbcontext.Remove(dbNotification);
+            await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task<Notification> Update(Notification notification)
+        {
+            var dbNotification = await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id);
+            dbNotification.Content = notification.Content;
+            dbNotification.Title = notification.Title;
+            await dbcontext.SaveChangesAsync();
+            return DbMapper.MapDbNotification(dbNotification);
+        }
+
+        public async Task<Notification> GetById(int id)
+        {
+            return DbMapper.MapDbNotification(await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == id));
+        }
+    }
+}

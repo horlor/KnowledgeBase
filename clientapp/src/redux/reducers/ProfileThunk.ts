@@ -22,8 +22,7 @@ export const UpdateProfileThunk = (request: UserUpdateRequest) =>{
     return async (dispatch : AppDispatch) =>{
             dispatch(PutProfileStarted());
             try{
-                //await UpdateProfileToApi(request);
-                throw new Error("huhuhuh");
+                await UpdateProfileToApi(request);
                 dispatch(PutProfileSuccess());
                 dispatch(LoadProfileThunk());
             }

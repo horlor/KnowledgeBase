@@ -8,6 +8,5 @@ namespace KnowledgeBase.Entities
     {
         public string Introduction { get; set; }
 
-        public ICollection<Topic> Topics { get; set; }
     }
 }
