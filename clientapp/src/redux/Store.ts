@@ -4,13 +4,15 @@ import { LoginReducer } from "./reducers/LoginReducer";
 import { UserReducer } from "./reducers/UserReducer";
 import { TopicReducer } from "./reducers/TopicReducer";
 import { ProfileReducer } from "./reducers/ProfileReducer";
+import { NotificationReducer } from "./reducers/NotificationReducer";
 
 const rootReducer = combineReducers({
     question: QuestionReducer,
     login: LoginReducer,
     user: UserReducer,
     topic: TopicReducer,
-    profile: ProfileReducer
+    profile: ProfileReducer,
+    notification: NotificationReducer
 });
 
 

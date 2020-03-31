@@ -12,5 +12,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<Notification> CreateForUser(string username, Notification notification);
         Task<Notification> Update(Notification notification);
         Task Remove(Notification notification);
+
+        Task<string> GetUserNameForNotification(Notification notification);
     }
 }

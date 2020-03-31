@@ -24,6 +24,7 @@ namespace KnowledgeBase.DataAccess.Repos
             var dbUser = await dbcontext.Users.FirstOrDefaultAsync(u => u.UserName == username);
             if (dbUser == null)
                 return null;
+            
             var dbQuestion = await dbcontext.Questions.FirstOrDefaultAsync(q => q.Id == notification.QuestionId);
             if (dbQuestion == null)
                 return null;
@@ -83,6 +84,21 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task<Notification> GetById(int id)
         {
             return DbMapper.MapDbNotification(await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == id));
+        }
+
+        public async Task<string> GetUserNameForNotification(int id)
+        {
+            var dbNotification = await dbcontext.Notifications
+                .Include(n=>n.User)
+                .FirstOrDefaultAsync(n => n.Id == id);
+            if (dbNotification == null)
+                return null;
+            return dbNotification.User.UserName;
+        }
+
+        public async Task<string> GetUserNameForNotification(Notification notification)
+        {
+            return await GetUserNameForNotification(notification.Id);
         }
     }
 }

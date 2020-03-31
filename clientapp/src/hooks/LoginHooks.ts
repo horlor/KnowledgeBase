@@ -1,6 +1,6 @@
 import {useSelector, useDispatch} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { Login, Logout, Register, LoginFromStorage } from "../api/UserApi";
+import { Login, Logout, Register, LoginFromStorage } from "../api/ProfileApi";
 import { LoginAction, LogoutAction } from "../redux/reducers/LoginReducer";
 import ErrorModel from "../models/ErrorModel";
 import { RegisterRequest, RegisterResponse } from "../models/LoginModels";

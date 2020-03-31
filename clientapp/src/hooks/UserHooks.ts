@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/Store";
 import { useEffect, useState } from "react";
 import { FetchUsersStarted, FetchUsersSuccess, FetchUsersFailure, FetchSelectedUserStarted, FetchSelectedUserFailure, FetchSelectedUserSuccess } from "../redux/reducers/UserReducer";
-import { LoadUsersFromApi, LoadUserDetailedFromApi, UpdateProfileToApi } from "../api/UserApi";
+import { LoadUsersFromApi, LoadUserDetailedFromApi, } from "../api/UserApi";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { UserUpdateRequest, UserDetailed } from "../models/User";

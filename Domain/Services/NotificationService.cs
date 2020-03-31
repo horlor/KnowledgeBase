@@ -35,5 +35,21 @@ namespace KnowledgeBase.Domain.Services
                 });
             }
         }
+
+        public async Task<bool> RemoveNotification(string username, Notification notification)
+        {
+            var notUser = await notificationRepo.GetUserNameForNotification(notification);
+            if (username != notUser)
+                return false;
+            else
+                await notificationRepo.Remove(notification);
+            return true;
+
+        }
+
+        public async Task<Notification> CreateNotificationForUser(string username, Notification n)
+        {
+            return await notificationRepo.CreateForUser(username, n);
+        }
     }
 }

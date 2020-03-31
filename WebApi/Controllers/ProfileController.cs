@@ -77,5 +77,16 @@ namespace KnowledgeBase.WebApi.Controllers
             return await notificationService.GetNotificationsForUser(UserName);
         }
 
+        [Authorize]
+        [HttpDelete("notifications")]
+        public async Task<ActionResult> DeleteNotification(Notification notification)
+        {
+            var res = await notificationService.RemoveNotification(UserName, notification);
+            if (res)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
     }
 }

@@ -4,11 +4,11 @@ import ErrorModel from "../../models/ErrorModel";
 
 interface IProfileState{
     user: UserDetailed | undefined,
-        loading: boolean,
-        error: ErrorModel |undefined,
-        edit: boolean,
-        saveLoading: boolean,
-        saveError: ErrorModel |undefined,
+    loading: boolean,
+    error: ErrorModel |undefined,
+    edit: boolean,
+    saveLoading: boolean,
+    saveError: ErrorModel |undefined,
 }
 
 const initialState : IProfileState  = {

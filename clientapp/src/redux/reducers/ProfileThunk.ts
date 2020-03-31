@@ -1,6 +1,6 @@
 import { UserUpdateRequest } from "../../models/User";
 import { AppDispatch } from "../Store";
-import { UpdateProfileToApi, LoadProfileFromApi } from "../../api/UserApi";
+import { UpdateProfileToApi, LoadProfileFromApi } from "../../api/ProfileApi";
 import { ChangeProfileEdit, FetchProfileStarted, FetchProfileSuccess, FetchProfileFailure, PutProfileStarted, PutProfileSuccess, PutProfileFailure } from "./ProfileReducer";
 import { CatchIntoErrorModel } from "../../helpers/ErrorHelpers";
 

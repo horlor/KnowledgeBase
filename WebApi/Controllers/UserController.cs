@@ -17,10 +17,12 @@ namespace KnowledgeBase.WebApi.Controllers
     {
 
         private UserService userService;
+        private NotificationService notificationService;
 
-        public UserController(UserService userService)
+        public UserController(UserService userService, NotificationService notificationService)
         {
             this.userService = userService;
+            this.notificationService = notificationService;
         }
 
         [HttpGet]
@@ -32,10 +34,16 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<UserDetailed>> GetUser([FromRoute] string username)
         {
-            var user =  await userService.GetUserDetailed(username);
+            var user = await userService.GetUserDetailed(username);
             if (user == null)
                 return NotFound();
             return Ok(user);
+        }
+
+        [HttpPost("{username}")]
+        public async Task PostNotification([FromRoute] string username, [FromBody] Notification notification)
+        {
+            await notificationService.CreateNotificationForUser(username, notification);
         }
 
 

@@ -14,31 +14,34 @@ const Menu : React.FC<IProps> = (props) => {
           <ListItem button component={Link} to="/questions">
             <ListItemText primary={"Questions and Answers"} />
           </ListItem>
-          <ListItem button component={Link} to="/users">
-            <ListItemText primary={"Users"} />
-          </ListItem>
-        {
-            loggedIn?
+          {loggedIn ? (
             <>
-                <ListItem button component={Link} to="/newquestion">
-                    <ListItemText primary={"Ask a new question"}/>
-                </ListItem>
-                <ListItem button component={Link} to="/profile">
-                    <ListItemText primary={"Profile"}/>
-                </ListItem>
-                
+              <ListItem button component={Link} to="/newquestion">
+                <ListItemText primary={"Ask a new question"} />
+              </ListItem>
+              <ListItem button component={Link} to="/users">
+                <ListItemText primary={"Users"} />
+              </ListItem>
+              <ListItem button component={Link} to="/profile">
+                <ListItemText primary={"Profile"} />
+              </ListItem>
+              <ListItem button component={Link} to="/notifications">
+                <ListItemText primary={"Notifications"}/>
+              </ListItem>
             </>
-            :
+          ) : (
             <>
-                <ListItem button component={Link} to="/login">
-                    <ListItemText primary={"Login"}/>
-                </ListItem>
-                <ListItem button component={Link} to="/register">
-                    <ListItemText primary={"Register"}/>
-                </ListItem>
+              <ListItem button component={Link} to="/users">
+                <ListItemText primary={"Users"} />
+              </ListItem>
+              <ListItem button component={Link} to="/login">
+                <ListItemText primary={"Login"} />
+              </ListItem>
+              <ListItem button component={Link} to="/register">
+                <ListItemText primary={"Register"} />
+              </ListItem>
             </>
-            
-        }
+          )}
         </List>
       </div>
     );
