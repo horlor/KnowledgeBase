@@ -3,5 +3,5 @@ export interface MyNotification{
     title: string,
     content: string,
     questionId: number,
-
+    finished: boolean,
 }

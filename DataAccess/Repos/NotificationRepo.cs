@@ -67,7 +67,12 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task Remove(Notification notification)
         {
-            var dbNotification = await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id);
+            await Remove(notification.Id);
+        }
+
+        public async Task Remove(int id)
+        {
+            var dbNotification = await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == id);
             dbcontext.Remove(dbNotification);
             await dbcontext.SaveChangesAsync();
         }
@@ -99,6 +104,24 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task<string> GetUserNameForNotification(Notification notification)
         {
             return await GetUserNameForNotification(notification.Id);
+        }
+
+        public async Task<bool> SetFinished(int id, bool to)
+        {
+            var dbNotification = await dbcontext.Notifications.SingleOrDefaultAsync(n => n.Id == id);
+            if(dbNotification != null)
+            {
+                dbNotification.Finished = to;
+                await dbcontext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> CheckUserForNotification(int id, string username)
+        {
+            var user = await GetUserNameForNotification(id);
+            return (user == username);
         }
     }
 }

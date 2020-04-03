@@ -2,9 +2,7 @@ import React from 'react'
 import { Card, CardHeader, CardContent, Typography, Paper, makeStyles, Box, Button, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
-
-
-
+import CheckIcon from '@material-ui/icons/Check';
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,6 +15,7 @@ const useStyles = makeStyles(theme => ({
 interface IProps{
     title: string,
     message: string,
+    finished: boolean,
     onDelete?: ()=>void,
     onFinish?: ()=>void
 }
@@ -24,20 +23,23 @@ interface IProps{
 const NotificationView : React.FC<IProps> = props =>{
     const classes = useStyles();
     return (
-        <Paper className={classes.surface}>
+        <Paper className={classes.surface}
+        style={(props.finished)?{background:"lightgray"}:{}}>
             <Typography variant="h6">{props.title}</Typography>
             <Typography variant="body1">{props.message}</Typography>
             <Box display="flex" flexDirection="row-reverse">
                 <Button endIcon={<DeleteIcon/>}
-                    onClick={props.onDelete}    
+                    onClick={props.onDelete}   
                 >
                     DELETE
                 </Button>
-                <Button endIcon={<ClearIcon/>}
-                    onClick={props.onFinish}
-                >
-                    MARK AS FINISHED
-                </Button>
+                {
+                    props.finished?
+                    <Button endIcon={<ClearIcon/>} onClick={props.onFinish}>MARK AS UNFINISHED</Button>
+                    :
+                    <Button endIcon={<CheckIcon/>} onClick={props.onFinish}>MARK AS FINISHED</Button>
+                }
+
             </Box>
         </Paper>
     );

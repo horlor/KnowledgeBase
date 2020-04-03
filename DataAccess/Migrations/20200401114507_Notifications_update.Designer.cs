@@ -4,14 +4,16 @@ using KnowledgeBase.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KnowledgeBase.DataAccess.Migrations
 {
     [DbContext(typeof(KnowledgeContext))]
-    partial class KnowledgeContextModelSnapshot : ModelSnapshot
+    [Migration("20200401114507_Notifications_update")]
+    partial class Notifications_update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,13 +59,13 @@ namespace KnowledgeBase.DataAccess.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Finished")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Read")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Seen")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")

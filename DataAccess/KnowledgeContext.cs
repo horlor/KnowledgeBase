@@ -36,6 +36,18 @@ namespace KnowledgeBase.DataAccess
             modelBuilder.Entity<DbTopic>()
                 .HasIndex(t => t.Name)
                 .IsUnique();
+            
+            modelBuilder.Entity<DbNotification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<DbNotification>()
+                .HasOne(n => n.Question)
+                .WithMany()
+                .HasForeignKey(n => n.QuestionId);
+
 
 
 

@@ -24,25 +24,25 @@ namespace KnowledgeBase.Domain.Services
         public async Task CreateNewQuestionNotification(Question q)
         {
             var users = await userRepo.GetUsersByTopic(q.Topic);
-            foreach(var user in users)
+            foreach (var user in users)
             {
-                if(user.UserName != q.Author)
-                await notificationRepo.CreateForUser(user.UserName, new Notification()
-                {
-                    Title="New Question",
-                    Content="New Question was created in one of your followed topics",
-                    QuestionId = q.Id,
-                });
+                if (user.UserName != q.Author)
+                    await notificationRepo.CreateForUser(user.UserName, new Notification()
+                    {
+                        Title = "New Question",
+                        Content = "New Question was created in one of your followed topics",
+                        QuestionId = q.Id,
+                    });
             }
         }
 
-        public async Task<bool> RemoveNotification(string username, Notification notification)
+        public async Task<bool> RemoveNotification(string username, int notificationId)
         {
-            var notUser = await notificationRepo.GetUserNameForNotification(notification);
+            var notUser = await notificationRepo.GetUserNameForNotification(notificationId);
             if (username != notUser)
                 return false;
             else
-                await notificationRepo.Remove(notification);
+                await notificationRepo.Remove(notificationId);
             return true;
 
         }
@@ -50,6 +50,17 @@ namespace KnowledgeBase.Domain.Services
         public async Task<Notification> CreateNotificationForUser(string username, Notification n)
         {
             return await notificationRepo.CreateForUser(username, n);
+        }
+
+        public async Task<bool> ChangeFinished(string username, int nId, bool finished)
+        {
+            var enabled = await notificationRepo.CheckUserForNotification(nId, username);
+            var success = false;
+            if (enabled)
+            {
+                success = await notificationRepo.SetFinished(nId, finished);
+            }
+            return success;
         }
     }
 }

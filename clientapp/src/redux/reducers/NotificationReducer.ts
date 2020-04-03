@@ -18,6 +18,7 @@ export const FetchNotificationsStarted = createAction("fetch-notifications-start
 export const FetchNotificationsSuccess = createAction<MyNotification[]>("fetch-notifications-success");
 export const FetchNotificationsFailure = createAction<ErrorModel>("fetch-notifications-failure");
 export const DeleteNotificationAction = createAction<MyNotification>("delete-notification");
+export const SetFinishedOnNotificationAction = createAction<{id: number, b: boolean}>("set-finished-notification");
 
 export const NotificationReducer = createReducer(initialState, builder => builder
         .addCase(FetchNotificationsStarted, (state, action)=>{
@@ -35,6 +36,11 @@ export const NotificationReducer = createReducer(initialState, builder => builde
         })
         .addCase(DeleteNotificationAction, (state: INotificationState, action)=>{
             state.items = state.items.filter(n => n.id !== action.payload.id);
+        })
+        .addCase(SetFinishedOnNotificationAction, (state : INotificationState, action)=>{
+            let a = state.items.find(n => n.id === action.payload.id);
+            if(a)
+                a.finished = action.payload.b;
         })
     );
 

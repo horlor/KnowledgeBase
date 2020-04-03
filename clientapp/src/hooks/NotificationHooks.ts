@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux"
 import { RootState, AppDispatch } from "../redux/Store"
 import { useEffect, useState } from "react"
-import { LoadNotificationsFromApi, DeleteNotification } from "../api/ProfileApi"
-import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction } from "../redux/reducers/NotificationReducer"
+import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished } from "../api/ProfileApi"
+import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetFinishedOnNotificationAction } from "../redux/reducers/NotificationReducer"
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers"
 import { MyNotification } from "../models/Notification"
 
@@ -37,7 +37,17 @@ export const useNotifications = () =>{
         }
     }
 
-    return {notifications, error, loading, deleteNotification};
+    const setFinish = async (n: MyNotification) =>{
+        try{
+            await PatchNotificationFinished(n.id,!n.finished);
+            dispatch(SetFinishedOnNotificationAction({id: n.id, b: !n.finished}));
+        }
+        catch(exc){
+            console.log("Finish failed");
+        }
+    }
+
+    return {notifications, error, loading, deleteNotification, setFinish};
 }
 
 export const useNotificationsWithUpdate = () =>{

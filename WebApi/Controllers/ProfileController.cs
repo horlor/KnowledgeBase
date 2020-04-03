@@ -78,10 +78,21 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpDelete("notifications")]
-        public async Task<ActionResult> DeleteNotification(Notification notification)
+        [HttpDelete("notifications/{id}")]
+        public async Task<ActionResult> DeleteNotification([FromRoute] int id)
         {
-            var res = await notificationService.RemoveNotification(UserName, notification);
+            var res = await notificationService.RemoveNotification(UserName, id);
+            if (res)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPatch("notifications/{id}/finished")]
+        public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationhPatchDTO dto)
+        {
+            var res = await notificationService.ChangeFinished(UserName, id, dto.finished);
             if (res)
                 return Ok();
             else

@@ -55,5 +55,9 @@ export const LoadNotificationsFromApi = async() =>{
 }
 
 export const DeleteNotification = async(notification : MyNotification) =>{
-    let response = await axios.delete("/api/profile/notifications",{data: notification});
+    let response = await axios.delete(`/api/profile/notifications/${notification.id}`);
+}
+
+export const PatchNotificationFinished = async(id: number, finished: boolean) =>{
+    await axios.patch(`/api/profile/notifications/${id}/finished`,{finished:finished});
 }

@@ -16,10 +16,10 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [Required]
         public string Content { get; set; }
 
-        public DbUser User { get; set; }
+        public virtual DbUser User { get; set; }
 
-        public DbTopic Topic { get; set; }
+        public virtual DbTopic Topic { get; set; }
 
-        public ICollection<DbAnswer> Answers{ get; set; }
+        public virtual ICollection<DbAnswer> Answers{ get; set; }
     }
 }
