@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ISession, RegisterRequest, RegisterResponse } from '../models/LoginModels';
 import { UserDetailed, UserUpdateRequest } from '../models/User';
-import { MyNotification } from '../models/Notification';
+import { MyNotification, PendingNotificationDto } from '../models/Notification';
 
 
 export const Login = async (username: string, password: string, stayLoggedIn : boolean): Promise<ISession> =>{
@@ -60,4 +60,9 @@ export const DeleteNotification = async(notification : MyNotification) =>{
 
 export const PatchNotificationFinished = async(id: number, finished: boolean) =>{
     await axios.patch(`/api/profile/notifications/${id}/finished`,{finished:finished});
+}
+
+export const LoadPendingNotifications = async() =>{
+    let response = await axios.get<PendingNotificationDto>("/api/profile/notifications/pending");
+    return response.data;
 }

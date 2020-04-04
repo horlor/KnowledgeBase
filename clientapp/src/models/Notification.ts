@@ -5,3 +5,8 @@ export interface MyNotification{
     questionId: number,
     finished: boolean,
 }
+
+export interface PendingNotificationDto{
+    count: number,
+    notifications: MyNotification[],
+}

@@ -16,6 +16,9 @@ namespace KnowledgeBase.Domain.Repository
         Task<string> GetUserNameForNotification(int id);
         Task<bool> SetFinished(int id, bool to);
         Task<bool> CheckUserForNotification(int id, string username);
+        Task<ICollection<Notification>> GetPendingNotifications(string username);
+
+        Task<bool> SetPending(int id, bool pending);
 
     }
 }

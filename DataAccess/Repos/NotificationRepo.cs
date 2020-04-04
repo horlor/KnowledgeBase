@@ -61,6 +61,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Notifications
                 .Include(n => n.User)
                 .Where(n => n.User.UserName == username)
+                .OrderBy(n=>n.Finished)
                 .Select(n => DbMapper.MapDbNotification(n))
                 .ToListAsync();
         }
@@ -122,6 +123,28 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             var user = await GetUserNameForNotification(id);
             return (user == username);
+        }
+
+        public async Task<ICollection<Notification>> GetPendingNotifications(string username)
+        {
+            return await dbcontext.Notifications
+                .Include(n => n.User)
+                .Where(n => n.User.UserName == username)
+                .Where(n => n.Pending)
+                .Select(n => DbMapper.MapDbNotification(n))
+                .ToListAsync();
+        }
+
+        public async Task<bool> SetPending(int id, bool pending)
+        {
+            var dbNotification = await dbcontext.Notifications.SingleOrDefaultAsync(n => n.Id == id);
+            if (dbNotification != null)
+            {
+                dbNotification.Pending = pending;
+                await dbcontext.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

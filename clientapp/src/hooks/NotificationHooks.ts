@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 import { RootState, AppDispatch } from "../redux/Store"
 import { useEffect, useState } from "react"
-import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished } from "../api/ProfileApi"
+import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished, LoadPendingNotifications } from "../api/ProfileApi"
 import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetFinishedOnNotificationAction } from "../redux/reducers/NotificationReducer"
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers"
 import { MyNotification } from "../models/Notification"
@@ -52,14 +52,37 @@ export const useNotifications = () =>{
 
 export const useNotificationsWithUpdate = () =>{
     const dispatch : AppDispatch = useDispatch();
+    const [message, setMessage] = useState<string>("");
+    const [open, setOpen] = useState(false);
+    const [forwardLink, setForward] = useState("#");
 
+    const checkForPending = async () =>{
+        console.log("check");
+        try{
+            setForward("#")
+            let dto = await LoadPendingNotifications();
+            if(dto.count >0){
+                setMessage(`You have ${dto.count} pending notifications`);
+                setOpen(true);
+                setForward("/notifications")
+            }
+        }
+        catch(exc){
+            console.log("Remote server unavailable")
+        }       
+    }
     useEffect(()=>{
+        checkForPending();
         const timer = window.setInterval(()=>{
-            loadAsync(dispatch)
-            console.log("Loaded in timeout")
+            checkForPending();
         },300000)
         return ()=>{
             window.clearInterval(timer)
         }
     },[dispatch])
+
+    const handleClose = ()=>{
+        setOpen(false);
+    }
+    return {message, open, handleClose, forwardLink};
 }

@@ -39,7 +39,7 @@ namespace KnowledgeBase.Domain.Services
         {
             var question =  await questionRepo.Store(q);
             //Purposefully not awaiting this call(it's not needed for the return, and can take really long time)
-            var _ = notificationService.CreateNewQuestionNotification(question);
+            await notificationService.CreateNewQuestionNotification(question);
             return question;
         }
 

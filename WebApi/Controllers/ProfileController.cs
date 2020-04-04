@@ -90,13 +90,25 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPatch("notifications/{id}/finished")]
-        public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationhPatchDTO dto)
+        public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationPatchDto dto)
         {
-            var res = await notificationService.ChangeFinished(UserName, id, dto.finished);
+            var res = await notificationService.ChangeFinished(UserName, id, dto.Finished);
             if (res)
                 return Ok();
             else
                 return BadRequest();
+        }
+
+        [Authorize]
+        [HttpGet("notifications/pending")]
+        public async Task<PendingNotificationsDto> GetPendingNotifications()
+        {
+            var notifications = await notificationService.GetPendingNotifications(UserName);
+            return new PendingNotificationsDto()
+            {
+                Count = notifications.Count,
+                Notifications = notifications,
+            };
         }
 
     }

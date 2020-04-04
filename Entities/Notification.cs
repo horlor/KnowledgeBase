@@ -11,7 +11,7 @@ namespace KnowledgeBase.Entities
         public string Content { get; set; }
 
         public int? QuestionId { get; set; }
-        public bool Read { get; set; }
+        public bool Pending { get; set; }
 
         public bool Finished { get; set; }
     }

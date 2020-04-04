@@ -1,4 +1,4 @@
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/Store";
 import { useEffect } from "react";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";

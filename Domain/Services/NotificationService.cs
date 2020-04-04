@@ -62,5 +62,13 @@ namespace KnowledgeBase.Domain.Services
             }
             return success;
         }
+
+        public async Task<ICollection<Notification>> GetPendingNotifications(string username)
+        {
+            var nots = await notificationRepo.GetPendingNotifications(username);
+            foreach (var item in nots)
+                await notificationRepo.SetPending(item.Id, false);
+            return nots;
+        }
     }
 }

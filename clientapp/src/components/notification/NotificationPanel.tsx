@@ -1,31 +1,25 @@
-import React, { useState } from 'react'
-import { Snackbar, Button, IconButton, Icon } from '@material-ui/core';
+import React from 'react'
+import { Snackbar, IconButton } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import ArchiveIcon from '@material-ui/icons/Archive';
 import CloseIcon from '@material-ui/icons/Close';
 import { useNotificationsWithUpdate } from '../../hooks/NotificationHooks';
+import { Link } from 'react-router-dom';
 
 
 interface IProps{
     
 }
 
-const NotificationPanel : React.FC<IProps> = props =>{
-    const [open, setOpen] = useState(true);
-
-    const handleClose = () =>{
-        setOpen(false);
-    }
-
-    useNotificationsWithUpdate();
+const NotificationPanel : React.FC<IProps> = () =>{
+    const {message, open, handleClose, forwardLink} = useNotificationsWithUpdate();
     return(
         <Snackbar 
             open={open} onClose={handleClose} autoHideDuration={15000}
             anchorOrigin={{vertical:"bottom", horizontal:"left"}}
-            message={"Testing the snackbar"}
+            message={message}
             action={
                 <>
-                    <IconButton color="inherit">
+                    <IconButton color="inherit" component={Link} to={forwardLink} onClick={handleClose}>
                         <ArrowForwardIcon/>
                     </IconButton>
                     <IconButton color="inherit" onClick={handleClose}>

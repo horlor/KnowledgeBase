@@ -13,7 +13,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public bool Read { get; set; }
+        public bool Pending { get; set; }
         public bool Finished { get; set; }
         public int? QuestionId { get; set; }
         [ForeignKey("QuestionId")]
@@ -25,7 +25,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
 
         public DbNotification()
         {
-            Read = false;
+            Pending = true;
             Finished = false;
         }
 

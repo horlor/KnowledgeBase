@@ -128,7 +128,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 Title = dbNotification.Title,
                 Content = dbNotification.Content,
                 QuestionId = dbNotification.QuestionId,
-                Read = dbNotification.Read,
+                Pending = dbNotification.Pending,
                 Finished = dbNotification.Finished,
             };
         }
