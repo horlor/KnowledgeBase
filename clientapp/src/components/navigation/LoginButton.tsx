@@ -35,7 +35,7 @@ const LoginButton : React.FC<IProps> = (props) =>{
                 open ={!!anchorEl}
                 onClose={handleClose}
             >
-                <MenuItem>Your profile</MenuItem>
+                <MenuItem component={Link} to="/profile">Your profile</MenuItem>
                 <MenuItem onClick={()=>{logoutFun(); handleClose();}}>Logout</MenuItem>
                 <MenuItem onClick={handleClose}>
                     <CloseIcon/>

@@ -20,3 +20,7 @@ export const CreateAnswerToQuestion = async (id : number, answer: Answer) : Prom
 export const CreateQuestionToApi = async (question: Question) => {
     await axios.post("/api/questions",question);
 }
+
+export const DeleteQuestion = async (question: Question) => {
+    await axios.delete(`/api/questions/${question.id}`);
+}

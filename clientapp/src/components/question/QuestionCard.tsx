@@ -3,9 +3,11 @@ import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardA
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Question from '../../models/Question';
 import { Link } from 'react-router-dom';
+import { useLoginState } from '../../hooks/LoginHooks';
 
 interface IQuestionProps{
     question: Question;
+    delete?: () =>void;
 }
 
 const styles = makeStyles(theme =>({
@@ -21,6 +23,7 @@ const styles = makeStyles(theme =>({
 
 const QuestionCard : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
+    const {username} = useLoginState();
     return (
         <Card variant="outlined" className={classes.card}>
             <CardHeader title={
@@ -35,6 +38,9 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
             </CardContent>
             <CardActions>
                 <Button size="small" component={Link} to={`/questions/${props.question.id}`}>Read</Button>
+                {
+                    props.delete?<Button size="small" onClick={props.delete}>Delete</Button>:""
+                }
             </CardActions>
         </Card>
     );

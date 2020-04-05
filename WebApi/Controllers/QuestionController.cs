@@ -76,7 +76,18 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok( await questionService.GetAnswersForQuestion(id));
         }
 
-
-        
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteQuestion([FromRoute] int id)
+        {
+            var question = await questionService.GetQuestion(id);
+            if (question == null)
+                return NotFound();
+            if (question.Author != UserName)
+                return Conflict();
+            await questionService.DeleteQuestion(question);
+            return NoContent();
+        }
+       
     }
 }

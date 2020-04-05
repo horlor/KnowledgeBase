@@ -84,5 +84,5 @@ export const useNotificationsWithUpdate = () =>{
     const handleClose = ()=>{
         setOpen(false);
     }
-    return {message, open, handleClose, forwardLink};
+    return { message, open, handleClose, forwardLink};
 }

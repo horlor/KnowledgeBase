@@ -1,13 +1,13 @@
 import React from 'react';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import {Link } from 'react-router-dom';
-import { useLoginState } from '../../hooks/LoginHooks';
+import { useLoggedInState } from '../../hooks/LoginHooks';
 
 interface IProps{
 
 }
 const Menu : React.FC<IProps> = (props) => {
-    const loggedIn = useLoginState();
+    const loggedIn = useLoggedInState();
     return (
       <div>
         <List>

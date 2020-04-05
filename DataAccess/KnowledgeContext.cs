@@ -46,7 +46,8 @@ namespace KnowledgeBase.DataAccess
             modelBuilder.Entity<DbNotification>()
                 .HasOne(n => n.Question)
                 .WithMany()
-                .HasForeignKey(n => n.QuestionId);
+                .HasForeignKey(n => n.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
 

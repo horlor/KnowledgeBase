@@ -3,12 +3,17 @@ import { Card, CardHeader, CardContent, Typography, Paper, makeStyles, Box, Butt
 import DeleteIcon from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
+import { Link } from 'react-router-dom';
 
 
 const useStyles = makeStyles(theme => ({
     surface:{
         padding: theme.spacing(1),
         margin: theme.spacing(1)
+    },
+    text:{
+        textDecoration: "none",
+        color: theme.palette.text.primary
     }
 }))
 
@@ -17,7 +22,8 @@ interface IProps{
     message: string,
     finished: boolean,
     onDelete?: ()=>void,
-    onFinish?: ()=>void
+    onFinish?: ()=>void,
+    linkTo?: string
 }
 
 const NotificationView : React.FC<IProps> = props =>{
@@ -25,7 +31,7 @@ const NotificationView : React.FC<IProps> = props =>{
     return (
         <Paper className={classes.surface}
         style={(props.finished)?{background:"lightgray"}:{}}>
-            <Typography variant="h6">{props.title}</Typography>
+            <Typography variant="h6" component={Link} to={props.linkTo?props.linkTo:"#"} className={classes.text}>{props.title}</Typography>
             <Typography variant="body1">{props.message}</Typography>
             <Box display="flex" flexDirection="row-reverse">
                 <Button endIcon={<DeleteIcon/>}
