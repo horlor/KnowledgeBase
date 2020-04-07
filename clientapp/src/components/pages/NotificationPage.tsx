@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Typography, makeStyles } from '@material-ui/core';
+import { Container, Typography, makeStyles, Modal } from '@material-ui/core';
 import { useNotifications } from '../../hooks/NotificationHooks';
 import NotificationView from '../notification/NotificationView';
 import LoadingView from '../common/LoadingView';

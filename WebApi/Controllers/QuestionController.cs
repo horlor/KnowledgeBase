@@ -88,6 +88,8 @@ namespace KnowledgeBase.WebApi.Controllers
             await questionService.DeleteQuestion(question);
             return NoContent();
         }
+
+
        
     }
 }

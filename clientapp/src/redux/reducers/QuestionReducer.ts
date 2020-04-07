@@ -22,6 +22,7 @@ const initialState : IQuestionStore = {
 
 export const AddQuestionAction = createAction<Question>("add-question");
 export const AddAnswerAction = createAction<Answer>("add-answer");
+export const DeleteQuestionAction = createAction<Question>("delete-question");
 export const FetchQuestionsStarted = createAction("fetch-questions-started");
 export const FetchQuestionsSuccess = createAction<PagedQuestions>("fetch-questions-success");
 export const FetchQuestionsFailure = createAction<ErrorModel>("fetch-questions-failure");
@@ -64,6 +65,9 @@ export const QuestionReducer = createReducer(initialState, builder => builder
     .addCase(FetchQAFailure, (state, action) =>{
         state.loading = false;
         state.error = action.payload;
+    })
+    .addCase(DeleteQuestionAction, (state, action) =>{
+        state.questions = state.questions.filter(q => q.id !== action.payload.id);
     })
 
 );

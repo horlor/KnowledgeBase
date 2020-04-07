@@ -1,8 +1,8 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi } from "../api/QuestionApi";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { AxiosError } from "axios";
@@ -23,19 +23,25 @@ export const useSelectLoading = () =>
 
 
 export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
-    var questions = useSelector((state : RootState) => state.question.questions);
+    var questions = useSelector((state : RootState) => state.question.questions, shallowEqual);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
     var currentPage = useSelector((state: RootState) => state.question.currentPage);
     var pageCount = useSelector((state: RootState) => state.question.pages);
     var dispatch = useDispatch();
+
+    const deleteQuestion = (q: Question)=>{
+        DeleteQuestion(q);
+        dispatch(DeleteQuestionAction(q));
+    }
+
     useEffect(()=>{
         dispatch(FetchQuestionsStarted());
         LoadQuestionsFromApi(page, pageSize)
         .then(resp => dispatch(FetchQuestionsSuccess(resp)))
         .catch(ex => dispatch(FetchQuestionsFailure(CatchIntoErrorModel(ex))))
-    },[dispatch, page, pageSize]); //It won't change just to make React happy
-    return {questions, error, loading, currentPage, pageCount};
+    },[dispatch, page, pageSize]);
+    return {questions, error, loading, currentPage, pageCount, deleteQuestion};
 }
 
 

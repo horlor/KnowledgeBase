@@ -1,9 +1,9 @@
 import React from 'react';
-import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions, Chip, Box} from '@material-ui/core'
+import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions, Chip, Box, IconButton} from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Question from '../../models/Question';
 import { Link } from 'react-router-dom';
-import { useLoginState } from '../../hooks/LoginHooks';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface IQuestionProps{
     question: Question;
@@ -18,12 +18,14 @@ const styles = makeStyles(theme =>({
     title:{
         display:"inline",
         marginRight: theme.spacing(2),
+    },
+    remove:{
+        marginRight: theme.spacing(2),
     }
 }));
 
 const QuestionCard : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
-    const {username} = useLoginState();
     return (
         <Card variant="outlined" className={classes.card}>
             <CardHeader title={
@@ -36,12 +38,17 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
             <CardContent>
                 <Typography variant="body1">{`${props.question.content.slice(0,400)}...`}</Typography>
             </CardContent>
-            <CardActions>
+            <Box display="flex">
                 <Button size="small" component={Link} to={`/questions/${props.question.id}`}>Read</Button>
+                <Box flexGrow={11000}/>
                 {
-                    props.delete?<Button size="small" onClick={props.delete}>Delete</Button>:""
+                    props.delete?
+                    <IconButton size="small" onClick={props.delete} className={classes.remove}>
+                        <DeleteIcon/>
+                        </IconButton>
+                    :""
                 }
-            </CardActions>
+            </Box>
         </Card>
     );
 }
