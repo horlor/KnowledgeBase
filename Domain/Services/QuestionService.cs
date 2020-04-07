@@ -12,10 +12,13 @@ namespace KnowledgeBase.Domain.Services
     {
         private IQuestionRepo questionRepo;
         private NotificationService notificationService;
-        public QuestionService(IQuestionRepo repo, NotificationService notificationService)
+        private IAnswerRepo answerRepo;
+
+        public QuestionService(IQuestionRepo questionRepo, NotificationService notificationService, IAnswerRepo answerRepo)
         {
-            questionRepo = repo;
+            this.questionRepo = questionRepo;
             this.notificationService = notificationService;
+            this.answerRepo = answerRepo;
         }
 
         public async Task<ICollection<Question>> GetAllQuestions()
@@ -31,14 +34,13 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task DeleteQuestion(Question question)
         {
-            //Maybe I should explicitly delete all answers for this questions
+            //All the answers will be deleted because of Cascade delete in MS SQL
             await questionRepo.Delete(question);
         }
 
          public async Task<Question> AddNewQuestion(Question q)
         {
             var question =  await questionRepo.Store(q);
-            //Purposefully not awaiting this call(it's not needed for the return, and can take really long time)
             await notificationService.CreateNewQuestionNotification(question);
             return question;
         }
@@ -72,6 +74,17 @@ namespace KnowledgeBase.Domain.Services
         {
             return await questionRepo.GetPageCount(pagesize);
         }
+
+        public async Task<Answer> GetAnswer(int id)
+        {
+            return await answerRepo.FindById(id);
+        }
+
+        public async Task DeleteAnswer(Answer answer)
+        {
+            await answerRepo.Delete(answer);
+        }
+        
     }
 
 }

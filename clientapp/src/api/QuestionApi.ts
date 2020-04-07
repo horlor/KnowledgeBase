@@ -24,3 +24,7 @@ export const CreateQuestionToApi = async (question: Question) => {
 export const DeleteQuestion = async (question: Question) => {
     await axios.delete(`/api/questions/${question.id}`);
 }
+
+export const DeleteAnswer = async (question: Question, answer: Answer) =>{
+    await axios.delete(`/api/questions/${question.id}/answers/${answer.id}`);
+}

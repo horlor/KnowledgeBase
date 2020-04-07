@@ -1,14 +1,15 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion } from "../api/QuestionApi";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { AxiosError } from "axios";
 import { Topic } from "../models/Topic";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import Question from "../models/Question";
+import Answer from "../models/Answer";
 
 ///Selector hooks to use int the components without depending them directly on redux
 export const useSelectQuestions = () =>
@@ -47,16 +48,40 @@ export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
 
 export const useQuestionAnswerHook = (questionId: number) => {
     const dispatch = useDispatch();
-    const question = useSelector((state: RootState) => state.question.questionwithanswers,shallowEqual,);
+    const question = useSelector((state: RootState) => state.question.questionwithanswers,shallowEqual);
     const error = useSelector((state: RootState) => state.question.error);
     const loading = useSelector((state: RootState) => state.question.loading);
+    const username = useSelector((state: RootState) => state.login.username);
+    const [selected, setSelected] = useState<Answer>();
+
+    const deleteAnswerWithDialog = (answer: Answer) => {
+        if(username !== answer.author)
+            return undefined;
+        return ()=>{
+            setSelected(answer);
+        }
+    }
+
+    const acceptDeleteAnswer = ()=>{
+        if(selected && question){
+            DeleteAnswer(question,selected);
+            dispatch(DeleteAnswerAction(selected));
+        }
+            
+        setSelected(undefined);
+    }
+
+    const cancelDeleteAnswer = ()=>{
+        setSelected(undefined)
+    }
+
     useEffect(()=>{
         dispatch(FetchQAStarted());
         LoadQuestionAnswerFromApi(questionId)
         .then(resp => dispatch(FetchQASuccess(resp)))
         .catch(ex => dispatch(FetchQAFailure(CatchIntoErrorModel(ex))));
     },[dispatch,questionId]);
-    return {question,loading, error};
+    return {question,loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer};
 
 }
 

@@ -89,6 +89,19 @@ namespace KnowledgeBase.WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpDelete("{qId}/answers/{id}")]
+        public async Task<ActionResult> DeleteAnswer([FromRoute] int qId, [FromRoute] int id)
+        {
+            var answer = await questionService.GetAnswer(id);
+            if (answer == null)
+                return NotFound();
+            if (answer.Author != UserName)
+                return Conflict();
+            await questionService.DeleteAnswer(answer);
+            return NoContent();
+        }
+
 
        
     }

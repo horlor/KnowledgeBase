@@ -20,14 +20,14 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task Delete(Answer answer)
         {
-            var ans = dbcontext.Answers.First(a => a.Id == answer.Id);
+            var ans = dbcontext.Answers.FirstOrDefault(a => a.Id == answer.Id);
             dbcontext.Remove(ans);
             await dbcontext.SaveChangesAsync();
         }
 
         public async Task<Answer> FindById(int id)
         {
-            return DbMapper.MapDbAnswer(await dbcontext.Answers.FirstAsync(a => a.Id == id));
+            return DbMapper.MapDbAnswer(await dbcontext.Answers.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id));
         }
 
         public async Task<Answer> Store(Answer answer)
