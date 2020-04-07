@@ -95,7 +95,13 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<ITopicRepo, TopicRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
 
-            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>(x => new JwtTokenGenerator()
+            {
+                Audience = Configuration["Jwt:Audience"],
+                Issuer = Configuration["Jwt:Issuer"],
+                Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                Expiration = DateTime.Now.AddDays(30),
+            }) ;
 
             services.AddTransient<DataSeeder, DataSeeder>();
 

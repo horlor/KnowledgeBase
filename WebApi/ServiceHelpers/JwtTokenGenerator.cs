@@ -10,6 +10,11 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
 {
     public class JwtTokenGenerator : ITokenGenerator
     {
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
+        public SymmetricSecurityKey Key { get; set; }
+        public DateTime Expiration { get; set; }
+
         public object GenerateToken(string name)
         {
             var claims = new List<Claim>
@@ -18,13 +23,9 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Secret key for JWT $42&"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(30));
-            var issuer = "Viknowledge";
-            var audience = "Viknowledge-users";
+            var creds = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(issuer, audience, claims, null, expires, creds);
+            var token = new JwtSecurityToken(Issuer, Audience, claims, null, Expiration, creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
