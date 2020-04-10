@@ -14,6 +14,9 @@ namespace KnowledgeBase.DataAccess.DataObjects
 
         [Required, MaxLength(1000)]
         public string Content { get; set; }
+        public DateTime Created { get; set; }
+
+        public DateTime LastUpdated { get; set; }
 
         [Required]
         public virtual DbQuestion Question { get; set; }

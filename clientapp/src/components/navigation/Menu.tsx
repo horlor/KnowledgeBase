@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import {Link } from 'react-router-dom';
 import { useLoggedInState } from '../../hooks/LoginHooks';
 
@@ -22,6 +22,7 @@ const Menu : React.FC<IProps> = (props) => {
               <ListItem button component={Link} to="/users">
                 <ListItemText primary={"Users"} />
               </ListItem>
+              <Divider/>
               <ListItem button component={Link} to="/profile">
                 <ListItemText primary={"Profile"} />
               </ListItem>

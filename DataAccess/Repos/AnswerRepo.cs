@@ -32,9 +32,12 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Answer> Store(Answer answer)
         {
+            var now = DateTime.Now;
             var dbAnswer = new DbAnswer()
             {
-                Content = answer.Content
+                Content = answer.Content,
+                Created = now,
+                LastUpdated = now,
             };
             var a = await dbcontext.Answers.AddAsync(dbAnswer);
             await dbcontext.SaveChangesAsync();
@@ -42,13 +45,18 @@ namespace KnowledgeBase.DataAccess.Repos
             return answer;
         }
 
-        public async Task Update(Answer answer)
+        public async Task<Answer> Update(Answer answer)
         {
             var ans = await dbcontext.Answers.FirstAsync(a => a.Id == answer.Id);
             ans.Content = answer.Content;
-            //TODO Author - User Pairing
-
+            ans.LastUpdated = DateTime.Now;
+            var user = dbcontext.Users.FirstOrDefault(u => u.UserName == answer.Author);
+            if(user !=null)
+            {
+                ans.User = user;
+            }
             await dbcontext.SaveChangesAsync();
+            return DbMapper.MapDbAnswer(ans);
         }
     }
 }

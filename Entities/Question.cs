@@ -11,6 +11,9 @@ namespace KnowledgeBase.Entities
         public string Content { get; set; }
         public string Author { get; set; }
 
+        public DateTime Created { get; set; }
+        public DateTime LastUpdate { get; set; }
+
         public Topic Topic { get; set; }
 
     }

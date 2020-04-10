@@ -102,7 +102,31 @@ namespace KnowledgeBase.WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Question>> UpdateQuestion([FromRoute] int id, [FromBody] QuestionUpdateRequest request)
+        {
+            var question = await questionService.GetQuestion(id);
+            if (question == null)
+                return NotFound();
+            if (question.Author != UserName)
+                return Conflict();
+            question.Content = request.Content;
+            return Ok(await questionService.UpdateQuestion(question));
+        }
 
-       
+        [Authorize]
+        [HttpPut("{qId}/answers/{id}")]
+        public async Task<ActionResult> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
+        {
+            var answer = await questionService.GetAnswer(id);
+            if (answer == null)
+                return NotFound();
+            if (answer.Author != UserName)
+                return Conflict();
+            answer.Content = request.Content;
+            return Ok(await questionService.UpdateAnswer(answer));
+        }
+
     }
 }

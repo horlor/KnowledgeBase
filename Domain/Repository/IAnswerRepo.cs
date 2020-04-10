@@ -10,7 +10,7 @@ namespace KnowledgeBase.Domain.Repository
     {
         Task<Answer> FindById(int id);
         Task<Answer> Store(Answer answer);
-        Task Update(Answer answer);
+        Task<Answer> Update(Answer answer);
         Task Delete(Answer answer);
     }
 }

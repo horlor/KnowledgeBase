@@ -75,7 +75,7 @@ export const useNotificationsWithUpdate = () =>{
         checkForPending();
         const timer = window.setInterval(()=>{
             checkForPending();
-        },300000)
+        },30000)
         return ()=>{
             window.clearInterval(timer)
         }

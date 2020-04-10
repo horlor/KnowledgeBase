@@ -72,10 +72,14 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Question> Store(Question question)
         {
+            //So there would be the same for the creation
+            var now = DateTime.Now;
             var dbQ = new DbQuestion()
             {
                 Content = question.Content,
                 Title = question.Title,
+                Created = now,
+                LastUpdated = now,
             };
             var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == question.Author);
             if (user == null)
@@ -93,6 +97,8 @@ namespace KnowledgeBase.DataAccess.Repos
             DbAnswer dbAnswer = new DbAnswer()
             {
                 Content = answer.Content,
+                Created = DateTime.Now,
+                LastUpdated = DateTime.Now,
             };
             var question = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == id);
             var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == answer.Author);
@@ -105,16 +111,17 @@ namespace KnowledgeBase.DataAccess.Repos
             return DbMapper.MapDbAnswer(dbAnswer);
         }
 
-        public async Task Update(Question question)
+        public async Task<Question> Update(Question question)
         {
             var q = await dbcontext.Questions.SingleAsync(q => q.Id == question.Id);
             if (q != null)
             {
                 q.Content = question.Content;
                 q.Title = question.Title;
-                //TODO changing user
+                q.LastUpdated = DateTime.Now;
                 await dbcontext.SaveChangesAsync();
             }
+            return DbMapper.MapDbQuestion(q);
         }
 
         public async Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize)

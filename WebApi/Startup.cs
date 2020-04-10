@@ -46,10 +46,17 @@ namespace KnowledgeBase.WebApi
                         //builder.AllowAnyOrigin();
                         builder.AllowAnyMethod();
                         builder.AllowCredentials();
+
+
+
                     });
             });
             services.AddDbContext<KnowledgeContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.EnableDetailedErrors();
+                options.EnableSensitiveDataLogging();
+            });
 
             services.AddIdentityCore<DbUser>();
             new IdentityBuilder(typeof(DbUser), typeof(IdentityRole), services)

@@ -16,6 +16,10 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [Required]
         public string Content { get; set; }
 
+        public DateTime Created { get; set; }
+
+        public DateTime LastUpdated { get; set; }
+
         public virtual DbUser User { get; set; }
 
         public virtual DbTopic Topic { get; set; }

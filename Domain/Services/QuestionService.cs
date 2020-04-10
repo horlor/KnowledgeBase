@@ -26,12 +26,6 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.List();
         }
 
-        public async Task UpdateQuestion(Question question)
-        {
-            //What if the object passed not exists till now
-            await questionRepo.Update(question);
-        }
-
         public async Task DeleteQuestion(Question question)
         {
             //All the answers will be deleted because of Cascade delete in MS SQL
@@ -83,6 +77,16 @@ namespace KnowledgeBase.Domain.Services
         public async Task DeleteAnswer(Answer answer)
         {
             await answerRepo.Delete(answer);
+        }
+
+        public async Task<Question> UpdateQuestion(Question question)
+        {
+            return await questionRepo.Update(question);
+        }
+
+        public async Task<Answer> UpdateAnswer(Answer answer)
+        {
+            return await answerRepo.Update(answer);
         }
         
     }
