@@ -8,6 +8,7 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     internal class DbMapper
     {
+        private static readonly string dateFormat = "yyyy.MM.dd HH:mm:ss";
         internal static Answer MapDbAnswer(DbAnswer dbAnswer)
         {
             if (dbAnswer == null)
@@ -17,8 +18,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 Id = dbAnswer.Id,
                 Author = dbAnswer.User.UserName,
                 Content = dbAnswer.Content,
-                Created = dbAnswer.Created,
-                LastUpdate = dbAnswer.LastUpdated,
+                Created = dbAnswer.Created.ToString(dateFormat),
+                LastUpdate = dbAnswer.LastUpdated.ToString(dateFormat),
             };
         }
 
@@ -32,8 +33,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 Author = dbQuestion.User?.UserName,
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content,
-                Created = dbQuestion.Created,
-                LastUpdate = dbQuestion.LastUpdated,
+                Created = dbQuestion.Created.ToString(dateFormat),
+                LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
                 Topic = MapDbTopic(dbQuestion.Topic)
             };
             return q;
@@ -55,8 +56,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 Title = dbQuestion.Title,
                 Content = dbQuestion.Content,
                 Answers = answers,
-                Created = dbQuestion.Created,
-                LastUpdate = dbQuestion.LastUpdated,
+                Created = dbQuestion.Created.ToString(dateFormat),
+                LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
                 Topic = MapDbTopic(dbQuestion.Topic)
             };
         }

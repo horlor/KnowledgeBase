@@ -1,27 +1,14 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
-import { RootState, AppDispatch } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer } from "../api/QuestionApi";
+import { RootState } from "../redux/Store";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
-import { AxiosError } from "axios";
 import { Topic } from "../models/Topic";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
-import Question from "../models/Question";
+import Question, { QuestionUpdateRequest } from "../models/Question";
 import Answer from "../models/Answer";
-
-///Selector hooks to use int the components without depending them directly on redux
-export const useSelectQuestions = () =>
-    useSelector((state : RootState) => state.question.questions);
-
-export const useSelectQuestionWithAnswer = () =>
-    useSelector((state : RootState) => state.question.questionwithanswers)
-
-export const useSelectLoading = () =>
-    useSelector((state : RootState) => state.question.loading);
-
-
 
 export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
     var questions = useSelector((state : RootState) => state.question.questions, shallowEqual);
@@ -64,7 +51,7 @@ export const useQuestionAnswerHook = (questionId: number) => {
 
     const acceptDeleteAnswer = ()=>{
         if(selected && question){
-            DeleteAnswer(question,selected);
+            DeleteAnswer(question.id,selected);
             dispatch(DeleteAnswerAction(selected));
         }
             
@@ -84,6 +71,7 @@ export const useQuestionAnswerHook = (questionId: number) => {
     return {question,loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer};
 
 }
+
 
 export const useNewQuestionHook = () => {
     const dispatch = useDispatch();
@@ -114,4 +102,31 @@ export const useNewQuestionHook = () => {
     }
 
     return {topics,  loggedIn, post, postLoading, postError};
+}
+
+export const useQuestionEditHook = (question: Question) =>{
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.login.username);
+    const [edit, setEdit] = useState(false);
+    const modifyEnabled = question.author === user;
+    const modified = question.created !== question.lastUpdate;
+
+    const saveChanges =  async(request: QuestionUpdateRequest) =>{
+        try{
+            await UpdateQuestion(question.id, request);
+            dispatch(UpdateQuestionAction(request.content));
+        }
+        catch(exc){
+            console.log("Update failed") 
+        }
+        setEdit(false)
+    }
+    const dropChanges = () =>{
+        setEdit(false)
+    }
+    const editQuestion = () =>{
+        setEdit(true)
+    }
+
+    return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified};
 }

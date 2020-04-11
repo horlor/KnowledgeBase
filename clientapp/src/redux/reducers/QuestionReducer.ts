@@ -2,7 +2,6 @@ import { createReducer, createAction } from "@reduxjs/toolkit";
 import Question, { PagedQuestions, QuestionWithAnswers } from "../../models/Question";
 import Answer from "../../models/Answer";
 import ErrorModel from "../../models/ErrorModel";
-import { access } from "fs";
 
 export interface IQuestionStore{
     questions: Question[],
@@ -22,8 +21,11 @@ const initialState : IQuestionStore = {
 }
 
 export const AddQuestionAction = createAction<Question>("add-question");
-export const AddAnswerAction = createAction<Answer>("add-answer");
+export const UpdateQuestionAction = createAction<string>("update-question");
 export const DeleteQuestionAction = createAction<Question>("delete-question");
+
+export const AddAnswerAction = createAction<Answer>("add-answer");
+export const UpdateAnswerAction = createAction<Answer>("update-answer");
 export const DeleteAnswerAction = createAction<Answer>("delete-answer")
 export const FetchQuestionsStarted = createAction("fetch-questions-started");
 export const FetchQuestionsSuccess = createAction<PagedQuestions>("fetch-questions-success");
@@ -75,6 +77,18 @@ export const QuestionReducer = createReducer(initialState, builder => builder
         if(state.questionwithanswers)
             state.questionwithanswers.answers = state.questionwithanswers.answers.filter(ans => ans.id !== action.payload.id);
     })
+    .addCase(UpdateAnswerAction, (state: IQuestionStore, action) =>{
+        if(state.questionwithanswers){
+            const idx  = state.questionwithanswers.answers.findIndex(a => a.id === action.payload.id);
+            console.log(action.payload);
+            state.questionwithanswers.answers[idx].content =action.payload.content;
+        }
+    })
+    .addCase(UpdateQuestionAction, (state, action) =>{
+        if(state.questionwithanswers){
+            state.questionwithanswers.content  = action.payload;
+        }
+    }) 
 
 );
 

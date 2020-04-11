@@ -30,7 +30,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
             <>
                 <QuestionView question={question}/>
                 {question.answers.map(ans => 
-                    <AnswerView content={ans.content} key={ans.id} author={ans.author} delete={deleteAnswerWithDialog(ans)}/>) }
+                    <AnswerView  key={ans.id} answer={ans}/>) }
                 <AnswerInput questionId={question.id}/>
                 <Dialog open={!!selected}>
                     <DialogTitle>Warning!</DialogTitle>

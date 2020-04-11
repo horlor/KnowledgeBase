@@ -6,6 +6,8 @@ export interface Question{
     title: string;
     content: string;
     author: string;
+    created?: string,
+    lastUpdate?: string,
     topic: Topic,
 }
 
@@ -18,6 +20,10 @@ export interface PagedQuestions{
 export interface QuestionWithAnswers extends Question{
     answers: Answer[];
 
+}
+
+export interface QuestionUpdateRequest{
+    content: string;
 }
 
 export default Question;

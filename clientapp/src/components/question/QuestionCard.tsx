@@ -4,6 +4,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Question from '../../models/Question';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { dateToString } from '../../helpers/DateHelper';
 
 interface IQuestionProps{
     question: Question;

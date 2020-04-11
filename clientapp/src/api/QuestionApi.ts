@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Question, { PagedQuestions, QuestionWithAnswers } from '../models/Question';
-import Answer from '../models/Answer';
+import Question, { PagedQuestions, QuestionWithAnswers, QuestionUpdateRequest } from '../models/Question';
+import Answer, { AnswerUpdateRequest } from '../models/Answer';
 
 export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
     var response = await axios.get<PagedQuestions>(`/api/questions?pagenum=${pageNum}&pageSize=${pageSize}`);
@@ -25,6 +25,14 @@ export const DeleteQuestion = async (question: Question) => {
     await axios.delete(`/api/questions/${question.id}`);
 }
 
-export const DeleteAnswer = async (question: Question, answer: Answer) =>{
-    await axios.delete(`/api/questions/${question.id}/answers/${answer.id}`);
+export const DeleteAnswer = async (questionId: number, answer: Answer) =>{
+    await axios.delete(`/api/questions/${questionId}/answers/${answer.id}`);
+}
+
+export const UpdateAnswer = async (questionId: number, answerId: number,  request: AnswerUpdateRequest) =>{
+    await axios.put(`/api/questions/${questionId}/answers/${answerId}`,request);
+}
+
+export const UpdateQuestion = async (id : number, request: QuestionUpdateRequest) =>{
+    await axios.put(`/api/questions/${id}`,request);
 }

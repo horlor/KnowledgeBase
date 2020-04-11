@@ -1,9 +1,10 @@
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../redux/Store'
-import Answer from '../models/Answer';
-import { CreateAnswerToQuestion } from '../api/QuestionApi';
-import { AddAnswerAction } from '../redux/reducers/QuestionReducer';
+import Answer, { AnswerUpdateRequest } from '../models/Answer';
+import { CreateAnswerToQuestion, DeleteAnswer, UpdateAnswer } from '../api/QuestionApi';
+import { AddAnswerAction, DeleteAnswerAction, UpdateAnswerAction } from '../redux/reducers/QuestionReducer';
+import { UserReducer } from '../redux/reducers/UserReducer';
 
 export const useAnswerInputHook = (id: number)=>{
     const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
@@ -26,4 +27,57 @@ export const useAnswerInputHook = (id: number)=>{
     }
 
     return {loggedIn, user, error, loading, postAnswer}
+}
+
+export const useAnswerHook = (answer: Answer) =>{
+    const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+    const user = useSelector((state: RootState) => state.login.username);
+    const dispatch = useDispatch();
+    const [edit, setEdit] = useState(false);
+    const [deleteDialog, setDelete] = useState(false);
+    const modifyEnabled = answer.author === user;
+    const modified = answer.created !== answer.lastUpdate;
+
+
+    const saveChanges =  async(request: AnswerUpdateRequest) =>{
+        try{
+            await UpdateAnswer(0,answer.id,request);
+            const ans = {...answer, content: request.content };
+            console.log(request)
+            console.log(ans);
+            dispatch(UpdateAnswerAction(ans));
+        }
+        catch(exc){
+            console.log(exc);
+        }
+        setEdit(false)
+    }
+    const dropChanges = () =>{
+        setEdit(false)
+    }
+    const editAnswer = () =>{
+        setEdit(true)
+    }
+
+    const deleteWithDialog = ()=>{
+        setDelete(true)
+    }
+
+    const acceptDelete = async() =>{
+        try{
+            await DeleteAnswer(0,answer);
+            dispatch(DeleteAnswerAction(answer))
+        }
+        catch(exc){
+            console.log(exc);
+        }
+
+        setDelete(false);
+    }
+
+    const dropDelete = () =>{
+        setDelete(false);
+    }
+
+    return {edit, saveChanges, dropChanges, editAnswer, deleteWithDialog, acceptDelete, dropDelete, deleteDialog, modifyEnabled, modified};
 }

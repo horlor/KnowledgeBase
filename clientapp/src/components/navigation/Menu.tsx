@@ -35,6 +35,7 @@ const Menu : React.FC<IProps> = (props) => {
               <ListItem button component={Link} to="/users">
                 <ListItemText primary={"Users"} />
               </ListItem>
+              <Divider/>
               <ListItem button component={Link} to="/login">
                 <ListItemText primary={"Login"} />
               </ListItem>
