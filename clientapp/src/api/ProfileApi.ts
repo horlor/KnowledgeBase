@@ -11,6 +11,7 @@ export const Login = async (username: string, password: string, stayLoggedIn : b
         if(stayLoggedIn){
             localStorage.setItem("Viknowledge-token", resp.data.token);
             localStorage.setItem("Viknowledge-user", resp.data.username)
+            localStorage.setItem("Viknowledge-role", resp.data.role);
         }
             
     }
@@ -21,11 +22,20 @@ export const LoginFromStorage = () =>{
     let token = localStorage.getItem("Viknowledge-token");
     if(token){
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        return localStorage.getItem("Viknowledge-user")
+        let username = localStorage.getItem("Viknowledge-user");
+        let role = localStorage.getItem("Viknowledge-role");
+        if(username && role)
+        return {
+                username:username,
+                role: role,
+            };
     }
     return null;
         
 }
+
+
+
 
 
 export const Logout  = () =>{

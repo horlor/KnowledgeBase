@@ -12,4 +12,9 @@ namespace KnowledgeBase.Entities.DataTransferObjects
         public string Introduction { get; set; }
         public ICollection<Topic> Topics { get; set; }
     }
+
+    public class UserPatchRoleDto
+    {
+        public string Role { get; set; }
+    }
 }

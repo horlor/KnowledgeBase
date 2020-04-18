@@ -42,12 +42,13 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<LoginResponse> Login(string username, string password)
         {
-            var result = await userRepo.SignIn(username, password);
+            var (result, role) = await userRepo.SignIn(username, password);
             var session = new LoginResponse() { Success = false };
             if (result == SignInResult.Success)
             {
                 session.Success = true;
-                session.Token = tokenGenerator.GenerateToken(username);
+                session.Role = role;
+                session.Token = tokenGenerator.GenerateToken(username, role);
                 session.Username = username;
             }
             return session;
@@ -71,6 +72,11 @@ namespace KnowledgeBase.Domain.Services
         public async Task<UserDetailed> UpdateUser(UserDetailed user)
         {
             return await userRepo.UpdateUser(user);
+        }
+
+        public async Task<string> SetUserRole(User user, string role)
+        {
+            return await userRepo.SetUserRole(user, role);
         }
 
     }

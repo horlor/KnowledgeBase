@@ -6,6 +6,6 @@ namespace KnowledgeBase.Domain.Interfaces
 {
     public interface ITokenGenerator
     {
-        object GenerateToken(string username);
+        object GenerateToken(string username, string role);
     }
 }

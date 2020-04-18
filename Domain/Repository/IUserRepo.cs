@@ -14,7 +14,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<User> GetByName(string name);
         Task<ICollection<User>> List();
 
-        Task<SignInResult> SignIn(string username, string password);
+        Task<(SignInResult, string)> SignIn(string username, string password);
 
         Task SignOut();
 
@@ -23,6 +23,8 @@ namespace KnowledgeBase.Domain.Repository
         Task<ICollection<User>> GetAllUser();
         Task<UserDetailed> UpdateUser(UserDetailed user);
         Task<ICollection<User>> GetUsersByTopic(Topic topic);
+
+        Task<string> SetUserRole(User user, string role);
 
     }
 

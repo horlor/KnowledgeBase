@@ -27,7 +27,7 @@ export const useLoginHook =  () =>{
         if(!loggedIn){
             try{
                 let resp = await Login(username, password, stayLoggedIn);
-                dispatch(LoginAction(resp.username));
+                dispatch(LoginAction(resp));
             }
             catch(exc){
                 setError(true);
@@ -75,8 +75,8 @@ export const useRegisterHook = ()=>{
 export const useCheckSavedLoginHook = () =>{
     const dispatch = useDispatch();
     useEffect(()=>{
-            let user = LoginFromStorage();
-            if(user)
-                dispatch(LoginAction(user));
+            let savedsession = LoginFromStorage();
+            if(savedsession)
+                dispatch(LoginAction(savedsession));
     },[dispatch])
 }

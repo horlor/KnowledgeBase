@@ -6,7 +6,6 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useQuestionEditHook } from '../../hooks/QuestionHooks';
 import { register } from '../../serviceWorker';
 import { useForm } from 'react-hook-form';
-import { dateToString } from '../../helpers/DateHelper';
 
 
 

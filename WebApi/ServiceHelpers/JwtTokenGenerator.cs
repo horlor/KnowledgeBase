@@ -15,12 +15,14 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
         public SymmetricSecurityKey Key { get; set; }
         public DateTime Expiration { get; set; }
 
-        public object GenerateToken(string name)
+        public object GenerateToken(string name, string role)
+
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var creds = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);

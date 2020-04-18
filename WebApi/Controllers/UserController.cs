@@ -46,6 +46,19 @@ namespace KnowledgeBase.WebApi.Controllers
             await notificationService.CreateNotificationForUser(username, notification);
         }
 
+        [Authorize(Roles ="Admin")]
+        [HttpPatch("{username}/role")]
+        public async Task<ActionResult> SetRoleForUser([FromRoute] string username, [FromBody] UserPatchRoleDto dto)
+        {
+            var user = await userService.GetUser(username);
+            if (user == null)
+                return NotFound();
+            var ret = userService.SetUserRole(user, dto.Role);
+            if (ret == null)
+                return BadRequest();
+            return Ok();
+        }
+
 
     }
 }

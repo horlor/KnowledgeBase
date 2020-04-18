@@ -58,12 +58,15 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
         }
 
-        public async Task<SignInResult> SignIn(string username, string password)
+        public async Task<(SignInResult, string)> SignIn(string username, string password)
         {
             var dbUser = await userManager.FindByNameAsync(username);
             if (dbUser == null)
-                return SignInResult.Failed;
-            return await signInManager.CheckPasswordSignInAsync(dbUser, password, false);
+                return (SignInResult.Failed, null);
+            var signinresult = await signInManager.CheckPasswordSignInAsync(dbUser, password, false);
+            var userrole = await userManager.GetRolesAsync(dbUser);
+            return (signinresult, userrole.First());
+
         }
 
         public async Task SignOut()
@@ -127,6 +130,23 @@ namespace KnowledgeBase.DataAccess.Repos
                     .ThenInclude(ut => ut.Topic)
                 .Select(u => DbMapper.MapDbUser(u))
                 .ToListAsync();
+        }
+
+        public async Task<string> SetUserRole(User user, string role)
+        {
+            var dbUser = await userManager.FindByNameAsync(user.UserName);
+            var roles = await userManager.GetRolesAsync(dbUser);
+            await userManager.RemoveFromRolesAsync(dbUser, roles);
+            try
+            {
+                await userManager.AddToRoleAsync(dbUser, role);
+                return role;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+            
         }
 
 

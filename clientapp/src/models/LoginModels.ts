@@ -3,6 +3,7 @@ import ErrorModel from "./ErrorModel";
 export interface ISession{
     username: string,
     token: string,
+    role: string,
 }
 
 export interface RegisterRequest{

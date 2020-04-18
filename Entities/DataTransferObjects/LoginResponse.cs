@@ -7,6 +7,7 @@ namespace KnowledgeBase.Entities
     public class LoginResponse
     {
         public string Username { get; set; }
+        public string Role { get; set; }
         public bool Success { get; set; }
         public object Token { get; set; }
     }
