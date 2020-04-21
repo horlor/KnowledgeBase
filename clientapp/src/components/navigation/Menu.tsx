@@ -1,13 +1,13 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Divider } from '@material-ui/core';
+import { List, ListItem, ListItemText, Divider, ListSubheader } from '@material-ui/core';
 import {Link } from 'react-router-dom';
-import { useLoggedInState } from '../../hooks/LoginHooks';
+import { useLoginState } from '../../hooks/LoginHooks';
 
 interface IProps{
 
 }
 const Menu : React.FC<IProps> = (props) => {
-    const loggedIn = useLoggedInState();
+    const {loggedIn, role} = useLoginState();
     return (
       <div>
         <List>
@@ -44,6 +44,24 @@ const Menu : React.FC<IProps> = (props) => {
               </ListItem>
             </>
           )}
+          {
+              (role==="Admin")?
+              <>
+                <Divider/>
+                <Divider/>
+                <ListSubheader>Admin</ListSubheader>
+                <ListItem button component={Link} to="/admin">
+                  <ListItemText primary={"Role management"}/>
+                </ListItem>
+                <ListItem button component={Link} to="/admin">
+                  <ListItemText primary={"Statistics"}/>
+                </ListItem>
+                <ListItem button component={Link} to="/topics">
+                  <ListItemText primary={"Topics"}/>
+                </ListItem>
+              </>
+              :""
+          }
         </List>
       </div>
     );

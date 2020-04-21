@@ -13,8 +13,9 @@ export const useLoggedInState = () =>
 export const useLoginState = () =>{
     const username = useSelector((state: RootState) => state.login.username);
     const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+    const role = useSelector((state: RootState)=> state.login.role);
 
-    return {username, loggedIn};
+    return {username, loggedIn, role};
 }
 
 export const useLoginHook =  () =>{

@@ -14,6 +14,8 @@ import { useCheckSavedLoginHook } from '../../hooks/LoginHooks';
 import ProfilePage from '../pages/ProfilePage';
 import NotificationPage from '../pages/NotificationPage';
 import NotificationPanel from '../notification/NotificationPanel';
+import AdminPage from '../pages/AdminPage';
+import TopicPage from '../pages/TopicPage';
 
 
 interface IProps{
@@ -74,6 +76,14 @@ export const Routes : React.FC<IProps> = (props) => {
                 path="/notifications"
                 component={NotificationPage}
                 exact
+            />
+            <Route
+                path="/admin"
+                component={AdminPage}
+            />
+            <Route
+                path="/topics"
+                component={TopicPage}
             />
             </NavigationView>
         {<NotificationPanel/>}

@@ -22,7 +22,8 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    width:"100%"
+    width:"100%",
+    height:"100vh"
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -136,9 +137,9 @@ const NavigationView : React.FC<IProps> = (props) => {
           </Drawer>
         </Hidden>
       </nav>
-      <Box width={1}>
+      <Box height="100%" width="100%" display="flex" flexDirection="column" justifyContent="start">
         <div className={classes.toolbar}/>
-        <Box display="flex" justifyItems="center" justifyContent="center">
+        <Box display="flex" justifyItems="center" justifyContent="center" height="100%"  width="100%">
           {props.children}
         </Box>
       </Box>
