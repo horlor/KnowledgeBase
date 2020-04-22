@@ -36,7 +36,7 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok(topic);
         }
 
-        [Authorize]
+        [Authorize(Roles ="Admin, Moderator")]
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDetailed topic)
         {
@@ -44,7 +44,7 @@ namespace KnowledgeBase.WebApi.Controllers
             return  Created("/api/topics/"+created.Id, created);
         }
 
-        [Authorize]
+        [Authorize(Roles ="Admin, Moderator")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTopic([FromRoute] int id)
         {
@@ -52,11 +52,12 @@ namespace KnowledgeBase.WebApi.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpPut("{id}")]
         public async Task<ActionResult<Topic>> UpdateTopic(TopicDetailed topicDetailed)
         {
             var ret = await topicService.Update(topicDetailed);
+            Console.WriteLine(topicDetailed.Ancestor == null? "null":"nemnull");
             if (ret == null)
                 return NotFound();
             else

@@ -59,7 +59,7 @@ interface IFormData{
 }
 
 const TopicPage : React.FC<IProps> = (props: IProps) =>{
-    const {topics, error, selectTopic, selected, saveChanges} = useTopicHook();
+    const {topics, error, selectTopic, selected, saveChanges, newTopic, createNew} = useTopicHook();
     const {register, handleSubmit} = useForm<IFormData>();
     const classes = useStyles();
     const [ancestor, setAncestor] = useState<Topic | null | undefined>(undefined);
@@ -77,6 +77,14 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
                 t.ancestor = ancestor;
             saveChanges(t);
         }
+        if(newTopic){
+            let t: TopicDetailed = {
+                id:0,
+                name: data.name,
+                ancestor: ancestor?ancestor:null,
+            }
+            saveChanges(t);
+        }
 
     }
 
@@ -91,7 +99,7 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
                     <List>
                         {
                             topics?.map(t => (
-                            <ListItem button onClick={()=>selectTopic(t)}>
+                            <ListItem key={t.id} button onClick={()=>selectTopic(t)}>
                                 <ListItemText primary={t.name} />
                             </ListItem>
                             ))
@@ -99,19 +107,26 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
                     </List>
                 </Box>
                 <Box className={classes.detailPanel}>
-                    {/*<Box className={classes.commandBar} display="flex" flexDirection="row">
-                        <Button className={classes.commandButton} startIcon={<AddIcon/>} variant="outlined">
+                    <Box className={classes.commandBar} display="flex" flexDirection="row">
+                        <Button 
+                            className={classes.commandButton} 
+                            startIcon={<AddIcon/>} variant="outlined"
+                            onClick={createNew}
+                            >
                             Create
                         </Button>
-                        <Button className={classes.commandButton} startIcon={<DeleteIcon/>} variant="outlined">
+                        {/*<Button 
+                            className={classes.commandButton}
+                            startIcon={<DeleteIcon/>} variant="outlined"
+                            >
                             Delete
-                        </Button>
-                    </Box>*/}
-                    {selected?
+                        </Button>*/}
+                    </Box>
+                    {(selected || newTopic)?
                         <form onSubmit={handleSubmit(onSubmit)}>
                         <TextField
                             className={classes.inputField}
-                            defaultValue={selected.name}
+                            defaultValue={selected?.name}
                             label="Name"
                             name="name"
                             inputRef={register}
@@ -121,7 +136,7 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
                             id="ancestor-combobox"
                             options={topics}
                             getOptionLabel={(topic) => topic?topic.name:""}
-                            defaultValue={selected.ancestor}
+                            defaultValue={selected?.ancestor}
                             onChange={((e: any,v: any)=>{setAncestor(v)})}
                             renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
                             />

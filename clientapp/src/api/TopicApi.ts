@@ -13,3 +13,7 @@ export const UpdateTopicApi = async (topic: TopicDetailed) =>{
     return await Axios.put(`/api/topics/${topic.id}`,topic);
 }
 
+export const CreateTopicApi = async(topic: TopicDetailed) =>{
+    return (await Axios.post<Topic>("/api/topics",{name:topic.name,ancestor:topic.ancestor})).data;
+}
+

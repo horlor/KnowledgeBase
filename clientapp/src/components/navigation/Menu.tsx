@@ -53,9 +53,6 @@ const Menu : React.FC<IProps> = (props) => {
                 <ListItem button component={Link} to="/admin">
                   <ListItemText primary={"Role management"}/>
                 </ListItem>
-                <ListItem button component={Link} to="/admin">
-                  <ListItemText primary={"Statistics"}/>
-                </ListItem>
                 <ListItem button component={Link} to="/topics">
                   <ListItemText primary={"Topics"}/>
                 </ListItem>

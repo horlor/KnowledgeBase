@@ -72,6 +72,9 @@ namespace KnowledgeBase.DataAccess.Repos
             var dbTopic = new DbTopic()
             {
                 Name = topic.Name,
+
+
+
                 Ancestor = ancestor,
             };
             var res = await dbcontext.Topics.AddAsync(dbTopic);
@@ -84,10 +87,18 @@ namespace KnowledgeBase.DataAccess.Repos
             var dbTopic = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == topic.Id);
             if (dbTopic is null)
                 return null;
-            var ancestor = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == topic.Ancestor.Id);
-            if (ancestor != null)
-                dbTopic.Ancestor = ancestor;
+            if (topic.Ancestor != null)
+            {
+                var ancestor = await dbcontext.Topics.FirstOrDefaultAsync(t => t.Id == topic.Ancestor.Id);
+                if (ancestor != null)
+                    dbTopic.Ancestor = ancestor;
+            }
+            else
+            {
+                dbTopic.Ancestor = null;
+            }
             dbTopic.Name = topic.Name;
+            Console.WriteLine(dbTopic.Ancestor == null ? "The dbtopic's ancestor is null":"wtf");
             await dbcontext.SaveChangesAsync();
             return topic;
         }
