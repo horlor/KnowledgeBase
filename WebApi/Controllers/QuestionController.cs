@@ -128,5 +128,11 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok(await questionService.UpdateAnswer(answer));
         }
 
+        [HttpGet("search")]
+        public async Task<QuestionSearchResponse> SearchQuestions([FromBody] QuestionSearchRequest request)
+        {
+            return await questionService.Search(request);
+        }
+
     }
 }

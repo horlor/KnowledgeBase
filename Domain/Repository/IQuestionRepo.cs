@@ -21,5 +21,6 @@ namespace KnowledgeBase.Domain.Repository
         Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize);
         Task<int> Count();
         Task<int> GetPageCount(int pagesize);
+        Task<ICollection<Question>> Search(string anywhere, string title = null, string content= null, Topic topic = null);
     }
 }

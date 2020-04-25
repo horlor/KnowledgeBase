@@ -144,5 +144,18 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             return (int)(Math.Ceiling((float)(await Count()) / pagesize));
         }
+
+        public async Task<ICollection<Question>> Search(string anywhere,string title, string content,   Topic topic)
+        {
+            var query = dbcontext.Questions
+                .Include(q => q.User)
+                .Include(q => q.Topic)
+                .Where(q => EF.Functions.Like(q.Title, $"%{title}%"))
+                .Where(q => EF.Functions.Like(q.Content, $"%{content}%"));
+            if (topic != null)
+                query = query.Where(q => q.Topic.Id == topic.Id);
+            return await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
+
+        }
     }
 }

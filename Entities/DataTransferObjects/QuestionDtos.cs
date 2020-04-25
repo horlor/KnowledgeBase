@@ -21,4 +21,18 @@ namespace KnowledgeBase.Entities.DataTransferObjects
     {
         public string Content { get; set; }
     }
+
+    public class QuestionSearchRequest
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Anywhere { get; set; }
+        public Topic Topic { get; set; }
+    }
+
+    public class QuestionSearchResponse
+    {
+        public int Count { get; set; }
+        public ICollection<Question> Results { get; set; }
+    }
 }
