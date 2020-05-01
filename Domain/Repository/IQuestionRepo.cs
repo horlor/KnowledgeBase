@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 
 namespace KnowledgeBase.Domain.Repository
 {
@@ -21,6 +22,6 @@ namespace KnowledgeBase.Domain.Repository
         Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize);
         Task<int> Count();
         Task<int> GetPageCount(int pagesize);
-        Task<ICollection<Question>> Search(string anywhere, string title = null, string content= null, Topic topic = null);
+        Task<QuestionSearchResponse> Search(QuestionSearchRequest request);
     }
 }

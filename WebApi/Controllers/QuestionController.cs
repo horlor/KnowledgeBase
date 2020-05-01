@@ -129,9 +129,15 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<QuestionSearchResponse> SearchQuestions([FromBody] QuestionSearchRequest request)
+        public async Task<QuestionSearchResponse> SearchQuestions([FromQuery] String anywhere, [FromQuery] String title, [FromQuery] String content, [FromQuery] int? topic)
         {
-            return await questionService.Search(request);
+            return await questionService.Search(new QuestionSearchRequest()
+            {
+                Anywhere = anywhere,
+                Title = title,
+                Content = content,
+                TopicId = topic,
+            });
         }
 
     }

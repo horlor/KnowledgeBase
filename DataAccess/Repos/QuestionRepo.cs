@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess.Repos
@@ -145,16 +146,25 @@ namespace KnowledgeBase.DataAccess.Repos
             return (int)(Math.Ceiling((float)(await Count()) / pagesize));
         }
 
-        public async Task<ICollection<Question>> Search(string anywhere,string title, string content,   Topic topic)
+        public async Task<QuestionSearchResponse> Search(QuestionSearchRequest request)
         {
             var query = dbcontext.Questions
                 .Include(q => q.User)
                 .Include(q => q.Topic)
-                .Where(q => EF.Functions.Like(q.Title, $"%{title}%"))
-                .Where(q => EF.Functions.Like(q.Content, $"%{content}%"));
-            if (topic != null)
-                query = query.Where(q => q.Topic.Id == topic.Id);
-            return await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
+                .Where(q => EF.Functions.Like(q.Title, $"%{request.Anywhere}%") || EF.Functions.Like(q.Content, $"%{request.Anywhere}%"));
+            if (!String.IsNullOrEmpty(request.Title))
+                query = query.Where(q => EF.Functions.Like(q.Title, $"%{request.Title}%"));
+            if (!String.IsNullOrEmpty(request.Content))
+                query = query.Where(q => EF.Functions.Like(q.Content, $"%{request.Content}%"));
+            //TODO somewhat normal question handling
+            if (request.TopicId != null)
+                query = query.Where(q => q.Topic.Id == request.TopicId);
+            var list = await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
+            return new QuestionSearchResponse()
+            {
+                Count = list.Count,
+                Questions = list,
+            };
 
         }
     }

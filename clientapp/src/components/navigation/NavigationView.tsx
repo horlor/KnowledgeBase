@@ -3,9 +3,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,6 +12,8 @@ import Box from "@material-ui/core/Box";
 import LoginButton from './LoginButton';
 import Logo from "../common/logodark.svg"
 import { Link } from 'react-router-dom';
+import { InputBase, TextField } from '@material-ui/core';
+import SearchBar from '../question/SearchBar';
 
 
 
@@ -93,6 +92,7 @@ const NavigationView : React.FC<IProps> = (props) => {
           Viknowledge
         </Typography>
         <Box flexGrow={1} />
+          <SearchBar/>
         <LoginButton />
       </Toolbar>
     </AppBar>

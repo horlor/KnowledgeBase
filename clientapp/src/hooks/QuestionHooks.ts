@@ -1,13 +1,13 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion } from "../api/QuestionApi";
+import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
 import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { Topic } from "../models/Topic";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
-import Question, { QuestionUpdateRequest } from "../models/Question";
+import Question, { QuestionUpdateRequest, QuestionSearchResult } from "../models/Question";
 import Answer from "../models/Answer";
 
 export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
@@ -129,4 +129,26 @@ export const useQuestionEditHook = (question: Question) =>{
     }
 
     return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified};
+}
+
+export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null) =>{
+    const [result, setResult] = useState<QuestionSearchResult>();
+    const [error, setError] = useState<ErrorModel>();
+    useEffect(()=>{
+        (async()=>{
+            setResult(undefined);
+            setError(undefined)
+            try{
+                let res = await SearchQuestionsFromApi({anywhere: anywhere, title: title, content: content, topic:topic})
+                setResult(res)
+            }
+            catch(exc){
+                console.log(exc)
+                setError(CatchIntoErrorModel(exc))
+            }
+        })();
+    },[anywhere, title, content, topic])
+
+    return {result, error};
+
 }

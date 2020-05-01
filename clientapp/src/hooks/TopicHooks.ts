@@ -58,3 +58,14 @@ export const useTopicHook = () =>{
 
     return {topics, error, selectTopic, selected, saveChanges, newTopic, createNew };
 }
+
+export const useTopicState = () =>{
+    const topics = useSelector((state: RootState)=> state.topic)
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch(LoadTopicsThunk())
+    },[dispatch])
+
+    return topics.topics;
+}

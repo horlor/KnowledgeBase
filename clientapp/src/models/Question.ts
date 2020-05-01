@@ -26,4 +26,16 @@ export interface QuestionUpdateRequest{
     content: string;
 }
 
+export interface QuestionSearchRequest{
+    title: string | null;
+    content: string | null;
+    anywhere: string | null;
+    topic: number | null;
+}
+
+export interface QuestionSearchResult{
+    questions: Question[],
+    count: number,
+}
+
 export default Question;

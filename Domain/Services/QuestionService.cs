@@ -92,12 +92,7 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<QuestionSearchResponse> Search(QuestionSearchRequest request)
         {
-            var res = await questionRepo.Search(request.Anywhere, request.Title, request.Content, request.Topic);
-            return new QuestionSearchResponse()
-            {
-                Count = res.Count,
-                Results = res,
-            };
+            return await questionRepo.Search(request);
         }
         
     }

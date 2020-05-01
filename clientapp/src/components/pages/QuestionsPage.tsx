@@ -8,6 +8,7 @@ import Pagination from '../common/Pagination';
 import { RouteComponentProps } from 'react-router-dom';
 import { useLoginState } from '../../hooks/LoginHooks';
 import Question from '../../models/Question';
+import SearchPanel from '../question/SearchPanel';
 
 type IProps = RouteComponentProps<{
 
