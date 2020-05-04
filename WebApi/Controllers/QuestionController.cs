@@ -22,7 +22,7 @@ namespace KnowledgeBase.WebApi.Controllers
     public class QuestionController : BaseController
     {
 
-        private QuestionService questionService;
+        private readonly QuestionService questionService;
 
         public QuestionController(QuestionService questionService)
         {
@@ -117,7 +117,7 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPut("{qId}/answers/{id}")]
-        public async Task<ActionResult> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
+        public async Task<ActionResult<Answer>> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
         {
             var answer = await questionService.GetAnswer(id);
             if (answer == null)

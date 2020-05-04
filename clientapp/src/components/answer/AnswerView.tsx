@@ -67,20 +67,10 @@ const AnswerView : React.FC<IProps> = (props) =>{
     return (
         <>
         <Paper className={classes.card}>
-            <Typography className={classes.content}>
-                {props.answer.content}
-            </Typography>
+        <Box display="flex" flexDirection="row">
+            <Typography className={classes.authorText}>{`by ${props.answer.author}`}</Typography>
+            <Box flexGrow={1} />
             {
-                modified?
-                <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.answer.lastUpdate}`}</Typography>
-                :""
-            }
-            <Divider/>
-            <Box display="flex" flexDirection="row">
-                <Typography className={classes.datetext}>{props.answer.created}</Typography>
-                <Box flexGrow={1} />
-                <Typography className={classes.authorText}>{`by ${props.answer.author}`}</Typography>
-                {
                     modifyEnabled?
                     <>
                         <IconButton className={classes.iconbutton} onClick={deleteWithDialog}>
@@ -93,7 +83,17 @@ const AnswerView : React.FC<IProps> = (props) =>{
                     :
                     ""
                 }
+            <Typography className={classes.datetext}>{props.answer.created}</Typography>
             </Box>
+            <Divider/>
+            <Typography className={classes.content}>
+                {props.answer.content}
+            </Typography>
+            {
+                modified?
+                <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.answer.lastUpdate}`}</Typography>
+                :""
+            }
         </Paper>
         <Dialog open={deleteDialog}>
                     <DialogTitle>Warning!</DialogTitle>

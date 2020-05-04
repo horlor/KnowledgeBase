@@ -113,8 +113,8 @@ export const useQuestionEditHook = (question: Question) =>{
 
     const saveChanges =  async(request: QuestionUpdateRequest) =>{
         try{
-            await UpdateQuestion(question.id, request);
-            dispatch(UpdateQuestionAction(request.content));
+            let result = await UpdateQuestion(question.id, request);
+            dispatch(UpdateQuestionAction(result));
         }
         catch(exc){
             console.log("Update failed") 

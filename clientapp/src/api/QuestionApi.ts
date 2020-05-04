@@ -31,11 +31,11 @@ export const DeleteAnswer = async (questionId: number, answer: Answer) =>{
 }
 
 export const UpdateAnswer = async (questionId: number, answerId: number,  request: AnswerUpdateRequest) =>{
-    await axios.put(`/api/questions/${questionId}/answers/${answerId}`,request);
+    return (await axios.put(`/api/questions/${questionId}/answers/${answerId}`,request)).data;
 }
 
 export const UpdateQuestion = async (id : number, request: QuestionUpdateRequest) =>{
-    await axios.put(`/api/questions/${id}`,request);
+   return ( await axios.put(`/api/questions/${id}`,request)).data;
 }
 
 export const SearchQuestionsFromApi = async(request: QuestionSearchRequest) =>{

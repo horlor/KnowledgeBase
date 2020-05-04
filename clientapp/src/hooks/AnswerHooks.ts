@@ -41,10 +41,8 @@ export const useAnswerHook = (answer: Answer) =>{
 
     const saveChanges =  async(request: AnswerUpdateRequest) =>{
         try{
-            await UpdateAnswer(0,answer.id,request);
-            const ans = {...answer, content: request.content };
-            console.log(request)
-            console.log(ans);
+             let response = await UpdateAnswer(0,answer.id,request);
+            const ans = response;
             dispatch(UpdateAnswerAction(ans));
         }
         catch(exc){

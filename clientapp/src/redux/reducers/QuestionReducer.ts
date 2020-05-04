@@ -21,7 +21,7 @@ const initialState : IQuestionStore = {
 }
 
 export const AddQuestionAction = createAction<Question>("add-question");
-export const UpdateQuestionAction = createAction<string>("update-question");
+export const UpdateQuestionAction = createAction<Question>("update-question");
 export const DeleteQuestionAction = createAction<Question>("delete-question");
 
 export const AddAnswerAction = createAction<Answer>("add-answer");
@@ -80,13 +80,12 @@ export const QuestionReducer = createReducer(initialState, builder => builder
     .addCase(UpdateAnswerAction, (state: IQuestionStore, action) =>{
         if(state.questionwithanswers){
             const idx  = state.questionwithanswers.answers.findIndex(a => a.id === action.payload.id);
-            console.log(action.payload);
-            state.questionwithanswers.answers[idx].content =action.payload.content;
+            state.questionwithanswers.answers[idx] = action.payload;
         }
     })
     .addCase(UpdateQuestionAction, (state, action) =>{
         if(state.questionwithanswers){
-            state.questionwithanswers.content  = action.payload;
+            state.questionwithanswers = {...state.questionwithanswers, ...action.payload}
         }
     }) 
 
