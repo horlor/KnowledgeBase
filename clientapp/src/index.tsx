@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import NavigationView from './components/navigation/NavigationView';
 import { CssBaseline} from '@material-ui/core';
 import Axios from 'axios';
 import Routes from './components/navigation/Routes';

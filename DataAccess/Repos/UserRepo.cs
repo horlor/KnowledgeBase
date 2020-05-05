@@ -124,10 +124,10 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<ICollection<User>> GetUsersByTopic(Topic topic)
         {
-            //TODO check for topic
             return await dbcontext.Users
                 .Include(u => u.UserTopics)
                     .ThenInclude(ut => ut.Topic)
+                    .Where(u => u.UserTopics.FirstOrDefault(ut => ut.TopicId == topic.Id) != null)
                 .Select(u => DbMapper.MapDbUser(u))
                 .ToListAsync();
         }

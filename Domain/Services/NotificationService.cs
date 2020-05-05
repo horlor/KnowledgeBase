@@ -30,7 +30,7 @@ namespace KnowledgeBase.Domain.Services
                     await notificationRepo.CreateForUser(user.UserName, new Notification()
                     {
                         Title = "New Question",
-                        Content = "New Question was created in one of your followed topics",
+                        Content = $"New Question was created in one of your followed topics: {q.Title}",
                         QuestionId = q.Id,
                     });
             }

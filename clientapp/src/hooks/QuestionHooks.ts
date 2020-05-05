@@ -131,7 +131,7 @@ export const useQuestionEditHook = (question: Question) =>{
     return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified};
 }
 
-export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null) =>{
+export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
     const [result, setResult] = useState<QuestionSearchResult>();
     const [error, setError] = useState<ErrorModel>();
     useEffect(()=>{
@@ -139,7 +139,8 @@ export const useSearchQuestionsHook = (anywhere: string | null, title: string | 
             setResult(undefined);
             setError(undefined)
             try{
-                let res = await SearchQuestionsFromApi({anywhere: anywhere, title: title, content: content, topic:topic})
+                let res = await SearchQuestionsFromApi({anywhere: anywhere, title: title, content: content, topic:topic, page: page})
+                console.log(res);
                 setResult(res)
             }
             catch(exc){
@@ -147,7 +148,7 @@ export const useSearchQuestionsHook = (anywhere: string | null, title: string | 
                 setError(CatchIntoErrorModel(exc))
             }
         })();
-    },[anywhere, title, content, topic])
+    },[anywhere, title, content, topic, page])
 
     return {result, error};
 

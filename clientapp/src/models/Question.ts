@@ -31,10 +31,14 @@ export interface QuestionSearchRequest{
     content: string | null;
     anywhere: string | null;
     topic: number | null;
+    page: number
 }
 
 export interface QuestionSearchResult{
     questions: Question[],
+    page: number,
+    pageCount: number,
+    pageSize: number,
     count: number,
 }
 

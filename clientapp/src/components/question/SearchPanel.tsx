@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Paper, TextField, Button, makeStyles, Box, Divider, Typography } from '@material-ui/core';
+import { Paper, TextField, Button, makeStyles, Box, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search'
 import { useHistory } from 'react-router';
 import { UrlBuilder } from '../../helpers/UrlBuilder';
@@ -8,6 +8,7 @@ import { Autocomplete } from '@material-ui/lab';
 
 interface IProps{
     count: number,
+    pages: number,
     anywhere: string | null,
     title: string| null,
     content: string| null,
@@ -96,7 +97,7 @@ const SearchPanel: React.FC<IProps> = (props) =>{
     else
             return(
                 <Box display="flex" className={classes.panel}>
-                    <Typography align="center">{`${props.count} question found`}</Typography>
+                    <Typography align="center">{`${props.count} question found on ${props.pages} page`}</Typography>
                     <Box flexGrow={1}/>
                     <Button 
                         onClick={()=>setOpen(true)}

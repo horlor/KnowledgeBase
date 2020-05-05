@@ -129,7 +129,8 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<QuestionSearchResponse> SearchQuestions([FromQuery] String anywhere, [FromQuery] String title, [FromQuery] String content, [FromQuery] int? topic)
+        public async Task<QuestionSearchResponse> SearchQuestions([FromQuery] String anywhere, [FromQuery] String title, [FromQuery] String content,
+            [FromQuery] int? topic, [FromQuery] int page = 1, [FromQuery] int countPerPage = 10)
         {
             return await questionService.Search(new QuestionSearchRequest()
             {
@@ -137,6 +138,8 @@ namespace KnowledgeBase.WebApi.Controllers
                 Title = title,
                 Content = content,
                 TopicId = topic,
+                Page = page,
+                CountPerPage = countPerPage,
             });
         }
 

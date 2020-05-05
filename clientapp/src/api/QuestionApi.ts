@@ -44,6 +44,7 @@ export const SearchQuestionsFromApi = async(request: QuestionSearchRequest) =>{
     url.appendWithQueryParam("title",request.title)
     url.appendWithQueryParam("content",request.content)
     url.appendWithQueryParam("topic",request.topic)
+    url.appendWithQueryParam("page",request.page)
     console.log(url.get())
     return (await axios.get<QuestionSearchResult>(url.get())).data
 }

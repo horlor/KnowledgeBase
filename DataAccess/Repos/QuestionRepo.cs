@@ -156,13 +156,20 @@ namespace KnowledgeBase.DataAccess.Repos
                 query = query.Where(q => EF.Functions.Like(q.Title, $"%{request.Title}%"));
             if (!String.IsNullOrEmpty(request.Content))
                 query = query.Where(q => EF.Functions.Like(q.Content, $"%{request.Content}%"));
-            //TODO somewhat normal question handling
             if (request.TopicId != null)
                 query = query.Where(q => q.Topic.Id == request.TopicId);
+            var count = await query.CountAsync();
+            query = query
+                .OrderByDescending(q => q.LastUpdated);
+                //.Skip((request.Page - 1) * request.CountPerPage)
+                //.Take(request.CountPerPage);
             var list = await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
             return new QuestionSearchResponse()
             {
-                Count = list.Count,
+                Page = request.Page,
+                PageSize = request.CountPerPage,
+                PageCount = (int)Math.Ceiling(((float)count)/request.CountPerPage),
+                Count = count,
                 Questions = list,
             };
 
