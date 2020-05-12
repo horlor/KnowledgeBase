@@ -160,9 +160,9 @@ namespace KnowledgeBase.DataAccess.Repos
                 query = query.Where(q => q.Topic.Id == request.TopicId);
             var count = await query.CountAsync();
             query = query
-                .OrderByDescending(q => q.LastUpdated);
-                //.Skip((request.Page - 1) * request.CountPerPage)
-                //.Take(request.CountPerPage);
+                .OrderByDescending(q => q.LastUpdated)
+                .Skip((request.Page - 1) * request.CountPerPage)
+                .Take(request.CountPerPage);
             var list = await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
             return new QuestionSearchResponse()
             {

@@ -42,9 +42,13 @@ const SearchPanel: React.FC<IProps> = (props) =>{
     const history = useHistory();
     const classes = useStyles();
 
+    const isSearch = !!anywhere || !!content || !!title || !!topic;
+
+
+
     const onSearch = ()=>{
         setOpen(false)
-        let builder = new UrlBuilder("/search_questions");
+        let builder = new UrlBuilder("/questions");
         builder.appendWithQueryParam("anywhere", anywhere)
         builder.appendWithQueryParam("content",content)
         builder.appendWithQueryParam("title",title)
@@ -95,13 +99,13 @@ const SearchPanel: React.FC<IProps> = (props) =>{
             </Paper>
         );
     else
-            return(
+        return(
                 <Box display="flex" className={classes.panel}>
                     <Typography align="center">{`${props.count} question found on ${props.pages} page`}</Typography>
                     <Box flexGrow={1}/>
                     <Button 
                         onClick={()=>setOpen(true)}
-                        variant="outlined">Edit search</Button>
+                        variant="outlined">{isSearch?"Edit search":"Detailed search"}</Button>
                 </Box>
             );
 }

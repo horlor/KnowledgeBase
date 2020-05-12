@@ -10,27 +10,37 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import Question, { QuestionUpdateRequest, QuestionSearchResult } from "../models/Question";
 import Answer from "../models/Answer";
 
-export const useQuestionsHook = (page: number = 1, pageSize=10) =>{
-    var questions = useSelector((state : RootState) => state.question.questions, shallowEqual);
+
+export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
+    var result = useSelector((state : RootState) => state.question.result, shallowEqual);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
-    var currentPage = useSelector((state: RootState) => state.question.currentPage);
-    var pageCount = useSelector((state: RootState) => state.question.pages);
     var dispatch = useDispatch();
+
+    useEffect(()=>{
+        (async()=>{
+            dispatch(FetchQuestionsStarted())
+            try{
+                let res = await SearchQuestionsFromApi({anywhere: anywhere, title: title, content: content, topic:topic, page: page})
+                console.log(res);
+                dispatch(FetchQuestionsSuccess(res))
+            }
+            catch(exc){
+                console.log(exc)
+                dispatch(FetchQuestionsFailure(CatchIntoErrorModel(exc)))
+            }
+        })();
+    },[anywhere, title, content, topic, page])
 
     const deleteQuestion = (q: Question)=>{
         DeleteQuestion(q);
         dispatch(DeleteQuestionAction(q));
     }
 
-    useEffect(()=>{
-        dispatch(FetchQuestionsStarted());
-        LoadQuestionsFromApi(page, pageSize)
-        .then(resp => dispatch(FetchQuestionsSuccess(resp)))
-        .catch(ex => dispatch(FetchQuestionsFailure(CatchIntoErrorModel(ex))))
-    },[dispatch, page, pageSize]);
-    return {questions, error, loading, currentPage, pageCount, deleteQuestion};
+    return {result, error, loading, deleteQuestion};
+
 }
+
 
 
 export const useQuestionAnswerHook = (questionId: number) => {
@@ -129,27 +139,4 @@ export const useQuestionEditHook = (question: Question) =>{
     }
 
     return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified};
-}
-
-export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
-    const [result, setResult] = useState<QuestionSearchResult>();
-    const [error, setError] = useState<ErrorModel>();
-    useEffect(()=>{
-        (async()=>{
-            setResult(undefined);
-            setError(undefined)
-            try{
-                let res = await SearchQuestionsFromApi({anywhere: anywhere, title: title, content: content, topic:topic, page: page})
-                console.log(res);
-                setResult(res)
-            }
-            catch(exc){
-                console.log(exc)
-                setError(CatchIntoErrorModel(exc))
-            }
-        })();
-    },[anywhere, title, content, topic, page])
-
-    return {result, error};
-
 }

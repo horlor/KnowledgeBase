@@ -54,7 +54,7 @@ const SearchBar : React.FC<IProps> = (props) =>{
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>)=>{
         if(e.keyCode === 13)
-            history.push(`/search_questions?anywhere=${search}`)
+            history.push(`/questions?anywhere=${search}`)
     }
     return (
         <>

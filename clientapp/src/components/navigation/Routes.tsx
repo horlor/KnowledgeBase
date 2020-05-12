@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import QuestionsPage from '../pages/QuestionsPage';
 import NewQuestionPage from '../pages/NewQuestionPage';
 import QuestionAnswerPage from '../pages/QuestionAnswerPage';
 import  LoginPage  from '../pages/LoginPage';
@@ -30,7 +29,7 @@ export const Routes : React.FC<IProps> = (props) => {
             <NavigationView drawer={<Menu/>}>
             <Route 
                 path="/questions"
-                component={QuestionsPage}
+                component={SearchQuestionsPage}
                 exact={true}    
             />
             <Route 

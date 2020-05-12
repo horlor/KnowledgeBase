@@ -7,6 +7,7 @@ import ErrorView from "../common/ErrorView";
 import SearchPanel from "../question/SearchPanel";
 import Pagination from "../common/Pagination";
 import { UrlBuilder } from "../../helpers/UrlBuilder";
+import LoadingView from "../common/LoadingView";
 
 type IProps = RouteComponentProps<{
 
@@ -21,9 +22,11 @@ const SearchQuestionsPage: React.FC<IProps> = props => {
 	const {result, error} = useSearchQuestionsHook(anywhere,title,content,topic, page)
 	if(error)
 		return <ErrorView title={error.code} message={error.description}/>;
+	if(!result)
+		return <LoadingView/>
 	return(
 		<Container maxWidth="xl">
-			<SearchPanel count={result?result.count:0} pages={result?result.pageCount:0} anywhere={anywhere} content={content} title={title} topicId={topic}/>
+			<SearchPanel count={result.count} pages={result?result.pageCount:0} anywhere={anywhere} content={content} title={title} topicId={topic}/>
 			{result?.questions.map(q => <QuestionCard key={q.id} question={q}/>)}
 		<Pagination pageChanged={(from, to)=>{
 			let url = new UrlBuilder("/search_questions")
