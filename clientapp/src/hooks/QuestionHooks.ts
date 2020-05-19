@@ -15,6 +15,7 @@ export const useSearchQuestionsHook = (anywhere: string | null, title: string | 
     var result = useSelector((state : RootState) => state.question.result, shallowEqual);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
+    var username = useSelector((state: RootState) => state.login.username)
     var dispatch = useDispatch();
 
     useEffect(()=>{
@@ -30,14 +31,14 @@ export const useSearchQuestionsHook = (anywhere: string | null, title: string | 
                 dispatch(FetchQuestionsFailure(CatchIntoErrorModel(exc)))
             }
         })();
-    },[anywhere, title, content, topic, page])
+    },[anywhere, title, content, topic, page, dispatch])
 
     const deleteQuestion = (q: Question)=>{
         DeleteQuestion(q);
         dispatch(DeleteQuestionAction(q));
     }
 
-    return {result, error, loading, deleteQuestion};
+    return {result, error, loading, username, deleteQuestion};
 
 }
 

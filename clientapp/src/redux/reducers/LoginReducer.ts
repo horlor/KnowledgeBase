@@ -29,5 +29,6 @@ export const LoginReducer = createReducer(initialstate, builder => builder
     .addCase(LogoutAction, (state, action) =>{
         state.loggedIn = false;
         state.username = undefined;
+        state.role = undefined;
     })
 );

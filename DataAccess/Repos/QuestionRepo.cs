@@ -95,11 +95,12 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Answer> StoreAnswerForQuestion(int id, Answer answer)
         {
+            var now = DateTime.Now;
             DbAnswer dbAnswer = new DbAnswer()
             {
                 Content = answer.Content,
-                Created = DateTime.Now,
-                LastUpdated = DateTime.Now,
+                Created = now,
+                LastUpdated = now,
             };
             var question = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == id);
             var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == answer.Author);

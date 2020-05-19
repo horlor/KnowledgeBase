@@ -142,7 +142,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 await userManager.AddToRoleAsync(dbUser, role);
                 return role;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return null;
             }

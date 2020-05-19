@@ -93,7 +93,7 @@ const SearchPanel: React.FC<IProps> = (props) =>{
                     getOptionLabel={(topic) => topic?topic.name:""}
                     defaultValue={topics.find(t => t.id === props.topicId)}
                     onChange={((e: any,v: any)=>{setTopic(v.id)})}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                    renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" />}
                     />
                 </form>
             </Paper>
