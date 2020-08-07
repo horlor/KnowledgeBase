@@ -5,20 +5,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useSelectedUserHook } from '../../hooks/UserHooks';
 import LoadingView from '../common/LoadingView';
 import ErrorView from '../common/ErrorView';
+import UserDetailView from '../user/UserDetailView';
 
-const useStyles = makeStyles( theme => ({
-    surface:{
-        width:"100%",
-        margin: theme.spacing(1),
-        padding: theme.spacing(1),
-    },
-    header:{
-        fontWeight:"bold",
-    },
-    avatar:{
-        margin: theme.spacing(1),
-    }
-}));
 
 type IProps = RouteComponentProps<{
     username: string;
@@ -26,7 +14,6 @@ type IProps = RouteComponentProps<{
 
 const UserDetailPage : React.FC<IProps> = (props: IProps) =>{
     const {user, loading, error} = useSelectedUserHook(props.match.params.username);
-    const classes = useStyles();
     if(loading)
         return <LoadingView/>;
     if(error!== undefined)
@@ -34,29 +21,11 @@ const UserDetailPage : React.FC<IProps> = (props: IProps) =>{
     if(user!==undefined)
         return (
         <Container maxWidth="xl">
-            <Paper className={classes.surface}>
-            <Box display="flex" flexDirection="row" alignItems="center">
-                <Avatar className={classes.avatar}>
-                    {user?.userName.toUpperCase().slice(0,1)}
-                </Avatar>
-                <Typography variant="h4">{user.userName}</Typography>
-            </Box>
-            <Divider/>
-            <Typography>{`Name: ${user.firstName} ${user.lastName}`}</Typography>
-            <Typography>{`Email: ${user.email}`}</Typography>
-            <Divider/>
-            <Typography className={classes.header}>Introduction</Typography>
-            <Typography>{user.introduction}</Typography>
-            <Divider/>
-            <Typography className={classes.header}>Known topics:</Typography>
-              {user.topics.map(topic =>
-                  <Chip variant="outlined" key={topic.id} label={topic.name} />
-                )}
-            </Paper>
+            <UserDetailView user={user} editable={false}/>
         </Container>
     );
     else
-        return <p>""</p>;
+        return <></>;
 }
 
 export default UserDetailPage;
