@@ -19,3 +19,11 @@ export interface UserUpdateRequest{
     topics: Topic[],
     introduction: string,
 }
+
+export interface UserWithRole{
+    userName: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    role: string,
+}

@@ -149,6 +149,20 @@ namespace KnowledgeBase.DataAccess.Repos
             
         }
 
+        public async Task<UserWithRole> GetUserWithRole(string username)
+        {
+            var dbUser = await userManager.FindByNameAsync(username);
+            var roles = await userManager.GetRolesAsync(dbUser);
+            return new UserWithRole()
+            {
+                UserName = dbUser.UserName,
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                Email = dbUser.Email,
+                Role = roles.FirstOrDefault(),
+            };
+        }
+
 
     }
 }

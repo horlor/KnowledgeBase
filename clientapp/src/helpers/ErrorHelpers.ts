@@ -2,6 +2,7 @@ import ErrorModel from "../models/ErrorModel";
 
 export const CatchIntoErrorModel = (ex :any) =>{
     let error = ex as Error;
+    console.log(ex);
     let em : ErrorModel = {code:"Unexpected error", description:"An unexpected error occured during the operation"};
     if(error){
         if(error.message==="Network Exception")

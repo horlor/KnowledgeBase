@@ -25,6 +25,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<ICollection<User>> GetUsersByTopic(Topic topic);
 
         Task<string> SetUserRole(User user, string role);
+        Task<UserWithRole> GetUserWithRole(string username);
 
     }
 

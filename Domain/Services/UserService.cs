@@ -79,5 +79,11 @@ namespace KnowledgeBase.Domain.Services
             return await userRepo.SetUserRole(user, role);
         }
 
+        public async Task<UserWithRole> GetUserWithRole(string username)
+        {
+            return await userRepo.GetUserWithRole(username);
+        }
+
+
     }
 }
