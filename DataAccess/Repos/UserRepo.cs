@@ -7,6 +7,7 @@ using KnowledgeBase.DataAccess.DataObjects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KnowledgeBase.Entities.DataTransferObjects;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
@@ -95,6 +96,27 @@ namespace KnowledgeBase.DataAccess.Repos
                 .ToListAsync();
         }
 
+        public async Task<ICollection<User>> GetUsersPaged(int pagenum, int pagesize = 16)
+        {
+            return await userManager.Users
+                .Include(u => u.UserTopics)
+                .ThenInclude(ut => ut.Topic)
+                .Select(u => DbMapper.MapDbUser(u))
+                .Skip((pagenum - 1) * pagesize)
+                .Take(pagesize)
+                .ToListAsync();
+        }
+
+        public async Task<int> Count()
+        {
+            return await userManager.Users.CountAsync();
+        }
+
+        public async Task<int> PageCount(int pagesize = 16)
+        {
+            return (int)(Math.Ceiling((float)(await Count()) / pagesize));
+        }
+
         public async Task<UserDetailed> UpdateUser(UserDetailed user)
         {
             var dbUser = await dbcontext.Users
@@ -164,6 +186,32 @@ namespace KnowledgeBase.DataAccess.Repos
                 LastName = dbUser.LastName,
                 Email = dbUser.Email,
                 Role = roles.FirstOrDefault(),
+            };
+        }
+
+        public async Task<UserSearchResponse> Search(UserSearchRequest request)
+        {
+            string anywhere = $"%{request.Anywhere}%";
+            var query = userManager.Users
+                .Include(u => u.UserTopics)
+                .ThenInclude(ut => ut.Topic)
+                .Where(u => EF.Functions.Like(u.UserName, anywhere)
+                || EF.Functions.Like(u.Email, anywhere));
+            if (request.UserName != null)
+                query = query.Where(u => EF.Functions.Like(u.UserName, $"%{request.UserName}%"));
+            if (request.Email != null)
+                query = query.Where(u => EF.Functions.Like(u.Email, $"%{request.Email}%"));
+            var count = await query.CountAsync();
+            query = query.Skip((request.Page - 1) * request.CountPerPage)
+                .Take(request.CountPerPage);
+            var list = await query.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
+            return new UserSearchResponse()
+            {
+                Page = request.Page,
+                PageSize = request.CountPerPage,
+                PageCount = (int)Math.Ceiling(((float)count) / request.CountPerPage),
+                Count = count,
+                Users = list,
             };
         }
 

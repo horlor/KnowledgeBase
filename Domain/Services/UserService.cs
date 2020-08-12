@@ -84,6 +84,20 @@ namespace KnowledgeBase.Domain.Services
             return await userRepo.GetUserWithRole(username);
         }
 
+        public async Task<ICollection<User>> GetUsersPaged(int pagenum, int pagesize)
+        {
+            return await userRepo.GetUsersPaged(pagenum, pagesize);
+        }
+
+        public async Task<int> GetPageCount(int pagesize)
+        {
+            return await userRepo.PageCount(pagesize);
+        }
+
+        public Task<UserSearchResponse> Search(UserSearchRequest request)
+        {
+            return userRepo.Search(request);
+        }
 
     }
 }

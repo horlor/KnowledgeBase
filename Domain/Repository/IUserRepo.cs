@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Identity;
 
 namespace KnowledgeBase.Domain.Repository
@@ -26,6 +27,12 @@ namespace KnowledgeBase.Domain.Repository
 
         Task<string> SetUserRole(User user, string role);
         Task<UserWithRole> GetUserWithRole(string username);
+
+        Task<int> Count();
+        Task<int> PageCount(int pagesize = 16);
+        Task<ICollection<User>> GetUsersPaged(int pagenum, int pagesize = 16);
+
+        Task<UserSearchResponse> Search(UserSearchRequest request);
 
     }
 
