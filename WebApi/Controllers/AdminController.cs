@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,21 @@ namespace KnowledgeBase.WebApi.Controllers
         public async Task<ActionResult<UserWithRole>> GetUserWithRole([FromRoute] string username)
         {
             return Ok(await userService.GetUserWithRole(username));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("users/{username}/role")]
+        public async Task<ActionResult> SetRoleForUser([FromRoute] string username, [FromBody] UserPatchRoleDto dto)
+        {
+            var user = await userService.GetUser(username);
+            Console.WriteLine("1");
+            if (user == null)
+                return NotFound();
+            Console.WriteLine("2");
+            var ret = await userService.SetUserRole(user, dto.Role);
+            if (ret == null)
+                return BadRequest();
+            return Ok();
         }
     }
 }

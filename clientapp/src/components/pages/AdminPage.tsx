@@ -42,10 +42,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const AdminPage : React.FC<IProps> = (props: IProps) =>{
-    const {users, error, selectedIndex, onItemSelected,selected, onRoleChange} = useAdminHook();
+    const {users, error, selectedIndex, onItemSelected,selected, onRoleChange, saveChanges} = useAdminHook();
     const classes = useStyles();
-    
-    const roleToOption = (role:string)=>role=="Admin"?3:(role=="Moderator"?2:1);
 
     if(error)
         return <ErrorView title={error.code} message={error.code}/>;
@@ -85,7 +83,7 @@ const AdminPage : React.FC<IProps> = (props: IProps) =>{
                                     <option value="Admin">Adminstrator</option>
                                 </Select>
                             </Box>
-                            <Button >Save role changes</Button>
+                            <Button onClick={()=>saveChanges()}>Save role changes</Button>
                         </>:
                         "")}
                     </Box>

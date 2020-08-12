@@ -9,3 +9,7 @@ export const GetUsers = async() =>{
 export const GetUserWithRole = async(username: string) =>{
 	return await Axios.get<UserWithRole>(`/api/admin/users/${username}`)
 }
+
+export const PatchUserWithRole = async(username: string, role: string) =>{
+	return await Axios.patch(`/api/admin/users/${username}/role`,{role:role});
+}

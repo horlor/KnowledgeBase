@@ -49,7 +49,10 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<User> GetByName(string name)
         {
-            var dbUser = await userManager.FindByNameAsync(name);
+            var dbUser = await dbcontext.Users
+                .Include(u => u.UserTopics)
+                .ThenInclude(ut => ut.Topic)
+                .FirstOrDefaultAsync(  u => u.UserName == name);
             return DbMapper.MapDbUser(dbUser);
         }
 
@@ -139,11 +142,12 @@ namespace KnowledgeBase.DataAccess.Repos
             await userManager.RemoveFromRolesAsync(dbUser, roles);
             try
             {
-                await userManager.AddToRoleAsync(dbUser, role);
+                var res = await userManager.AddToRoleAsync(dbUser, role);
+            Console.WriteLine(res);
                 return role;
             }
             catch(Exception)
-            {
+            { 
                 return null;
             }
             

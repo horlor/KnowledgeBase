@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GetUsers, GetUserWithRole } from "../api/AdminApi";
+import { GetUsers, GetUserWithRole, PatchUserWithRole } from "../api/AdminApi";
 import { User, UserWithRole } from "../models/User";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
@@ -30,10 +30,13 @@ export const useAdminHook = () =>{
 	const onRoleChange = (role: string)=>{
 		if(selected)
 			setSelected({...selected, role: role})
+		console.log(selected);
 	}
 
-	const saveChanges = ()=>{
-		
+	const saveChanges = async()=>{
+		console.log(selected)
+		if(selected)
+		 await PatchUserWithRole(selected.userName,selected.role);
 	}
 
 	return {error, users, selectedIndex, onItemSelected, selected, onRoleChange, saveChanges};
