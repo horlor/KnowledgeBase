@@ -27,3 +27,12 @@ export interface UserWithRole{
     lastName: string,
     role: string,
 }
+
+export interface UserSearchResponse{
+    page: number,
+    pageSize: number,
+    pageCount: number,
+    count: number,
+    users: User[],
+}
+

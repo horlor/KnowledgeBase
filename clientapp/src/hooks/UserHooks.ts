@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/Store";
 import { useEffect, useState } from "react";
 import { FetchUsersStarted, FetchUsersSuccess, FetchUsersFailure, FetchSelectedUserStarted, FetchSelectedUserFailure, FetchSelectedUserSuccess } from "../redux/reducers/UserReducer";
-import { LoadUsersFromApi, LoadUserDetailedFromApi, } from "../api/UserApi";
+import { LoadUsersFromApi, LoadUserDetailedFromApi, LoadUsersFromApiSearch, } from "../api/UserApi";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { UserUpdateRequest, UserDetailed } from "../models/User";
@@ -10,17 +10,19 @@ import { useForm } from "react-hook-form";
 import ErrorModel from "../models/ErrorModel";
 import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
 import { ChangeProfileEdit } from "../redux/reducers/ProfileReducer";
+import { useHistory, useLocation } from "react-router";
 
 
-export const useUserListHook = ()=>{
+export const useUserListHook = (page: number, pageSize: number, search: string)=>{
     const dispatch : AppDispatch = useDispatch();
     const users = useSelector((state: RootState)=> state.user.users);
     const error = useSelector((state: RootState) => state.user.error);
     const loading = useSelector((state: RootState) => state.user.loading);
+    const pageCount = useSelector((state: RootState) => state.user.pageCount);
 
     useEffect(()=>{
         dispatch(FetchUsersStarted());
-        LoadUsersFromApi()
+        LoadUsersFromApiSearch(page,pageSize,search)
         .then(resp => {
             dispatch(FetchUsersSuccess(resp));
         })
@@ -29,11 +31,7 @@ export const useUserListHook = ()=>{
         );
     }, [dispatch])
 
-    const switchSelected = (username: string) =>{
-
-    }
-
-    return { users, error, loading, switchSelected};
+    return { users, error, loading, page, pageCount};
 }
 
 export const useSelectedUserHook = (username: string)=>{
@@ -41,7 +39,6 @@ export const useSelectedUserHook = (username: string)=>{
     const user = useSelector((state: RootState) =>state.user.selectedUser);
     const loading = useSelector((state: RootState) => state.user.selectedLoading);
     const error = useSelector((state: RootState) => state.user.selectedError);
-    console.log("WTF");
     useEffect( () =>{
         const fetch = async() =>{
             dispatch(FetchSelectedUserStarted());
