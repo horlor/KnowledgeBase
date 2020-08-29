@@ -74,7 +74,7 @@ namespace KnowledgeBase.WebApi
                 options.Password.RequireLowercase = true;
             });
 
-            //Handling wierd JWT handling of microsoft, ie. changing claim types
+            //Handling weird JWT handling of microsoft, ie. changing claim types
             //More on: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/415
             //
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -94,13 +94,17 @@ namespace KnowledgeBase.WebApi
                    
                }
             );
-
+            services.AddSingleton<DatabaseSettings, DatabaseSettings>(t => new DatabaseSettings()
+            {
+                avatarPath = Configuration["AvatarPath"]
+            });
 
             services.AddScoped<IQuestionRepo, QuestionRepo>();
             services.AddScoped<IAnswerRepo, AnswerRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ITopicRepo, TopicRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
+            services.AddScoped<IAvatarRepo, UserRepo>();
 
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>(x => new JwtTokenGenerator()
             {
@@ -117,6 +121,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<UserService, UserService>();
             services.AddScoped<TopicService, TopicService>();
             services.AddScoped<NotificationService, NotificationService>();
+            services.AddScoped<AvatarService, AvatarService>();
 
 
         }

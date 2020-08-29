@@ -7,6 +7,7 @@ using KnowledgeBase.Entities;
 using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBase.WebApi.Controllers
@@ -18,11 +19,13 @@ namespace KnowledgeBase.WebApi.Controllers
 
         private UserService userService;
         private NotificationService notificationService;
+        private readonly AvatarService avatarService;
 
-        public UserController(UserService userService, NotificationService notificationService)
+        public UserController(UserService userService, NotificationService notificationService, AvatarService avatarService)
         {
             this.userService = userService;
             this.notificationService = notificationService;
+            this.avatarService = avatarService;
         }
 
         [HttpGet]
@@ -60,6 +63,11 @@ namespace KnowledgeBase.WebApi.Controllers
             });
         }
 
+        [HttpGet("{username}/avatar")]
+        public PhysicalFileResult GetAvatarForUser([FromRoute] string username)
+        {
+            return avatarService.GetAvatar(username);
+        }
 
     }
 }

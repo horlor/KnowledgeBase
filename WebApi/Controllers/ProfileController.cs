@@ -17,11 +17,13 @@ namespace KnowledgeBase.WebApi.Controllers
     {
         private UserService userService;
         private NotificationService notificationService;
+        private readonly AvatarService avatarService;
 
-        public ProfileController(UserService userService, NotificationService notificationService)
+        public ProfileController(UserService userService, NotificationService notificationService, AvatarService avatarService)
         {
             this.userService = userService;
             this.notificationService = notificationService;
+            this.avatarService = avatarService;
         }
 
         [HttpPost("login")]
@@ -111,5 +113,27 @@ namespace KnowledgeBase.WebApi.Controllers
             };
         }
 
+        [Authorize]
+        [HttpGet("avatar")]
+        public PhysicalFileResult GetAvatar()
+        {
+            return avatarService.GetAvatar(UserName);
+        }
+
+        [Authorize]
+        [HttpPut("avatar")]
+        public async Task<IActionResult> SetAvatar(IFormFile image)
+        {
+            await avatarService.AddOrSetAvatar(UserName, image);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("avatar")]
+        public async Task<IActionResult> DeleteAvatar()
+        {
+            await avatarService.DeleteAvatar(UserName);
+            return NoContent();
+        }
     }
 }

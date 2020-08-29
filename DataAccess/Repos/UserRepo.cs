@@ -8,22 +8,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Entities.DataTransferObjects;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Net.Http.Headers;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
-    public class UserRepo : IUserRepo
+    public class UserRepo : IUserRepo, IAvatarRepo
     {
         private readonly KnowledgeContext dbcontext;
         private readonly UserManager<DbUser> userManager;
         private readonly SignInManager<DbUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly string avatarPath;
 
-        public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public UserRepo(KnowledgeContext context, UserManager<DbUser> userManager, SignInManager<DbUser> signInManager, RoleManager<IdentityRole> roleManager, DatabaseSettings settings)
         {
             this.dbcontext = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
+            this.avatarPath = settings.avatarPath;
         }
 
         public async Task<IdentityResult> Create(User user, string password)
@@ -62,11 +68,11 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
         }
 
-        public async Task<(SignInResult, string)> SignIn(string username, string password)
+        public async Task<(Microsoft.AspNetCore.Identity.SignInResult, string)> SignIn(string username, string password)
         {
             var dbUser = await userManager.FindByNameAsync(username);
             if (dbUser == null)
-                return (SignInResult.Failed, null);
+                return (Microsoft.AspNetCore.Identity.SignInResult.Failed, null);
             var signinresult = await signInManager.CheckPasswordSignInAsync(dbUser, password, false);
             var userrole = await userManager.GetRolesAsync(dbUser);
             return (signinresult, userrole.First());
@@ -215,6 +221,37 @@ namespace KnowledgeBase.DataAccess.Repos
             };
         }
 
+        public async Task AddOrSetAvatar(string userName, IFormFile image)
+        {
+            await DeleteAvatar(userName);
+            string extension = Path.GetExtension(image.FileName);
+            using (var stream = new FileStream($"{avatarPath}/{userName}{extension}",FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+        }
 
+        public async Task DeleteAvatar(string username)
+        {
+            await Task.Run(() =>
+            {
+                var files = Directory.GetFiles(avatarPath, $"{username}.*");
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+            });
+        }
+
+        public PhysicalFileResult GetAvatar(string username)
+        {
+            var files = Directory.GetFiles(avatarPath, $"{username}.*");
+            if (files.Length > 0)
+            {
+                string extension = Path.GetExtension(files.First());
+                return new PhysicalFileResult(files.First(), $"image/{extension.Substring(1)}");
+            }
+            return null;
+        }
     }
 }
