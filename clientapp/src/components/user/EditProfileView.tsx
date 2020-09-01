@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog, CircularProgress, Snackbar, Backdrop, DialogTitle, DialogActions, DialogContentText, DialogContent, Input } from '@material-ui/core';
+import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog, CircularProgress, Snackbar, Backdrop, DialogTitle, DialogActions, DialogContentText, DialogContent, Input, Avatar, InputLabel } from '@material-ui/core';
 import {Autocomplete, Alert} from '@material-ui/lab'
 import { useForm } from 'react-hook-form';
 import { Topic } from '../../models/Topic';
 import { UserDetailed, UserUpdateRequest } from '../../models/User';
 import ErrorModel from '../../models/ErrorModel';
+import { GetAvatarPathForUser } from '../../api/UserApi';
 
 const useStyles = makeStyles(theme =>({
     paper:{
@@ -29,7 +30,12 @@ const useStyles = makeStyles(theme =>({
     },
     saveRow:{
         margin: theme.spacing(1),
-    }
+    },
+    avatar:{
+        height:theme.spacing(10),
+        width: theme.spacing(10),
+        marginRight: theme.spacing(0,0,1,0),
+    },
 }));
 
 interface IProps{
@@ -54,11 +60,11 @@ interface IFormData{
 const EditProfileView : React.FC<IProps> = (props) =>{
     const classes = useStyles();
     const user = props.user;
-    const {register, handleSubmit, errors} = useForm<IFormData>({mode:"onBlur"});
+    const {register, handleSubmit, errors, watch} = useForm<IFormData>({mode:"onBlur"});
     //Getting topics from user - it must be the same reference to AutoComplete work correct
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [topicsLoaded, setTopicsLoaded] = useState(false);
-    const [image, setImage] = useState(false)
+    const [imageSrc, setImageSrc] = useState(GetAvatarPathForUser(props.user));
     let deftopics : Topic[] = [];
     if(!topicsLoaded){
         user.topics.forEach(t => {
@@ -69,7 +75,22 @@ const EditProfileView : React.FC<IProps> = (props) =>{
         setSelectedTopics(deftopics)
         setTopicsLoaded(true);
     }
-        
+    const avatarPath = watch("avatar");
+    const handleImage = ()=>{
+        let reader = new FileReader();
+        let file = avatarPath?.item(0);
+        if(file)
+        {
+            let url =  reader.readAsDataURL(file);
+            reader.onload = ()=>{
+                if(reader.result)
+                    setImageSrc(reader.result+"");
+            }
+        }
+        else{
+            setImageSrc(GetAvatarPathForUser(props.user));
+        }
+    }
 
     const onSubmit = (data: IFormData) =>{
         props.onSubmit({
@@ -142,9 +163,19 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                         name="topics"/>}
                     />
                 </Box>
-                <Box>
-                    <Input name="avatar" inputProps={{accept:"image/*"}} type="file" inputRef={register}/>
+                <Divider className={classes.divider}/>
+                <Typography>Avatar</Typography>
+                <Box display="flex" flexDirection="row" className={classes.item}>
+                    <Avatar className={classes.avatar} src={imageSrc} >{props.user.userName.slice(0,1)}</Avatar>
+                    <label htmlFor="avatar">
+                        <input style={{display: "none"}} id="avatar" name="avatar" accept="image/*" type="file" ref={register}
+                        onChange={handleImage}/>
+                        <Button component="span">Upload avatar</Button>
+                    <Typography>{avatarPath?.item(0)?.name}</Typography>
+                    </label>
+                    
                 </Box>
+                <Divider/>
                 <Box display="flex" flexDirection="row" className={classes.saveRow}>
                     {props.saveLoading?<CircularProgress/>:
                     <Button type="submit" color="primary" variant="outlined">Save</Button>}
