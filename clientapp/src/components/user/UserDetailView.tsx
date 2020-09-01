@@ -2,6 +2,7 @@ import React from 'react';
 import { Paper, Box, Avatar, Typography, Divider, Chip, makeStyles, Container, Button, IconButton } from '@material-ui/core';
 import { UserDetailed } from '../../models/User';
 import EditIcon from '@material-ui/icons/Edit';
+import { GetAvatarPathForUser } from '../../api/UserApi';
 
 
 
@@ -38,7 +39,7 @@ const UserDetailView : React.FC<IProps> = (props) => {
         <Container maxWidth="xl">
         <Paper className={classes.surface}>
         <Box display="flex" flexDirection="row" alignItems="center">
-            <Avatar className={classes.avatar}>
+            <Avatar src={`${GetAvatarPathForUser(props.user)}#${Date.now()}`} className={classes.avatar}>
                 {props.user.userName.toUpperCase().slice(0,1)}
             </Avatar>
             <Typography variant="h4">{props.user.userName}</Typography>

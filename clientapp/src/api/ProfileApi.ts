@@ -76,3 +76,20 @@ export const LoadPendingNotifications = async() =>{
     let response = await axios.get<PendingNotificationDto>("/api/profile/notifications/pending");
     return response.data;
 }
+
+export const UploadAvatar = async(fileList: FileList) =>{
+    const file = fileList.item(0);
+    if(file){
+        let data = new FormData();
+        data.append("File",file);
+        console.log(data)
+        try{
+            const a = await axios.put("/api/profile/avatar",data, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+        }
+        finally{
+        }
+        
+    }
+}

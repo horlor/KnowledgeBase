@@ -5,6 +5,7 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
 import { UserUpdateRequest } from "../models/User";
 import { ChangeProfileEdit, PutProfileErrorClose } from "../redux/reducers/ProfileReducer";
+import { UploadAvatar } from "../api/ProfileApi";
 
 
 export const useProfileHook = () =>{
@@ -19,8 +20,11 @@ export const useProfileHook = () =>{
         
     },[dispatch])
 
-    const save = (request: UserUpdateRequest) =>{
+    const save = (request: UserUpdateRequest, avatar?: FileList) =>{
         dispatch(UpdateProfileThunk(request));
+        if(avatar){
+            UploadAvatar(avatar);
+        }
     }
 
     const setEdit =(b: boolean) =>{

@@ -20,3 +20,7 @@ export const LoadUsersFromApiSearch = async (page: number, pageSize: number, sea
     let response = await axios.get<UserSearchResponse>(urlBuilder.get());
     return response.data;
 }
+
+export const GetAvatarPathForUser = (user: User) =>{
+    return `${axios.defaults.baseURL}api/users/${user.userName}/avatar`;
+}

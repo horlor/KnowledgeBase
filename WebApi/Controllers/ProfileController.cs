@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
@@ -115,16 +116,22 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpGet("avatar")]
-        public PhysicalFileResult GetAvatar()
+        public IActionResult GetAvatar()
         {
-            return avatarService.GetAvatar(UserName);
+            var (stream, ext) = avatarService.GetAvatar(UserName);
+            if (stream == null)
+                return NotFound();
+            return new FileStreamResult(stream, $"image/{ext}");
         }
 
         [Authorize]
         [HttpPut("avatar")]
-        public async Task<IActionResult> SetAvatar(IFormFile image)
+        public async Task<IActionResult> SetAvatar([FromForm(Name = "file")] IFormFile image)
         {
-            await avatarService.AddOrSetAvatar(UserName, image);
+            using(var stream = image.OpenReadStream())
+            {
+                await avatarService.AddOrSetAvatar(UserName, stream, Path.GetExtension(image.FileName));
+            }
             return Ok();
         }
 

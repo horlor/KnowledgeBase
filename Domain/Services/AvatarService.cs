@@ -1,8 +1,10 @@
 ﻿using KnowledgeBase.Domain.Repository;
+using KnowledgeBase.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,19 +19,25 @@ namespace KnowledgeBase.Domain.Services
             this.avatarRepo = avatarRepo;
         }
 
-        public Task AddOrSetAvatar(string username, IFormFile file)
+        public async Task AddOrSetAvatar(string username, IFormFile file)
         {
-            return avatarRepo.AddOrSetAvatar(username, file);
+            await avatarRepo.AddOrSetAvatar(username, file);
         }
 
-        public PhysicalFileResult GetAvatar(string username)
+        public async Task AddOrSetAvatar(string username, Stream imageStream, string extension)
+        {
+            await avatarRepo.AddOrSetAvatar(username, imageStream, extension);
+        }
+
+        public (Stream, string) GetAvatar(string username)
         {
             return avatarRepo.GetAvatar(username);
+            
         }
 
-        public Task DeleteAvatar(string username)
+        public async Task DeleteAvatar(string username)
         {
-            return avatarRepo.DeleteAvatar(username);
+            await avatarRepo.DeleteAvatar(username);
         }
     }
 }

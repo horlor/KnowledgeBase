@@ -378,3 +378,7 @@ yarn-error.log*
 
 /.vscode
 clientapp/.vscode/settings.json
+
+# FileStorage
+/FileStorage
+FileStorage/avatars/lorant.jpg

@@ -223,6 +223,8 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task AddOrSetAvatar(string userName, IFormFile image)
         {
+            if (image == null)
+                return;
             await DeleteAvatar(userName);
             string extension = Path.GetExtension(image.FileName);
             using (var stream = new FileStream($"{avatarPath}/{userName}{extension}",FileMode.Create))
@@ -243,15 +245,26 @@ namespace KnowledgeBase.DataAccess.Repos
             });
         }
 
-        public PhysicalFileResult GetAvatar(string username)
+        public (Stream, string) GetAvatar(string username)
         {
             var files = Directory.GetFiles(avatarPath, $"{username}.*");
             if (files.Length > 0)
             {
                 string extension = Path.GetExtension(files.First());
-                return new PhysicalFileResult(files.First(), $"image/{extension.Substring(1)}");
+                return (new FileStream(files.First(), FileMode.Open), extension);
+                //return new PhysicalFileResult(files.First(), $"image/{extension.Substring(1)}");
             }
-            return null;
+            return (null,null);
+        }
+
+        public async Task AddOrSetAvatar(string username, Stream imageStream, string extension)
+        {
+            await DeleteAvatar(username);
+            using (var stream = new FileStream($"{avatarPath}/{username}{extension}", FileMode.Create))
+            {
+                await imageStream.CopyToAsync(stream);
+            }
+
         }
     }
 }

@@ -64,9 +64,12 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("{username}/avatar")]
-        public PhysicalFileResult GetAvatarForUser([FromRoute] string username)
+        public IActionResult GetAvatarForUser([FromRoute] string username)
         {
-            return avatarService.GetAvatar(username);
+            var (stream, ext) = avatarService.GetAvatar(username);
+            if (stream == null)
+                return NotFound();
+            return new FileStreamResult(stream, $"image/{ext}");
         }
 
     }

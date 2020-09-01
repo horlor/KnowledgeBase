@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog, CircularProgress, Snackbar, Backdrop, DialogTitle, DialogActions, DialogContentText, DialogContent } from '@material-ui/core';
+import { Container, Grid, TextField, Paper, makeStyles, Divider, Box, Typography, Chip, IconButton, Button, Dialog, CircularProgress, Snackbar, Backdrop, DialogTitle, DialogActions, DialogContentText, DialogContent, Input } from '@material-ui/core';
 import {Autocomplete, Alert} from '@material-ui/lab'
 import { useForm } from 'react-hook-form';
 import { Topic } from '../../models/Topic';
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme =>({
 interface IProps{
     availableTopics: Topic[],
     user: UserDetailed,
-    onSubmit: (request: UserUpdateRequest) =>void,
+    onSubmit: (request: UserUpdateRequest, avatar?: FileList) =>void,
     onDrop?: () => void
     saveLoading: boolean,
     saveError?: ErrorModel,
@@ -48,6 +48,7 @@ interface IFormData{
     lastname: string,
     email: string,
     introduction: string,
+    avatar: FileList,
 }
 
 const EditProfileView : React.FC<IProps> = (props) =>{
@@ -57,9 +58,10 @@ const EditProfileView : React.FC<IProps> = (props) =>{
     //Getting topics from user - it must be the same reference to AutoComplete work correct
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [topicsLoaded, setTopicsLoaded] = useState(false);
+    const [image, setImage] = useState(false)
     let deftopics : Topic[] = [];
     if(!topicsLoaded){
-        user.topics.map(t => {
+        user.topics.forEach(t => {
             let topic = props.availableTopics.find(tp => tp.id == t.id);
             if(topic)
                 deftopics.push(topic);
@@ -76,7 +78,7 @@ const EditProfileView : React.FC<IProps> = (props) =>{
             email: data.email,
             introduction: data.introduction,
             topics: selectedTopics,
-        });
+        },data.avatar);
     }
 
 
@@ -140,12 +142,15 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                         name="topics"/>}
                     />
                 </Box>
+                <Box>
+                    <Input name="avatar" inputProps={{accept:"image/*"}} type="file" inputRef={register}/>
+                </Box>
                 <Box display="flex" flexDirection="row" className={classes.saveRow}>
                     {props.saveLoading?<CircularProgress/>:
                     <Button type="submit" color="primary" variant="outlined">Save</Button>}
                     <Box flexGrow={1}></Box>
                     <Button color="secondary" variant="outlined" onClick={props.onDrop}>Don't save</Button>
-                </Box> 
+                </Box>
             </form>
             </Paper>
             <Dialog open={!!props.saveError} onClose={props.onErrorClose}>
