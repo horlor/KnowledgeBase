@@ -96,6 +96,7 @@ namespace KnowledgeBase.DataAccess.Repos
             else
             {
                 dbTopic.Ancestor = null;
+                dbTopic.AncestorId = null;
             }
             dbTopic.Name = topic.Name;
             Console.WriteLine(dbTopic.Ancestor == null ? "The dbtopic's ancestor is null":"wtf");

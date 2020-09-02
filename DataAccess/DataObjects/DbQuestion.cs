@@ -20,6 +20,8 @@ namespace KnowledgeBase.DataAccess.DataObjects
 
         public DateTime LastUpdated { get; set; }
 
+        public Boolean Closed { get; set; } = false;
+
         public virtual DbUser User { get; set; }
 
         public virtual DbTopic Topic { get; set; }

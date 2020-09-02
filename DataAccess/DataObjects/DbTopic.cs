@@ -12,7 +12,9 @@ namespace KnowledgeBase.DataAccess.DataObjects
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
+        [ForeignKey("AncestorId")]
         public virtual DbTopic Ancestor { get; set; }
+        public int? AncestorId { get; set; }
 
         public virtual ICollection<DbUserTopic> UserTopics { get; set; }
     }
