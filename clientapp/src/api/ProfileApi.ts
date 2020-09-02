@@ -89,7 +89,12 @@ export const UploadAvatar = async(fileList: FileList) =>{
             });
         }
         finally{
+            console.log('akarmi');
         }
         
     }
+}
+
+export const DeleteAvatar = async () =>{
+    await axios.delete("/api/profile/avatar");
 }

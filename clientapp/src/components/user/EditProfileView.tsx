@@ -36,13 +36,17 @@ const useStyles = makeStyles(theme =>({
         width: theme.spacing(10),
         marginRight: theme.spacing(0,0,1,0),
     },
+    button:{
+        margin:theme.spacing(1)
+    }
 }));
 
 interface IProps{
     availableTopics: Topic[],
     user: UserDetailed,
     onSubmit: (request: UserUpdateRequest, avatar?: FileList) =>void,
-    onDrop?: () => void
+    onDrop?: () => void,
+    deleteAvatar: ()=> void,
     saveLoading: boolean,
     saveError?: ErrorModel,
     onErrorClose?: ()=>void,
@@ -65,6 +69,7 @@ const EditProfileView : React.FC<IProps> = (props) =>{
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [topicsLoaded, setTopicsLoaded] = useState(false);
     const [imageSrc, setImageSrc] = useState(GetAvatarPathForUser(props.user));
+    const [avatarDialog, setAvatarDialog] = useState(false);
     let deftopics : Topic[] = [];
     if(!topicsLoaded){
         user.topics.forEach(t => {
@@ -88,7 +93,7 @@ const EditProfileView : React.FC<IProps> = (props) =>{
             }
         }
         else{
-            setImageSrc(GetAvatarPathForUser(props.user));
+            setImageSrc(GetAvatarPathForUser(props.user)+"#"+Date.now());
         }
     }
 
@@ -100,6 +105,12 @@ const EditProfileView : React.FC<IProps> = (props) =>{
             introduction: data.introduction,
             topics: selectedTopics,
         },data.avatar);
+    }
+
+    const onDeleteAvatar = ()=>{
+        props.deleteAvatar();
+        setImageSrc("#")
+        setAvatarDialog(false);
     }
 
 
@@ -170,7 +181,9 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     <label htmlFor="avatar">
                         <input style={{display: "none"}} id="avatar" name="avatar" accept="image/*" type="file" ref={register}
                         onChange={handleImage}/>
-                        <Button component="span">Upload avatar</Button>
+                        <Button className={classes.button} component="span" variant="contained" color="primary">Upload avatar</Button>
+                        <Button className={classes.button} onClick={()=>{setAvatarDialog(true)}}
+                            variant="contained" color="secondary">Delete Avatar</Button>
                     <Typography>{avatarPath?.item(0)?.name}</Typography>
                     </label>
                     
@@ -191,6 +204,16 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={props.onErrorClose}>Ok</Button>
+                    </DialogActions>
+            </Dialog>
+            <Dialog open={avatarDialog} onClose={()=>setAvatarDialog(false)}>
+                    <DialogTitle>Deleting avatar</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Are you sure to delete your avatar? This cannot be undone.</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={onDeleteAvatar}>Ok</Button>
+                        <Button onClick={()=>setAvatarDialog(false)}>Cancel</Button>
                     </DialogActions>
             </Dialog>
         </Container>

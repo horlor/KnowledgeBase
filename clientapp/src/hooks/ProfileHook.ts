@@ -5,7 +5,7 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
 import { UserUpdateRequest } from "../models/User";
 import { ChangeProfileEdit, PutProfileErrorClose } from "../redux/reducers/ProfileReducer";
-import { UploadAvatar } from "../api/ProfileApi";
+import { UploadAvatar, DeleteAvatar } from "../api/ProfileApi";
 
 
 export const useProfileHook = () =>{
@@ -27,6 +27,10 @@ export const useProfileHook = () =>{
         }
     }
 
+    const deleteAvatar = async () =>{
+        await DeleteAvatar();
+    }
+
     const setEdit =(b: boolean) =>{
         dispatch(ChangeProfileEdit(b));
     }
@@ -35,5 +39,5 @@ export const useProfileHook = () =>{
         dispatch(PutProfileErrorClose());
     }
 
-    return {topics, save, profile, edit, setEdit, closeError};
+    return {topics, save, profile, edit, setEdit, deleteAvatar, closeError};
 }
