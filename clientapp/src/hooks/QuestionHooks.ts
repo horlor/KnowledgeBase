@@ -1,6 +1,6 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
-import { LoadQuestionsFromApi, LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi } from "../api/QuestionApi";
+import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
 import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
@@ -9,6 +9,7 @@ import { Topic } from "../models/Topic";
 import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import Question, { QuestionUpdateRequest, QuestionSearchResult } from "../models/Question";
 import Answer from "../models/Answer";
+import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
 
 
 export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
@@ -103,6 +104,7 @@ export const useNewQuestionHook = () => {
             topic: topic,
             author: username?username:'',
             id:0,
+            closed:false,
         }
         try{
             await CreateQuestionToApi(q);
@@ -119,6 +121,7 @@ export const useQuestionEditHook = (question: Question) =>{
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.login.username);
     const [edit, setEdit] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const modifyEnabled = question.author === user;
     const modified = question.created !== question.lastUpdate;
 
@@ -139,5 +142,24 @@ export const useQuestionEditHook = (question: Question) =>{
         setEdit(true)
     }
 
-    return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified};
+    const closeQuestion = async (content: string) =>{
+        if(user){
+            if(question.closed)
+                await ReopenQuestion(question.id, {id:0, content:content, author: user})
+            else
+                await CloseQuestion(question.id, {id:0, content:content, author: user})
+            dispatch(LoadQuestionAnswersThunk(question.id))
+        }
+        setDialogOpen(false);
+    }
+
+    const openDialog = ()=>{
+        setDialogOpen(true);
+    }
+
+    const closeDialog =()=>{
+        setDialogOpen(false);
+    }
+
+    return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified, closeState:{openDialog, closeDialog, closeQuestion, dialogOpen}};
 }

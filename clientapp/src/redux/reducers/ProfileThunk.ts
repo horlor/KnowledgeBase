@@ -31,7 +31,3 @@ export const UpdateProfileThunk = (request: UserUpdateRequest) =>{
             }
     }
 }
-
-function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}

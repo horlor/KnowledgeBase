@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, makeStyles, Paper, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import Answer, { AnswerUpdateRequest } from '../../models/Answer';
+import Answer, { AnswerUpdateRequest, AnswerType } from '../../models/Answer';
 import { useAnswerHook } from '../../hooks/AnswerHooks';
 import { useForm } from 'react-hook-form';
 
@@ -68,7 +68,8 @@ const AnswerView : React.FC<IProps> = (props) =>{
         <>
         <Paper className={classes.card}>
         <Box display="flex" flexDirection="row">
-            <Typography className={classes.authorText}>{`by ${props.answer.author}`}</Typography>
+            <Typography className={classes.authorText}>
+                {`${props.answer.type == AnswerType.Reopener?"Reopened ":props.answer.type == AnswerType.Closer?"Closed ":""}by ${props.answer.author}`}</Typography>
             <Box flexGrow={1} />
             {
                     modifyEnabled?

@@ -58,22 +58,49 @@ namespace KnowledgeBase.WebApi.Controllers
             return Created("api/questions/" + q.Id, q);
         }
 
+        [HttpGet("{id}/answers")]
+        public async Task<ActionResult<ICollection<Answer>>> GetAnswersForQuestion(int id)
+        {
+            return Ok(await questionService.GetAnswersForQuestion(id));
+        }
+
+        [Authorize]
+        [HttpPost("{id}/close")]
+        public async Task<IActionResult> CloseQuestion([FromRoute] int id, [FromBody] Answer answer)
+        {
+            var question = await questionService.GetQuestion(id);
+            if (question == null)
+                return NotFound();
+            if (!(UserName == answer.Author || question.Author == UserName || AuthenticateModerator()))
+                return Conflict();
+            return Ok( await  questionService.CloseQuestion(id, answer));
+        }
+        [Authorize]
+        [HttpPost("{id}/reopen")]
+        public async Task<IActionResult> ReopenQuestion([FromRoute] int id, [FromBody] Answer answer)
+        {
+            var question = await questionService.GetQuestion(id);
+            if (question == null)
+                return NotFound();
+            if (!(UserName == answer.Author || question.Author == UserName || AuthenticateModerator()))
+                return Conflict();
+            Console.WriteLine("Reopen Question: " + AuthenticateModerator());
+            return Ok( await questionService.ReopenQuestion(id, answer));
+        }
+
+
         [Authorize]
         [HttpPost("{id}/answers")]
         public async Task<ActionResult<Answer>> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
-            //So no one can post in someone else's name
-            //Jó ez, de lehet a DTO-s megoldás is
+            Console.WriteLine("Http POST to Answers");
             if (UserName != answer.Author)
                 return Conflict();
+            var question = await questionService.GetQuestion(id);
+            if (question.Closed)
+                return BadRequest();
             var a = await questionService.AddAnswerToQuestion(id, answer);
             return Created("api/questions/" + id + "/answers/" + a.Id, a);
-        }
-
-        [HttpGet("{id}/answers")]
-        public async Task<ActionResult<ICollection<Answer>>> GetAnswersForQuestion(int id)
-        {
-            return Ok( await questionService.GetAnswersForQuestion(id));
         }
 
         [Authorize]

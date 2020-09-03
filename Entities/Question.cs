@@ -14,6 +14,8 @@ namespace KnowledgeBase.Entities
         public string Created { get; set; }
         public string LastUpdate { get; set; }
 
+        public bool Closed { get; set; }
+
         public Topic Topic { get; set; }
 
     }

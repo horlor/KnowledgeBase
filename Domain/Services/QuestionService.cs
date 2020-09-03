@@ -47,6 +47,8 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer)
         {
+            //To made sure that no opener or closer answer will be created without the consisting property
+            answer.Type = AnswerType.Simple;
             return await questionRepo.StoreAnswerForQuestion(qId, answer);
         }
 
@@ -95,6 +97,15 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.Search(request);
         }
         
+        public async Task<Answer> CloseQuestion(int questionId, Answer answer)
+        {
+            return await questionRepo.CloseQuestion(questionId, answer);
+        }
+
+        public async Task<Answer> ReopenQuestion(int questionId, Answer answer)
+        {
+            return await questionRepo.ReopenQuestion(questionId, answer);
+        }
     }
 
 }

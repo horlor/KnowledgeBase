@@ -48,3 +48,11 @@ export const SearchQuestionsFromApi = async(request: QuestionSearchRequest) =>{
     console.log(url.get())
     return (await axios.get<QuestionSearchResult>(url.get())).data
 }
+
+export const CloseQuestion = async (questionId: number, answer: Answer) =>{
+    await axios.post(`/api/questions/${questionId}/close`,answer);
+}
+
+export const ReopenQuestion = async (questionId: number, answer: Answer)=>{
+    await axios.post(`/api/questions/${questionId}/reopen`,answer);
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using KnowledgeBase.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess.DataObjects
@@ -17,6 +18,7 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public DateTime Created { get; set; }
 
         public DateTime LastUpdated { get; set; }
+        public AnswerType Type { get; set; } = AnswerType.Simple;
 
         [Required]
         public virtual DbQuestion Question { get; set; }

@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../redux/Store'
-import Answer, { AnswerUpdateRequest } from '../models/Answer';
+import Answer, { AnswerUpdateRequest, AnswerType } from '../models/Answer';
 import { CreateAnswerToQuestion, DeleteAnswer, UpdateAnswer } from '../api/QuestionApi';
 import { AddAnswerAction, DeleteAnswerAction, UpdateAnswerAction } from '../redux/reducers/QuestionReducer';
 import { UserReducer } from '../redux/reducers/UserReducer';
@@ -35,7 +35,7 @@ export const useAnswerHook = (answer: Answer) =>{
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
     const [deleteDialog, setDelete] = useState(false);
-    const modifyEnabled = answer.author === user;
+    const modifyEnabled = answer.author === user && answer.type == AnswerType.Simple;
     const modified = answer.created !== answer.lastUpdate;
 
 

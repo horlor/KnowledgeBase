@@ -29,9 +29,12 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
             {question?
             <>
                 <QuestionView question={question}/>
-                {question.answers.map(ans => 
-                    <AnswerView  key={ans.id} answer={ans}/>) }
-                <AnswerInput questionId={question.id}/>
+                {question.answers.map(ans => {
+                    return <AnswerView  key={ans.id} answer={ans}/>;
+                }
+                    ) }
+                    {question.closed?"":<AnswerInput questionId={question.id}/>}
+                
                 <Dialog open={!!selected}>
                     <DialogTitle>Warning!</DialogTitle>
                     <DialogContent>

@@ -1,11 +1,14 @@
 import React from 'react';
-import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button } from '@material-ui/core';
+import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import Question, { QuestionUpdateRequest } from '../../models/Question';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete'
 import { useQuestionEditHook } from '../../hooks/QuestionHooks';
 import { register } from '../../serviceWorker';
 import { useForm } from 'react-hook-form';
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { QuestionCloseDialog } from './QuestionCloseDialog';
 
 
 
@@ -41,7 +44,7 @@ const useStyles = makeStyles(theme =>({
 }));
 
 const QuestionView : React.FC<IProps> = props=>{
-    const { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified} = useQuestionEditHook(props.question);
+    const { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified, closeState} = useQuestionEditHook(props.question);
     const classes = useStyles();
     const {register, handleSubmit} =useForm<QuestionUpdateRequest>();
     if(edit)
@@ -77,6 +80,17 @@ const QuestionView : React.FC<IProps> = props=>{
                         <IconButton onClick={editQuestion}>
                             <EditIcon/>
                         </IconButton>
+                        <IconButton onClick={closeState.openDialog}>
+                            {props.question.closed?
+                            <LockOpenIcon/>:
+                            <LockIcon/>}
+                        </IconButton>
+                        <QuestionCloseDialog
+                            onOk={closeState.closeQuestion}
+                            onCancel={closeState.closeDialog}
+                            closing={!props.question.closed}
+                            open={closeState.dialogOpen}
+                        />
                     </>
                     :""
                 }

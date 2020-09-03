@@ -6,6 +6,7 @@ export interface Question{
     title: string;
     content: string;
     author: string;
+    closed: boolean,
     created?: string,
     lastUpdate?: string,
     topic: Topic,

@@ -20,6 +20,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 Content = dbAnswer.Content,
                 Created = dbAnswer.Created.ToString(dateFormat),
                 LastUpdate = dbAnswer.LastUpdated.ToString(dateFormat),
+                Type = dbAnswer.Type,
             };
         }
 
@@ -35,7 +36,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 Content = dbQuestion.Content,
                 Created = dbQuestion.Created.ToString(dateFormat),
                 LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
-                Topic = MapDbTopic(dbQuestion.Topic)
+                Topic = MapDbTopic(dbQuestion.Topic),
+                Closed = dbQuestion.Closed,
             };
             return q;
         }
@@ -58,7 +60,8 @@ namespace KnowledgeBase.DataAccess.Repos
                 Answers = answers,
                 Created = dbQuestion.Created.ToString(dateFormat),
                 LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
-                Topic = MapDbTopic(dbQuestion.Topic)
+                Topic = MapDbTopic(dbQuestion.Topic),
+                Closed = dbQuestion.Closed,
             };
         }
 

@@ -59,7 +59,7 @@ namespace KnowledgeBase.DataAccess.Repos
                     .ThenInclude(a => a.User)
                 .Include(q => q.User)
                 .Include(q => q.Topic)
-                .SingleAsync(q => q.Id == id);
+                .SingleOrDefaultAsync(q => q.Id == id);
             return DbMapper.MapDbQuestionWithAnswers(q);
         }
 
@@ -95,27 +95,15 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Answer> StoreAnswerForQuestion(int id, Answer answer)
         {
-            var now = DateTime.Now;
-            DbAnswer dbAnswer = new DbAnswer()
-            {
-                Content = answer.Content,
-                Created = now,
-                LastUpdated = now,
-            };
-            var question = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == id);
-            var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == answer.Author);
-            if (question == null || user == null)
-                return null;
-            dbAnswer.Question = question;
-            dbAnswer.User = user;
-            await dbcontext.Answers.AddAsync(dbAnswer);
+            var dbQuestion = await dbcontext.Questions.SingleOrDefaultAsync(t => t.Id == id);
+            var ret = await AddAnswerToDbQuestion(dbQuestion, answer);
             await dbcontext.SaveChangesAsync();
-            return DbMapper.MapDbAnswer(dbAnswer);
+            return ret;
         }
 
         public async Task<Question> Update(Question question)
         {
-            var q = await dbcontext.Questions.SingleAsync(q => q.Id == question.Id);
+            var q = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == question.Id);
             if (q != null)
             {
                 q.Content = question.Content;
@@ -174,6 +162,49 @@ namespace KnowledgeBase.DataAccess.Repos
                 Questions = list,
             };
 
+        }
+
+        public async Task<Answer> CloseQuestion(int questionId, Answer answer)
+        {
+            answer.Type = AnswerType.Closer;
+            var dbQuestion = await dbcontext.Questions.SingleOrDefaultAsync(t => t.Id == questionId);
+            if (dbQuestion == null)
+                return null;
+            dbQuestion.Closed = true;
+            var ret = await AddAnswerToDbQuestion(dbQuestion, answer);
+            await dbcontext.SaveChangesAsync();
+            return ret;
+        }
+
+        public async Task<Answer> ReopenQuestion(int questionId, Answer answer)
+        {
+            answer.Type = AnswerType.Reopener;
+            var dbQuestion = await dbcontext.Questions.SingleOrDefaultAsync(t => t.Id == questionId);
+            if (dbQuestion == null)
+                return null;
+            dbQuestion.Closed = false;
+            var ret = await AddAnswerToDbQuestion(dbQuestion, answer);
+            await dbcontext.SaveChangesAsync();
+            return ret;
+        }
+
+        private async Task<Answer> AddAnswerToDbQuestion(DbQuestion question, Answer answer)
+        {
+            var now = DateTime.Now;
+            DbAnswer dbAnswer = new DbAnswer()
+            {
+                Content = answer.Content,
+                Created = now,
+                LastUpdated = now,
+                Type = answer.Type,
+            };
+            var user = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == answer.Author);
+            if (question == null || user == null)
+                return null;
+            dbAnswer.Question = question;
+            dbAnswer.User = user;
+            await dbcontext.Answers.AddAsync(dbAnswer);
+            return DbMapper.MapDbAnswer(dbAnswer);
         }
     }
 }
