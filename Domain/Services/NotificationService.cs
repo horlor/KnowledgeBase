@@ -1,4 +1,4 @@
-﻿using KnowledgeBase.Domain.Hubs;
+﻿using KnowledgeBase.Domain.Interfaces;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
 using System;
@@ -13,12 +13,14 @@ namespace KnowledgeBase.Domain.Services
         private readonly INotificationRepo notificationRepo;
         private readonly IUserRepo userRepo;
         private readonly INotificationHub notificationHub;
+
         public NotificationService(INotificationRepo notificationRepo, IUserRepo userRepo, INotificationHub notificationHub)
         {
             this.notificationRepo = notificationRepo;
             this.userRepo = userRepo;
             this.notificationHub = notificationHub;
         }
+
         public async Task<ICollection<Notification>> GetNotificationsForUser(string username)
         {
             return await notificationRepo.GetByUsername(username);
@@ -27,10 +29,8 @@ namespace KnowledgeBase.Domain.Services
         public async Task CreateNewQuestionNotification(Question q)
         {
             var users = await userRepo.GetUsersByTopic(q.Topic);
-            Console.WriteLine($"NewQuestion called: {users.Count}");
             foreach (var user in users)
             {
-                
                 if (user.UserName != q.Author)
                 {
                     Console.WriteLine($"\tUser:{user.UserName}");
@@ -64,7 +64,7 @@ namespace KnowledgeBase.Domain.Services
             return await notificationRepo.CreateForUser(username, n);
         }
 
-        public async Task<bool> ChangeFinished(string username, int nId, bool finished)
+        public async Task<bool> ChangeImportant(string username, int nId, bool finished)
         {
             var enabled = await notificationRepo.CheckUserForNotification(nId, username);
             var success = false;

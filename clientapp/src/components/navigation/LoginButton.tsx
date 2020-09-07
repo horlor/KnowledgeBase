@@ -41,7 +41,6 @@ const LoginButton : React.FC<IProps> = (props) =>{
                 <MenuItem onClick={handleClose}>
                     <CloseIcon/>
                 </MenuItem>
-                <MenuItem onClick={()=> NotificationService.ping()}>Notf</MenuItem>
             </Menu>
             </>
     );

@@ -19,7 +19,6 @@ using System.IdentityModel.Tokens.Jwt;
 using KnowledgeBase.WebApi.ServiceHelpers;
 using KnowledgeBase.Domain.Interfaces;
 using KnowledgeBase.WebApi.Hubs;
-using KnowledgeBase.Domain.Hubs;
 using System.Threading.Tasks;
 
 namespace KnowledgeBase.WebApi
@@ -145,7 +144,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<NotificationService, NotificationService>();
             services.AddScoped<AvatarService, AvatarService>();
 
-            services.AddScoped<INotificationHub, NotificationHub>();
+            services.AddScoped<INotificationHub, NotificationHubProxy>();
 
 
         }

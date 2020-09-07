@@ -4,31 +4,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KnowledgeBase.Domain.Hubs;
 using KnowledgeBase.Entities;
 using KnowledgeBase.Domain.Services;
 
 namespace KnowledgeBase.WebApi.Hubs
 {
-    public class NotificationHub : Hub, INotificationHub
+    public class NotificationHub : Hub<INotificationClient>
     {
-        private IHubContext<NotificationHub> hubContext;
+        private readonly NotificationService notificationService;
 
-        public NotificationHub(IHubContext<NotificationHub> hubContext)
+        public NotificationHub(NotificationService notificationService)
         {
-            this.hubContext = hubContext;
+            this.notificationService = notificationService;
         }
 
-
-        public async Task SendNotificationToUser(string username, Notification notification)
+        [Authorize]
+        public async Task SetNotificationSeen(string username, int notificationId, bool to)
         {
-            Console.WriteLine($"{username}:{notification.Title}");
-            await hubContext.Clients.User("lorant").SendAsync("RecieveNotification", notification);
+            await notificationService.ChangeSeen(username, notificationId, to);
         }
 
-        public async Task Ping()
+        [Authorize]
+        public async Task SetNotificationImportant(string username, int notificationId, bool to)
         {
-            Console.WriteLine("User: "+Context.UserIdentifier+ ", "+Context.User);
+            await notificationService.ChangeImportant(username, notificationId, to);
         }
 
     }

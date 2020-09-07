@@ -95,7 +95,7 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPatch("notifications/{id}/finished")]
         public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationPatchDto dto)
         {
-            var res = await notificationService.ChangeFinished(UserName, id, dto.Finished);
+            var res = await notificationService.ChangeImportant(UserName, id, dto.Finished);
             if (res)
                 return Ok();
             else
