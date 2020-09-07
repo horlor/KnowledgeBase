@@ -3,7 +3,8 @@ export interface MyNotification{
     title: string,
     content: string,
     questionId: number,
-    finished: boolean,
+    seen: boolean,
+    important: boolean,
 }
 
 export interface PendingNotificationDto{

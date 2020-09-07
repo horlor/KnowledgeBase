@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using KnowledgeBase.WebApi.ServiceHelpers;
 using KnowledgeBase.Domain.Interfaces;
+using KnowledgeBase.WebApi.Hubs;
+using KnowledgeBase.Domain.Hubs;
+using System.Threading.Tasks;
 
 namespace KnowledgeBase.WebApi
 {
@@ -36,6 +39,11 @@ namespace KnowledgeBase.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSignalR(builder =>
+            {
+                builder.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
+                builder.EnableDetailedErrors = true;
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowedOrigins,
@@ -43,12 +51,8 @@ namespace KnowledgeBase.WebApi
                     {
                         builder.WithOrigins("http://localhost:3000");
                         builder.AllowAnyHeader();
-                        //builder.AllowAnyOrigin();
                         builder.AllowAnyMethod();
                         builder.AllowCredentials();
-
-
-
                     });
             });
             services.AddDbContext<KnowledgeContext>(options =>
@@ -91,6 +95,24 @@ namespace KnowledgeBase.WebApi
                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
                        ClockSkew = TimeSpan.Zero
                    };
+
+                   cfg.Events = new JwtBearerEvents
+                   {
+                       OnMessageReceived = context =>
+                       {
+                           var accessToken = context.Request.Query["access_token"];
+
+                           // If the request is for our hub...
+                           var path = context.HttpContext.Request.Path;
+                           if (!string.IsNullOrEmpty(accessToken) &&
+                               (path.StartsWithSegments("/api/notificationhub")))
+                           {
+                               // Read the token out of the query string
+                               context.Token = accessToken;
+                           }
+                           return Task.CompletedTask;
+                       }
+                   };
                    
                }
             );
@@ -123,6 +145,8 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<NotificationService, NotificationService>();
             services.AddScoped<AvatarService, AvatarService>();
 
+            services.AddScoped<INotificationHub, NotificationHub>();
+
 
         }
 
@@ -141,12 +165,12 @@ namespace KnowledgeBase.WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/api/notificationhub");
             });
 
             seeder.Seed();

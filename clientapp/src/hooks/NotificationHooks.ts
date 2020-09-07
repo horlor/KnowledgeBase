@@ -5,6 +5,7 @@ import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished
 import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetFinishedOnNotificationAction } from "../redux/reducers/NotificationReducer"
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers"
 import { MyNotification } from "../models/Notification"
+import { NotificationService } from "../api/NotificationApi"
 
 const loadAsync = async(dispatch: AppDispatch) =>{
     try{
@@ -39,8 +40,8 @@ export const useNotifications = () =>{
 
     const setFinish = async (n: MyNotification) =>{
         try{
-            await PatchNotificationFinished(n.id,!n.finished);
-            dispatch(SetFinishedOnNotificationAction({id: n.id, b: !n.finished}));
+            await PatchNotificationFinished(n.id,!n.important);
+            dispatch(SetFinishedOnNotificationAction({id: n.id, b: !n.important}));
         }
         catch(exc){
             console.log("Finish failed");
@@ -51,38 +52,39 @@ export const useNotifications = () =>{
 }
 
 export const useNotificationsWithUpdate = () =>{
-    const dispatch : AppDispatch = useDispatch();
     const [message, setMessage] = useState<string>("");
     const [open, setOpen] = useState(false);
     const [forwardLink, setForward] = useState("#");
 
-    const checkForPending = async () =>{
-        console.log("check");
-        try{
-            setForward("#")
-            let dto = await LoadPendingNotifications();
-            if(dto.count >0){
-                setMessage(`You have ${dto.count} pending notifications`);
-                setOpen(true);
-                setForward("/notifications")
+    const onNotification = (notification: MyNotification) =>{
+        console.log("getNotification");
+        setMessage(notification.title);
+        setOpen(true);
+        setForward("/notifications");  
+    }
+
+
+    useEffect(()=>{
+        const onEffect = async()=>{
+            let token = localStorage.getItem("Viknowledge-token")
+            if(token){
+                await NotificationService.subscribe(token)
+                NotificationService.setOnNotification(onNotification)
+    
             }
         }
-        catch(exc){
-            console.log("Remote server unavailable")
-        }       
-    }
-    useEffect(()=>{
-        checkForPending();
-        const timer = window.setInterval(()=>{
-            checkForPending();
-        },30000)
+        onEffect();
         return ()=>{
-            window.clearInterval(timer)
+            NotificationService.unsubscribe()
         }
-    },[dispatch])
+    },[])
 
     const handleClose = ()=>{
         setOpen(false);
     }
-    return { message, open, handleClose, forwardLink};
+
+    const Ping =  async()=>{
+        await NotificationService.ping();
+    }
+    return { message, open, handleClose, Ping, forwardLink};
 }

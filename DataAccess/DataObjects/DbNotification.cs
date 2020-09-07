@@ -13,8 +13,8 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public bool Pending { get; set; }
-        public bool Finished { get; set; }
+        public bool Seen { get; set; }
+        public bool Important { get; set; }
         public int? QuestionId { get; set; }
         [ForeignKey("QuestionId")]
         public virtual DbQuestion Question { get; set; }
@@ -22,12 +22,6 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual DbUser User { get; set; }
-
-        public DbNotification()
-        {
-            Pending = true;
-            Finished = false;
-        }
 
     }
 }

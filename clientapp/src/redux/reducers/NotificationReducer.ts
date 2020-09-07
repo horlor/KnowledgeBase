@@ -40,7 +40,7 @@ export const NotificationReducer = createReducer(initialState, builder => builde
         .addCase(SetFinishedOnNotificationAction, (state : INotificationState, action)=>{
             let a = state.items.find(n => n.id === action.payload.id);
             if(a)
-                a.finished = action.payload.b;
+                a.important = action.payload.b;
         })
     );
 

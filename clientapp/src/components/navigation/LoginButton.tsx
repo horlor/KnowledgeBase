@@ -6,6 +6,7 @@ import {useLoginHook} from "../../hooks/LoginHooks";
 import CloseIcon from "@material-ui/icons/Close"
 import { Menu, MenuItem, Icon } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { NotificationService } from "../../api/NotificationApi";
 interface IProps{
 
 }
@@ -39,7 +40,8 @@ const LoginButton : React.FC<IProps> = (props) =>{
                 <MenuItem onClick={()=>{logoutFun(); handleClose();}}>Logout</MenuItem>
                 <MenuItem onClick={handleClose}>
                     <CloseIcon/>
-                    </MenuItem>
+                </MenuItem>
+                <MenuItem onClick={()=> NotificationService.ping()}>Notf</MenuItem>
             </Menu>
             </>
     );

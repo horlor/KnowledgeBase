@@ -22,6 +22,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, name),
                 new Claim(ClaimTypes.Role, role)
             };
 

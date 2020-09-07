@@ -14,11 +14,11 @@ namespace KnowledgeBase.Domain.Repository
         Task Remove(Notification notification);
         Task Remove(int id);
         Task<string> GetUserNameForNotification(int id);
-        Task<bool> SetFinished(int id, bool to);
+        Task<bool> SetImportant(int id, bool to);
         Task<bool> CheckUserForNotification(int id, string username);
         Task<ICollection<Notification>> GetPendingNotifications(string username);
 
-        Task<bool> SetPending(int id, bool pending);
+        Task<bool> SetSeen(int id, bool pending);
 
     }
 }

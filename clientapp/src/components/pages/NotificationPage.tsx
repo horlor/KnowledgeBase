@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Typography, makeStyles, Modal } from '@material-ui/core';
+import { Container, Typography} from '@material-ui/core';
 import { useNotifications } from '../../hooks/NotificationHooks';
 import NotificationView from '../notification/NotificationView';
 import LoadingView from '../common/LoadingView';
@@ -21,7 +21,7 @@ const NotificationPage : React.FC<IProps> = () =>{
             notifications.length !== 0
             ?
             notifications.map(n => 
-            <NotificationView key={n.id} title={n.title} message={n.content} finished={n.finished}
+            <NotificationView key={n.id} title={n.title} message={n.content} finished={n.important}
                  onDelete={()=>deleteNotification(n)}
                  onFinish={()=>setFinish(n)}
                  linkTo={`/questions/${n.questionId}`}

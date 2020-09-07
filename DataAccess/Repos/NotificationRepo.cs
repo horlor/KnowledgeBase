@@ -61,7 +61,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Notifications
                 .Include(n => n.User)
                 .Where(n => n.User.UserName == username)
-                .OrderBy(n=>n.Finished)
+                .OrderBy(n=>n.Seen)
                 .Select(n => DbMapper.MapDbNotification(n))
                 .ToListAsync();
         }
@@ -107,12 +107,12 @@ namespace KnowledgeBase.DataAccess.Repos
             return await GetUserNameForNotification(notification.Id);
         }
 
-        public async Task<bool> SetFinished(int id, bool to)
+        public async Task<bool> SetImportant(int id, bool to)
         {
             var dbNotification = await dbcontext.Notifications.SingleOrDefaultAsync(n => n.Id == id);
             if(dbNotification != null)
             {
-                dbNotification.Finished = to;
+                dbNotification.Important = to;
                 await dbcontext.SaveChangesAsync();
                 return true;
             }
@@ -130,17 +130,17 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Notifications
                 .Include(n => n.User)
                 .Where(n => n.User.UserName == username)
-                .Where(n => n.Pending)
+                .Where(n => n.Seen)
                 .Select(n => DbMapper.MapDbNotification(n))
                 .ToListAsync();
         }
 
-        public async Task<bool> SetPending(int id, bool pending)
+        public async Task<bool> SetSeen(int id, bool seen)
         {
             var dbNotification = await dbcontext.Notifications.SingleOrDefaultAsync(n => n.Id == id);
             if (dbNotification != null)
             {
-                dbNotification.Pending = pending;
+                dbNotification.Seen = seen;
                 await dbcontext.SaveChangesAsync();
                 return true;
             }
