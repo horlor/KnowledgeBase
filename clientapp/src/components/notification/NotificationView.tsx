@@ -23,8 +23,8 @@ const useStyles = makeStyles(theme => ({
 interface IProps{
     notification: MyNotification
     onDelete?: ()=>void,
-    onSetImportant?: ()=>void,
-    onSetSeen?: ()=>void,
+    SetImportant?: (b: boolean)=>void,
+    SetSeen?: (b: boolean)=>void,
     linkTo?: string
 }
 
@@ -36,26 +36,25 @@ const NotificationView : React.FC<IProps> = props =>{
         <div className={classes.surface}
         style={(n.seen)?{background:"gainsboro"}:{}}>
             <Box display="flex" alignItems="center">
-            <IconButton onClick={props.onSetImportant}>
+            <IconButton onClick={()=>props.SetImportant?.(!n.important)}>
                     <StarIcon color={n.important?"primary":"action"}/>
                 </IconButton>
-                <Typography variant="h6" component={Link} to={props.linkTo?props.linkTo:"#"} className={classes.text}>{n.title}</Typography>
+                <Typography variant="h6" 
+                    component={Link} 
+                    to={props.linkTo?props.linkTo:"#"}
+                    onClick={()=> props.SetSeen?.(true)}
+                    className={classes.text}>{n.title}</Typography>
                 <Box flexGrow="1"/>
                 <IconButton onClick={props.onDelete}>
                     <DeleteIcon/>
                 </IconButton>
-                <IconButton onClick={props.onSetSeen}>
+                <IconButton onClick={()=>props.SetSeen?.(!n.seen)}>
                     {n.seen?<VisibilityOffIcon/>:<VisibilityIcon/>}
                 </IconButton>
             </Box>
             <Typography variant="body1">{n.content}</Typography>
         </div>
     );
-}
-
-NotificationView.defaultProps={
-    onDelete: undefined,
-    onSetImportant: undefined,
 }
 
 export default NotificationView;

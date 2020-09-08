@@ -33,16 +33,26 @@ namespace KnowledgeBase.Domain.Services
             {
                 if (user.UserName != q.Author)
                 {
-                    Console.WriteLine($"\tUser:{user.UserName}");
                     await CreateNotificationForUser(user.UserName, new Notification()
                     {
-                        Title = "New Question",
+                        Title = $"New Question in {q.Topic.Name}",
                         Content = $"New Question was created in one of your followed topics: {q.Title}",
                         QuestionId = q.Id,
                     });
                 }
 
             }
+        }
+
+        public async Task CreateNewAnswerNotification(Question q, Answer a)
+        {
+            if(a.Author != q.Author)
+                await CreateNotificationForUser(q.Author, new Notification()
+                {
+                    Title = $"New answer submitted to your question",
+                    Content = $"New answer was submitted to your question: {q.Title}",
+                    QuestionId = q.Id,
+                });
         }
 
         public async Task<bool> RemoveNotification(string username, int notificationId)
@@ -58,10 +68,9 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<Notification> CreateNotificationForUser(string username, Notification n)
         {
-            Console.WriteLine("előtte");
-            await notificationHub.SendNotificationToUser(username, n);
-            Console.WriteLine("utána");
-            return await notificationRepo.CreateForUser(username, n);
+            var notification  = await notificationRepo.CreateForUser(username, n); 
+            await notificationHub.SendNotificationToUser(username, notification);
+            return notification;
         }
 
         public async Task<bool> ChangeImportant(string username, int nId, bool finished)

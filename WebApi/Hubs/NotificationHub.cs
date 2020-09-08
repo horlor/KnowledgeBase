@@ -21,7 +21,9 @@ namespace KnowledgeBase.WebApi.Hubs
         [Authorize]
         public async Task SetNotificationSeen(int notificationId, bool to)
         {
+            Console.WriteLine($"{Context.UserIdentifier} {notificationId} {to}");
             var result = await notificationService.ChangeSeen(Context.UserIdentifier, notificationId, to);
+            Console.WriteLine($"\t{result}");
             if (!result)
                 throw new Exception();
         }

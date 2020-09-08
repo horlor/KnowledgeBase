@@ -38,10 +38,10 @@ export const useNotifications = () =>{
         }
     }
 
-    const setImportant = async (n: MyNotification) =>{
+    const setImportant = async (n: MyNotification, b: boolean) =>{
         try{
-            await NotificationService.setImportantOnNotification(n, !n.important)
-            dispatch(SetImportantOnNotificationAction({id: n.id, b: !n.important}));
+            await NotificationService.setImportantOnNotification(n, b)
+            dispatch(SetImportantOnNotificationAction({id: n.id, b: b}));
         }
         catch(exc){
             console.log("SetImportant failed");
@@ -49,10 +49,10 @@ export const useNotifications = () =>{
         }
     }
 
-    const setSeen = async(n: MyNotification) => {
+    const setSeen = async(n: MyNotification, b:boolean) => {
         try{
-            await NotificationService.setSeenOnNotification(n, !n.seen)
-            dispatch(SetSeenOnNotificationAction({id: n.id, b: !n.seen}));
+            await NotificationService.setSeenOnNotification(n, b)
+            dispatch(SetSeenOnNotificationAction({id: n.id, b: b}));
         }
         catch(exc){
             console.log("SetSeen failed");
@@ -67,12 +67,14 @@ export const useNotificationsWithUpdate = () =>{
     const [message, setMessage] = useState<string>("");
     const [open, setOpen] = useState(false);
     const [forwardLink, setForward] = useState("#");
+    const [notification, setNotification] = useState<MyNotification>();
 
-    const onNotification = (notification: MyNotification) =>{
+    const onNotification = (n: MyNotification) =>{
         console.log("getNotification");
-        setMessage(notification.title);
+        setMessage(n.title);
         setOpen(true);
         setForward("/notifications");  
+        setNotification(n);
     }
 
 
@@ -95,5 +97,10 @@ export const useNotificationsWithUpdate = () =>{
         setOpen(false);
     }
 
-    return { message, open, handleClose, forwardLink};
+    const setSeen=async()=>{
+        if(notification)
+            await NotificationService.setSeenOnNotification(notification,true);
+    }
+
+    return { message, open, handleClose, forwardLink, setSeen};
 }

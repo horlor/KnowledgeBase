@@ -49,7 +49,9 @@ namespace KnowledgeBase.Domain.Services
         {
             //To made sure that no opener or closer answer will be created without the consisting property
             answer.Type = AnswerType.Simple;
-            return await questionRepo.StoreAnswerForQuestion(qId, answer);
+            var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
+            await notificationService.CreateNewAnswerNotification(q, ret);
+            return ret;
         }
 
         public async Task<Question> GetQuestion(int id)

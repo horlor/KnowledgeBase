@@ -17,7 +17,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<QuestionWithAnswers> FindWithAnswersById(int id);
         Task<ICollection<Answer>> FindAnswersforQuestion(Question question);
         Task<ICollection<Answer>> FindAnswersforQuestionById(int id);
-        Task<Answer> StoreAnswerForQuestion(int id, Answer answer);
+        Task<(Answer, Question)> StoreAnswerForQuestion(int id, Answer answer);
 
         Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize);
         Task<int> Count();

@@ -93,12 +93,15 @@ namespace KnowledgeBase.DataAccess.Repos
             return DbMapper.MapDbQuestion(dbQ);
         }
 
-        public async Task<Answer> StoreAnswerForQuestion(int id, Answer answer)
+        public async Task<(Answer, Question)> StoreAnswerForQuestion(int id, Answer answer)
         {
-            var dbQuestion = await dbcontext.Questions.SingleOrDefaultAsync(t => t.Id == id);
+            var dbQuestion = await dbcontext.Questions
+                .Include(t=> t.User)
+                .Include(t=> t.Topic)
+                .SingleOrDefaultAsync(t => t.Id == id);
             var ret = await AddAnswerToDbQuestion(dbQuestion, answer);
             await dbcontext.SaveChangesAsync();
-            return ret;
+            return (ret, DbMapper.MapDbQuestion(dbQuestion));
         }
 
         public async Task<Question> Update(Question question)

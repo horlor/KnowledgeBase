@@ -70,8 +70,8 @@ const NotificationPage : React.FC<IProps> = () =>{
                         <ListItem className={classes.listitem}>
                             <NotificationView key={n.id} notification={n}
                                     onDelete={()=>deleteNotification(n)}
-                                    onSetImportant={()=>setImportant(n)}
-                                    onSetSeen={()=>setSeen(n)}
+                                    SetImportant={(b)=>setImportant(n,b)}
+                                    SetSeen={(b)=>setSeen(n,b)}
                                     linkTo={`/questions/${n.questionId}`}
                             />
                         </ListItem>

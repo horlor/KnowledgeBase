@@ -11,7 +11,7 @@ interface IProps{
 }
 
 const NotificationPanel : React.FC<IProps> = () =>{
-    const {message, open, handleClose, forwardLink} = useNotificationsWithUpdate();
+    const {message, open, handleClose, forwardLink, setSeen} = useNotificationsWithUpdate();
     return(
         <Snackbar 
             open={open} onClose={handleClose} autoHideDuration={15000}
@@ -19,7 +19,7 @@ const NotificationPanel : React.FC<IProps> = () =>{
             message={message}
             action={
                 <>
-                    <IconButton color="inherit" component={Link} to={forwardLink} onClick={handleClose}>
+                    <IconButton color="inherit" component={Link} to={forwardLink} onClick={async()=>{handleClose();}}>
                         <ArrowForwardIcon/>
                     </IconButton>
                     <IconButton color="inherit" onClick={handleClose}>
