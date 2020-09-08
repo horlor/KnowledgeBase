@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootState, AppDispatch } from "../redux/Store"
 import { useEffect, useState } from "react"
 import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished, LoadPendingNotifications } from "../api/ProfileApi"
-import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetFinishedOnNotificationAction } from "../redux/reducers/NotificationReducer"
+import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetImportantOnNotificationAction, SetSeenOnNotificationAction } from "../redux/reducers/NotificationReducer"
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers"
 import { MyNotification } from "../models/Notification"
 import { NotificationService } from "../api/NotificationApi"
@@ -38,17 +38,29 @@ export const useNotifications = () =>{
         }
     }
 
-    const setFinish = async (n: MyNotification) =>{
+    const setImportant = async (n: MyNotification) =>{
         try{
-            await PatchNotificationFinished(n.id,!n.important);
-            dispatch(SetFinishedOnNotificationAction({id: n.id, b: !n.important}));
+            await NotificationService.setImportantOnNotification(n, !n.important)
+            dispatch(SetImportantOnNotificationAction({id: n.id, b: !n.important}));
         }
         catch(exc){
-            console.log("Finish failed");
+            console.log("SetImportant failed");
+            console.log(exc);
         }
     }
 
-    return {notifications, error, loading, deleteNotification, setFinish};
+    const setSeen = async(n: MyNotification) => {
+        try{
+            await NotificationService.setSeenOnNotification(n, !n.seen)
+            dispatch(SetSeenOnNotificationAction({id: n.id, b: !n.seen}));
+        }
+        catch(exc){
+            console.log("SetSeen failed");
+            console.log(exc);
+        }
+    }
+
+    return {notifications, error, loading, deleteNotification, setImportant, setSeen};
 }
 
 export const useNotificationsWithUpdate = () =>{
@@ -69,7 +81,7 @@ export const useNotificationsWithUpdate = () =>{
             let token = localStorage.getItem("Viknowledge-token")
             if(token){
                 await NotificationService.subscribe(token)
-                NotificationService.setOnNotification(onNotification)
+                NotificationService.setRecieveNotification(onNotification)
     
             }
         }
@@ -83,8 +95,5 @@ export const useNotificationsWithUpdate = () =>{
         setOpen(false);
     }
 
-    const Ping =  async()=>{
-        await NotificationService.ping();
-    }
-    return { message, open, handleClose, Ping, forwardLink};
+    return { message, open, handleClose, forwardLink};
 }

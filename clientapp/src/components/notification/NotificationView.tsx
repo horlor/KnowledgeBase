@@ -1,59 +1,61 @@
 import React from 'react'
-import { Card, CardHeader, CardContent, Typography, Paper, makeStyles, Box, Button, IconButton } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Typography, Paper, makeStyles, Box, Button, IconButton, ListItem } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ClearIcon from '@material-ui/icons/Clear';
-import CheckIcon from '@material-ui/icons/Check';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import StarIcon from '@material-ui/icons/Star';
 import { Link } from 'react-router-dom';
+import { MyNotification } from '../../models/Notification';
 
 
 const useStyles = makeStyles(theme => ({
     surface:{
-        padding: theme.spacing(1),
-        margin: theme.spacing(1)
+        padding: theme.spacing(0.5),
+        width:"100%"
     },
     text:{
         textDecoration: "none",
+        
         color: theme.palette.text.primary
     }
 }))
 
 interface IProps{
-    title: string,
-    message: string,
-    finished: boolean,
+    notification: MyNotification
     onDelete?: ()=>void,
-    onFinish?: ()=>void,
+    onSetImportant?: ()=>void,
+    onSetSeen?: ()=>void,
     linkTo?: string
 }
 
 const NotificationView : React.FC<IProps> = props =>{
     const classes = useStyles();
+    const n = props.notification;
+    console.log(n);
     return (
-        <Paper className={classes.surface}
-        style={(props.finished)?{background:"lightgray"}:{}}>
-            <Typography variant="h6" component={Link} to={props.linkTo?props.linkTo:"#"} className={classes.text}>{props.title}</Typography>
-            <Typography variant="body1">{props.message}</Typography>
-            <Box display="flex" flexDirection="row-reverse">
-                <Button endIcon={<DeleteIcon/>}
-                    onClick={props.onDelete}   
-                >
-                    DELETE
-                </Button>
-                {
-                    props.finished?
-                    <Button endIcon={<ClearIcon/>} onClick={props.onFinish}>MARK AS UNFINISHED</Button>
-                    :
-                    <Button endIcon={<CheckIcon/>} onClick={props.onFinish}>MARK AS FINISHED</Button>
-                }
-
+        <div className={classes.surface}
+        style={(n.seen)?{background:"gainsboro"}:{}}>
+            <Box display="flex" alignItems="center">
+            <IconButton onClick={props.onSetImportant}>
+                    <StarIcon color={n.important?"primary":"action"}/>
+                </IconButton>
+                <Typography variant="h6" component={Link} to={props.linkTo?props.linkTo:"#"} className={classes.text}>{n.title}</Typography>
+                <Box flexGrow="1"/>
+                <IconButton onClick={props.onDelete}>
+                    <DeleteIcon/>
+                </IconButton>
+                <IconButton onClick={props.onSetSeen}>
+                    {n.seen?<VisibilityOffIcon/>:<VisibilityIcon/>}
+                </IconButton>
             </Box>
-        </Paper>
+            <Typography variant="body1">{n.content}</Typography>
+        </div>
     );
 }
 
 NotificationView.defaultProps={
     onDelete: undefined,
-    onFinish: undefined,
+    onSetImportant: undefined,
 }
 
 export default NotificationView;

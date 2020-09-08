@@ -14,7 +14,7 @@ class NotificationApi{
 		await this.connection?.start();
 	}
 
-	public setOnNotification(onNotification:(notification: MyNotification)=> void){
+	public setRecieveNotification(onNotification:(notification: MyNotification)=> void){
 		console.log("test")
 		if(this.connection){
 			this.connection.on("RecieveNotification",onNotification);
@@ -22,9 +22,18 @@ class NotificationApi{
 			
 	}
 
-	public async ping(){
+	public async setImportantOnNotification(notification: MyNotification, to: boolean){
 		if(this.connection)
-			await this.connection.invoke("Ping");
+			await this.connection.invoke("SetNotificationImportant",notification.id,to);
+		else
+			throw SignalR.HttpError;
+	}
+
+	public async setSeenOnNotification(notification: MyNotification, to: boolean){
+		if(this.connection)
+			await this.connection.invoke("SetNotificationSeen",notification.id,to);
+		else
+			throw SignalR.HttpError;
 	}
 
 
