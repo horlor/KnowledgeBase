@@ -6,12 +6,19 @@ namespace KnowledgeBase.Entities.DataTransferObjects
 {
     public class NotificationPatchDto
     {
-        public bool Finished { get; set; }
+        public bool B { get; set; }
     }
 
     public class PendingNotificationsDto
     {
         public int Count { get; set; }
         public ICollection<Notification> Notifications { get; set; }
+    }
+
+    public enum NotificationsDeleteOptions
+    {
+        All=0,
+        AllSeen = 1,
+        AllNotImportant = 2,
     }
 }

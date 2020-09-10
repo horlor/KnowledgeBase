@@ -4,15 +4,14 @@ import AccountCircle from "@material-ui/icons/AccountCircle"
 import Button from "@material-ui/core/Button"
 import {useLoginHook} from "../../hooks/LoginHooks";
 import CloseIcon from "@material-ui/icons/Close"
-import { Menu, MenuItem, Icon } from "@material-ui/core";
+import { Menu, MenuItem, Avatar } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { NotificationService } from "../../api/NotificationApi";
 interface IProps{
 
 }
 
 const LoginButton : React.FC<IProps> = (props) =>{
-    const {loggedIn, logoutFun} = useLoginHook();
+    const {loggedIn, logoutFun, avatarPath} = useLoginHook();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClose = () => {
@@ -27,7 +26,7 @@ const LoginButton : React.FC<IProps> = (props) =>{
                 aria-controls="userdropdown"
                 aria-haspopup={true}
             >
-                <AccountCircle/>
+                {avatarPath?<Avatar src={avatarPath}/>:<AccountCircle/>}
             </IconButton>
             <Menu
                 id="userdropdown"

@@ -30,7 +30,7 @@ interface IProps{
 }
 
 const NotificationPage : React.FC<IProps> = () =>{
-    const {notifications, error, loading, deleteNotification, setImportant, setSeen} = useNotifications();
+    const {notifications, error, loading, deleteNotification, setImportant, setSeen, deleteFunctions} = useNotifications();
     const [anchorEl, setAnchorEl] = useState<HTMLElement |null>(null);
     const classes = useStyles();
     if(error)
@@ -45,21 +45,21 @@ const NotificationPage : React.FC<IProps> = () =>{
                     <Box flexGrow="1"/>
                     <IconButton
                             onClick={e =>setAnchorEl(e.currentTarget)}
-                            aria-controls="notification-dropdown"
+                            aria-controls="notificationpage-dropdown"
                             aria-haspopup={true}
                         >
                             <MoreVertIcon/>
                         </IconButton>
                     
                         <Menu 
-                            id="notification-dropdown" 
+                            id="notificationpage-dropdown" 
                             anchorEl={anchorEl}
                             open={!!anchorEl}
                             onClose={()=> setAnchorEl(null)}
                             >
-                            <MenuItem>Delete all seen</MenuItem>
-                            <MenuItem>Delete all but stared</MenuItem>
-                            <MenuItem>Delete all</MenuItem>
+                            <MenuItem onClick={deleteFunctions.AllSeen}>Delete all seen</MenuItem>
+                            <MenuItem onClick={deleteFunctions.AllButImportant}>Delete all but stared</MenuItem>
+                            <MenuItem onClick={deleteFunctions.All}>Delete all</MenuItem>
                         </Menu>
                 </Box>
                 <List className={classes.list}>

@@ -68,8 +68,16 @@ export const DeleteNotification = async(notification : MyNotification) =>{
     let response = await axios.delete(`/api/profile/notifications/${notification.id}`);
 }
 
-export const PatchNotificationFinished = async(id: number, finished: boolean) =>{
-    await axios.patch(`/api/profile/notifications/${id}/finished`,{finished:finished});
+export const DeleteAllNotifications  =async(options: number)=>{
+    await axios.delete(`/api/profile/notifications?options=${options}`);
+}
+
+export const PatchNotificationSeen = async(id: number, b: boolean) =>{
+    await axios.patch(`/api/profile/notifications/${id}/seen`,{B:b});
+}
+
+export const PatchNotificationImportant = async(id: number, b: boolean) =>{
+    await axios.patch(`/api/profile/notifications/${id}/important`,{B:b});
 }
 
 export const LoadPendingNotifications = async() =>{

@@ -20,5 +20,7 @@ namespace KnowledgeBase.Domain.Repository
 
         Task<bool> SetSeen(int id, bool pending);
 
+        Task RemoveAll(string username, KnowledgeBase.Entities.DataTransferObjects.NotificationsDeleteOptions options);
+
     }
 }

@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux"
 import { RootState, AppDispatch } from "../redux/Store"
 import { useEffect, useState } from "react"
-import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationFinished, LoadPendingNotifications } from "../api/ProfileApi"
-import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetImportantOnNotificationAction, SetSeenOnNotificationAction } from "../redux/reducers/NotificationReducer"
+import { LoadNotificationsFromApi, DeleteNotification, PatchNotificationSeen, LoadPendingNotifications, PatchNotificationImportant, DeleteAllNotifications } from "../api/ProfileApi"
+import { FetchNotificationsStarted, FetchNotificationsSuccess, FetchNotificationsFailure, DeleteNotificationAction, SetImportantOnNotificationAction, SetSeenOnNotificationAction, DeleteAllNotificationAction, DeleteAllButImportantNotificationAction, DeleteAllSeenNotificationAction } from "../redux/reducers/NotificationReducer"
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers"
 import { MyNotification } from "../models/Notification"
 import { NotificationService } from "../api/NotificationApi"
@@ -40,7 +40,7 @@ export const useNotifications = () =>{
 
     const setImportant = async (n: MyNotification, b: boolean) =>{
         try{
-            await NotificationService.setImportantOnNotification(n, b)
+            await PatchNotificationImportant(n.id,b);
             dispatch(SetImportantOnNotificationAction({id: n.id, b: b}));
         }
         catch(exc){
@@ -51,7 +51,7 @@ export const useNotifications = () =>{
 
     const setSeen = async(n: MyNotification, b:boolean) => {
         try{
-            await NotificationService.setSeenOnNotification(n, b)
+            await PatchNotificationSeen(n.id,b);
             dispatch(SetSeenOnNotificationAction({id: n.id, b: b}));
         }
         catch(exc){
@@ -60,7 +60,28 @@ export const useNotifications = () =>{
         }
     }
 
-    return {notifications, error, loading, deleteNotification, setImportant, setSeen};
+    const deleteFunctions = {
+        All:async()=>{
+            try{
+                await DeleteAllNotifications(0);
+                dispatch(DeleteAllNotificationAction());
+            }
+            catch(exc){
+                console.log(exc);
+            }
+
+        },
+        AllButImportant:async()=>{
+            await DeleteAllNotifications(2);
+            dispatch(DeleteAllButImportantNotificationAction())
+        },
+        AllSeen:async()=>{
+            await DeleteAllNotifications(1);
+            dispatch(DeleteAllSeenNotificationAction());
+        }
+    }
+
+    return {notifications, error, loading, deleteNotification, setImportant, setSeen,deleteFunctions};
 }
 
 export const useNotificationsWithUpdate = () =>{

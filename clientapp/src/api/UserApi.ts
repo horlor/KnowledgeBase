@@ -21,6 +21,8 @@ export const LoadUsersFromApiSearch = async (page: number, pageSize: number, sea
     return response.data;
 }
 
-export const GetAvatarPathForUser = (user: User) =>{
+export const GetAvatarPathForUser = (user: User | string) =>{
+    if(typeof user === "string")
+        return `${axios.defaults.baseURL}api/users/${user}/avatar`;
     return `${axios.defaults.baseURL}api/users/${user.userName}/avatar`;
 }

@@ -20,6 +20,9 @@ export const FetchNotificationsFailure = createAction<ErrorModel>("fetch-notific
 export const DeleteNotificationAction = createAction<MyNotification>("delete-notification");
 export const SetImportantOnNotificationAction = createAction<{id: number, b: boolean}>("set-finished-notification");
 export const SetSeenOnNotificationAction = createAction<{id: number, b: boolean}>("set-seen-notification");
+export const DeleteAllNotificationAction = createAction("delete-all-notification");
+export const DeleteAllSeenNotificationAction = createAction("delete-all-seen-notifications");
+export const DeleteAllButImportantNotificationAction = createAction("delete-all-but-important-notifications");
 
 export const NotificationReducer = createReducer(initialState, builder => builder
         .addCase(FetchNotificationsStarted, (state, action)=>{
@@ -47,6 +50,15 @@ export const NotificationReducer = createReducer(initialState, builder => builde
             let a = state.items.find(n => n.id === action.payload.id)
             if(a)
                 a.seen = action.payload.b;
+        })
+        .addCase(DeleteAllButImportantNotificationAction, (state: INotificationState, action)=>{
+            state.items = state.items.filter(n => n.important);
+        })
+        .addCase(DeleteAllNotificationAction, (state: INotificationState, action)=>{
+            state.items = [];
+        })
+        .addCase(DeleteAllSeenNotificationAction, (state: INotificationState, action)=>{
+            state.items = state.items.filter(n => !n.seen && !n.important);
         })
     );
 

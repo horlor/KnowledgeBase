@@ -9,6 +9,7 @@ using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -86,16 +87,26 @@ namespace KnowledgeBase.WebApi.Controllers
         {
             var res = await notificationService.RemoveNotification(UserName, id);
             if (res)
-                return Ok();
+                return NoContent();
             else
                 return BadRequest();
         }
 
         [Authorize]
-        [HttpPatch("notifications/{id}/finished")]
+        [HttpDelete("notifications")]
+        public async Task<ActionResult> DeleteNotifications([FromQuery] int options)
+        {
+            Console.WriteLine(options);
+            await notificationService.DeleteAll(UserName, (NotificationsDeleteOptions)options);
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPatch("notifications/{id}/important")]
         public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationPatchDto dto)
         {
-            var res = await notificationService.ChangeImportant(UserName, id, dto.Finished);
+            var res = await notificationService.ChangeImportant(UserName, id, dto.B);
             if (res)
                 return Ok();
             else
@@ -103,7 +114,18 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("notifications/pending")]
+        [HttpPatch("notifications/{id}/seen")]
+        public async Task<ActionResult> PatchNotificationSeen([FromRoute] int id, [FromBody] NotificationPatchDto dto)
+        {
+            var res = await notificationService.ChangeSeen(UserName, id, dto.B);
+            if (res)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
+        [Authorize]
+        [HttpGet("notifications/unseen")]
         public async Task<PendingNotificationsDto> GetPendingNotifications()
         {
             var notifications = await notificationService.GetPendingNotifications(UserName);

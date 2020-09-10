@@ -1,6 +1,7 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -145,6 +146,28 @@ namespace KnowledgeBase.DataAccess.Repos
                 return true;
             }
             return false;
+        }
+
+        public async Task RemoveAll(string username, NotificationsDeleteOptions options)
+        {
+            var dbUser = await dbcontext.Users.FirstOrDefaultAsync(t => t.UserName == username);
+            if (dbUser == null)
+                return;
+            var notifications = dbcontext.Notifications.Where(n => n.UserId == dbUser.Id);
+            switch (options)
+            {
+                case NotificationsDeleteOptions.All:
+                    break;
+                case NotificationsDeleteOptions.AllNotImportant:
+                    notifications = notifications.Where(n => !n.Important);
+                    break;
+                case NotificationsDeleteOptions.AllSeen:
+                    notifications = notifications.Where(n => n.Seen && !n.Important);
+                    break;
+            }
+            var range = await notifications.ToListAsync();
+            dbcontext.Notifications.RemoveRange(range);
+            await dbcontext.SaveChangesAsync();
         }
     }
 }

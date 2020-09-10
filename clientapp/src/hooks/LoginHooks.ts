@@ -6,6 +6,7 @@ import ErrorModel from "../models/ErrorModel";
 import { RegisterRequest, RegisterResponse } from "../models/LoginModels";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import { GetAvatarPathForUser } from "../api/UserApi";
 
 export const useLoggedInState = () =>
     useSelector((state : RootState) => state.login.loggedIn);
@@ -20,8 +21,11 @@ export const useLoginState = () =>{
 
 export const useLoginHook =  () =>{
     const loggedIn = useSelector((state : RootState) => state.login.loggedIn);
+    const user = useSelector((state: RootState) => state.login.username);
     const dispatch : AppDispatch = useDispatch();
     const [error, setError] = useState<boolean>(false);
+
+    const avatarPath = user? GetAvatarPathForUser(user):undefined;
 
     const loginFun = async (username: string, password: string, stayLoggedIn = false) =>{
         setError(false);
@@ -39,7 +43,7 @@ export const useLoginHook =  () =>{
         Logout();
         dispatch(LogoutAction());
     };
-    return {loggedIn, loginFun, logoutFun, error};
+    return {loggedIn, loginFun, avatarPath, logoutFun, error};
 }
 
 export const useRegisterHook = ()=>{

@@ -1,6 +1,7 @@
 ﻿using KnowledgeBase.Domain.Interfaces;
 using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
+using KnowledgeBase.Entities.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -99,6 +100,12 @@ namespace KnowledgeBase.Domain.Services
             foreach (var item in nots)
                 await notificationRepo.SetSeen(item.Id, false);
             return nots;
+        }
+
+        public async Task DeleteAll(string username, NotificationsDeleteOptions options)
+        {
+            Console.WriteLine(options);
+            await notificationRepo.RemoveAll(username, options);
         }
     }
 }
