@@ -10,6 +10,7 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import Question, { QuestionUpdateRequest, QuestionSearchResult } from "../models/Question";
 import Answer from "../models/Answer";
 import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
+import { useHistory } from "react-router";
 
 
 export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
@@ -92,6 +93,7 @@ export const useNewQuestionHook = () => {
     const topics = useSelector((state: RootState) => state.topic.topics)
     const [postError, setPostError] = useState<ErrorModel |undefined>(undefined);
     const [postLoading, setPostLoading] = useState(false);
+    const history = useHistory();
 
     useEffect(() =>{
         dispatch(LoadTopicsThunk());
@@ -107,7 +109,8 @@ export const useNewQuestionHook = () => {
             closed:false,
         }
         try{
-            await CreateQuestionToApi(q);
+            const result = await CreateQuestionToApi(q);
+            history.push("/questions/"+result.id);
         }
         catch(exc){
             setPostError(CatchIntoErrorModel(exc));
