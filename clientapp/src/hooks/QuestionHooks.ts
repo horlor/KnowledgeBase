@@ -2,7 +2,7 @@ import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
 import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion, QuestionService } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction, CloseQuestionAction, ReopenQuestionAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { Topic } from "../models/Topic";
@@ -88,6 +88,8 @@ export const useQuestionAnswerHook = (questionId: number) => {
                 QuestionService.setOnAnswerEdited((answer)=> dispatch(UpdateAnswerAction(answer)));
                 QuestionService.setOnAnswerDeleted((answer)=> dispatch(DeleteAnswerAction(answer)));
                 QuestionService.setOnQuestionEdited((q) => dispatch(UpdateQuestionAction(q)));
+                QuestionService.setOnQuestionClosed((answer) => dispatch(CloseQuestionAction(answer)));
+                QuestionService.setOnQuestionReopened(answer => dispatch(ReopenQuestionAction(answer)));
             }
             catch(ex){
                 console.log(ex);

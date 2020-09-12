@@ -110,12 +110,16 @@ namespace KnowledgeBase.Domain.Services
         
         public async Task<Answer> CloseQuestion(int questionId, Answer answer)
         {
-            return await questionRepo.CloseQuestion(questionId, answer);
+            var ret = await questionRepo.CloseQuestion(questionId, answer);
+            await questionHub.OnQuestionClosed(questionId, answer);
+            return ret;
         }
 
         public async Task<Answer> ReopenQuestion(int questionId, Answer answer)
         {
-            return await questionRepo.ReopenQuestion(questionId, answer);
+            var ret = await questionRepo.ReopenQuestion(questionId, answer);
+            await questionHub.OnQuestionReopend(questionId, answer);
+            return ret;
         }
     }
 

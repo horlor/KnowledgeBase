@@ -106,6 +106,14 @@ class QuestionSignalrService{
         if(this.connection)
             this.connection.on("QuestionEdited",onQuestionEdited);
     }
+    public setOnQuestionClosed(onQuestionClosed: (answer: Answer)=> void){
+        if(this.connection)
+            this.connection.on("QuestionClosed",onQuestionClosed);
+    }
+    public setOnQuestionReopened(onQuestionReopened: (answer: Answer)=> void){
+        if(this.connection)
+            this.connection.on("QuestionReopened",onQuestionReopened);
+    }
 }
 
 export const QuestionService = new QuestionSignalrService();

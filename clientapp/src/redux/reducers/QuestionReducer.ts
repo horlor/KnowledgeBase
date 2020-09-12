@@ -2,6 +2,7 @@ import { createReducer, createAction } from "@reduxjs/toolkit";
 import Question, { PagedQuestions, QuestionWithAnswers, QuestionSearchResult } from "../../models/Question";
 import Answer from "../../models/Answer";
 import ErrorModel from "../../models/ErrorModel";
+import { act } from "react-dom/test-utils";
 
 export interface IQuestionStore{
     result?: QuestionSearchResult,
@@ -18,10 +19,13 @@ const initialState : IQuestionStore = {
 
 export const UpdateQuestionAction = createAction<Question>("update-question");
 export const DeleteQuestionAction = createAction<Question>("delete-question");
-
+export const CloseQuestionAction = createAction<Answer>("close-question");
+export const ReopenQuestionAction = createAction<Answer>("reopen-question");
 export const AddAnswerAction = createAction<Answer>("add-answer");
 export const UpdateAnswerAction = createAction<Answer>("update-answer");
 export const DeleteAnswerAction = createAction<Answer>("delete-answer")
+
+
 export const FetchQuestionsStarted = createAction("fetch-questions-started");
 export const FetchQuestionsSuccess = createAction<QuestionSearchResult>("fetch-questions-success");
 export const FetchQuestionsFailure = createAction<ErrorModel>("fetch-questions-failure");
@@ -79,7 +83,19 @@ export const QuestionReducer = createReducer(initialState, builder => builder
         if(state.questionwithanswers){
             state.questionwithanswers = {...state.questionwithanswers, ...action.payload}
         }
-    }) 
+    })
+    .addCase(CloseQuestionAction, (state, action)=>{
+        if(state.questionwithanswers){
+            state.questionwithanswers.closed = true;
+            state.questionwithanswers.answers.push(action.payload);
+        }
+    })
+    .addCase(ReopenQuestionAction, (state, action)=>{
+        if(state.questionwithanswers){
+            state.questionwithanswers.closed = false;
+            state.questionwithanswers.answers.push(action.payload);
+        }
+    })
 
 );
 

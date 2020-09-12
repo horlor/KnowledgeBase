@@ -21,7 +21,6 @@ export const useAnswerInputHook = (id: number)=>{
         CreateAnswerToQuestion(id, answer)
         .then(resp => {
             setLoading(false);
-            dispatch(AddAnswerAction(resp));
         })
         .catch(exc=> setLoading(false));
     }

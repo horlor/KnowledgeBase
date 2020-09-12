@@ -12,5 +12,7 @@ namespace KnowledgeBase.WebApi.Hubs
         Task AnswerEdited(Answer answer);
         Task AnswerDeleted(Answer answer);
         Task QuestionEdited(Question question);
+        Task QuestionClosed(Answer answer);
+        Task QuestionReopened(Answer answer);
     }
 }
