@@ -11,7 +11,13 @@ class NotificationApi{
 			.configureLogging(SignalR.LogLevel.Debug)
 			.withAutomaticReconnect()
 			.build();
-		await this.connection?.start();
+		try{
+			await this.connection?.start();
+		}
+		catch(ex){
+			console.log(ex);
+		}
+		
 	}
 
 	public setRecieveNotification(onNotification:(notification: MyNotification)=> void){

@@ -125,7 +125,7 @@ namespace KnowledgeBase.WebApi.Controllers
                 return NotFound();
             if (answer.Author != UserName)
                 return Conflict();
-            await questionService.DeleteAnswer(answer);
+            await questionService.DeleteAnswer(qId, answer);
             return NoContent();
         }
 
@@ -152,7 +152,7 @@ namespace KnowledgeBase.WebApi.Controllers
             if (answer.Author != UserName)
                 return Conflict();
             answer.Content = request.Content;
-            return Ok(await questionService.UpdateAnswer(answer));
+            return Ok(await questionService.UpdateAnswer(qId,answer));
         }
 
         [HttpGet("search")]

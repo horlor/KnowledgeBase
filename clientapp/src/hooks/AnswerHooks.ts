@@ -32,6 +32,7 @@ export const useAnswerInputHook = (id: number)=>{
 export const useAnswerHook = (answer: Answer) =>{
     const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
     const user = useSelector((state: RootState) => state.login.username);
+    const question = useSelector((state:RootState) => state.question.questionwithanswers)
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
     const [deleteDialog, setDelete] = useState(false);
@@ -41,7 +42,7 @@ export const useAnswerHook = (answer: Answer) =>{
 
     const saveChanges =  async(request: AnswerUpdateRequest) =>{
         try{
-             let response = await UpdateAnswer(0,answer.id,request);
+             let response = await UpdateAnswer(question?.id || 0,answer.id,request);
             const ans = response;
             dispatch(UpdateAnswerAction(ans));
         }
@@ -63,7 +64,7 @@ export const useAnswerHook = (answer: Answer) =>{
 
     const acceptDelete = async() =>{
         try{
-            await DeleteAnswer(0,answer);
+            await DeleteAnswer(question?.id || 0,answer);
             dispatch(DeleteAnswerAction(answer))
         }
         catch(exc){

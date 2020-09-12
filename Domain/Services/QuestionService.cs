@@ -1,4 +1,5 @@
-﻿using KnowledgeBase.Domain.Repository;
+﻿using KnowledgeBase.Domain.Interfaces;
+using KnowledgeBase.Domain.Repository;
 using KnowledgeBase.Entities;
 using KnowledgeBase.Entities.DataTransferObjects;
 using System;
@@ -11,15 +12,17 @@ namespace KnowledgeBase.Domain.Services
 {
     public class QuestionService
     {
-        private IQuestionRepo questionRepo;
-        private NotificationService notificationService;
-        private IAnswerRepo answerRepo;
+        private readonly IQuestionRepo questionRepo;
+        private readonly NotificationService notificationService;
+        private readonly IAnswerRepo answerRepo;
+        private readonly IQuestionHub questionHub;
 
-        public QuestionService(IQuestionRepo questionRepo, NotificationService notificationService, IAnswerRepo answerRepo)
+        public QuestionService(IQuestionRepo questionRepo, NotificationService notificationService, IAnswerRepo answerRepo, IQuestionHub questionHub)
         {
             this.questionRepo = questionRepo;
             this.notificationService = notificationService;
             this.answerRepo = answerRepo;
+            this.questionHub = questionHub;
         }
 
         public async Task<ICollection<Question>> GetAllQuestions()
@@ -50,6 +53,7 @@ namespace KnowledgeBase.Domain.Services
             //To made sure that no opener or closer answer will be created without the consisting property
             answer.Type = AnswerType.Simple;
             var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
+            await questionHub.OnNewAnswer(qId, ret);
             await notificationService.CreateNewAnswerNotification(q, ret);
             return ret;
         }
@@ -79,19 +83,24 @@ namespace KnowledgeBase.Domain.Services
             return await answerRepo.FindById(id);
         }
 
-        public async Task DeleteAnswer(Answer answer)
+        public async Task DeleteAnswer(int questionId, Answer answer)
         {
             await answerRepo.Delete(answer);
+            await questionHub.OnAnswerDeleted(questionId, answer);
         }
 
         public async Task<Question> UpdateQuestion(Question question)
         {
-            return await questionRepo.Update(question);
+            var ret = await questionRepo.Update(question);
+            await questionHub.OnQuestionEdited(ret);
+            return question;
         }
 
-        public async Task<Answer> UpdateAnswer(Answer answer)
+        public async Task<Answer> UpdateAnswer(int questionId, Answer answer)
         {
-            return await answerRepo.Update(answer);
+            var ret = await answerRepo.Update(answer);
+            await questionHub.OnAnswerEdited(questionId, answer);
+            return ret;
         }
 
         public async Task<QuestionSearchResponse> Search(QuestionSearchRequest request)

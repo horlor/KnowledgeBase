@@ -2,6 +2,8 @@ import axios from 'axios';
 import Question, { PagedQuestions, QuestionWithAnswers, QuestionUpdateRequest, QuestionSearchRequest, QuestionSearchResult } from '../models/Question';
 import Answer, { AnswerUpdateRequest } from '../models/Answer';
 import { UrlBuilder } from '../helpers/UrlBuilder';
+import * as SignalR from "@microsoft/signalr"
+import { queries } from '@testing-library/react';
 
 export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
     var response = await axios.get<PagedQuestions>(`/api/questions?pagenum=${pageNum}&pageSize=${pageSize}`);
@@ -56,3 +58,54 @@ export const CloseQuestion = async (questionId: number, answer: Answer) =>{
 export const ReopenQuestion = async (questionId: number, answer: Answer)=>{
     await axios.post(`/api/questions/${questionId}/reopen`,answer);
 }
+
+
+class QuestionSignalrService{
+    private connection? : SignalR.HubConnection;
+
+    public async subscribe(questionId: number){
+        this.connection =
+			new SignalR.HubConnectionBuilder()
+			.withUrl("http://localhost:5001/api/questionhub")
+			.configureLogging(SignalR.LogLevel.Debug)
+			.withAutomaticReconnect()
+            .build();
+        try{
+            await this.connection?.start();
+            await this.connection?.invoke("JoinQuestion",questionId);
+        }
+		catch(ex){
+			console.log(ex);
+		}
+
+    }
+
+    public async unsubscribe(questionId: number){
+        if(this.connection){
+            await this.connection.invoke("LeaveQuestion", questionId);
+            await this.connection.stop();
+            this.connection = undefined;
+        }
+    }
+
+    public setOnNewAnswer(onNewAnswer:(answer: Answer) => void){
+        if(this.connection)
+            this.connection.on("NewAnswer",onNewAnswer);
+    }
+
+    public setOnAnswerEdited(onAnswerEdited: (answer: Answer) => void){
+        if(this.connection)
+            this.connection.on("AnswerEdited", onAnswerEdited);
+    }
+
+    public setOnAnswerDeleted(onAnswerDeleted: (answer: Answer)=> void){
+        if(this.connection)
+            this.connection.on("AnswerDeleted", onAnswerDeleted);
+    }
+    public setOnQuestionEdited(onQuestionEdited: (question: Question) => void){
+        if(this.connection)
+            this.connection.on("QuestionEdited",onQuestionEdited);
+    }
+}
+
+export const QuestionService = new QuestionSignalrService();

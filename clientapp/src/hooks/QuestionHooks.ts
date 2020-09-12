@@ -1,8 +1,8 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
-import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion } from "../api/QuestionApi";
+import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion, QuestionService } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { Topic } from "../models/Topic";
@@ -11,6 +11,7 @@ import Question, { QuestionUpdateRequest, QuestionSearchResult } from "../models
 import Answer from "../models/Answer";
 import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
 import { useHistory } from "react-router";
+import AnswerInput from "../components/answer/AnswerInput";
 
 
 export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
@@ -76,10 +77,26 @@ export const useQuestionAnswerHook = (questionId: number) => {
     }
 
     useEffect(()=>{
-        dispatch(FetchQAStarted());
-        LoadQuestionAnswerFromApi(questionId)
-        .then(resp => dispatch(FetchQASuccess(resp)))
-        .catch(ex => dispatch(FetchQAFailure(CatchIntoErrorModel(ex))));
+        (async()=>{
+            dispatch(FetchQAStarted());
+            LoadQuestionAnswerFromApi(questionId)
+            .then(resp => dispatch(FetchQASuccess(resp)))
+            .catch(ex => dispatch(FetchQAFailure(CatchIntoErrorModel(ex))));
+            try{
+                await QuestionService.subscribe(questionId);
+                QuestionService.setOnNewAnswer((answer)=> dispatch(AddAnswerAction(answer)));
+                QuestionService.setOnAnswerEdited((answer)=> dispatch(UpdateAnswerAction(answer)));
+                QuestionService.setOnAnswerDeleted((answer)=> dispatch(DeleteAnswerAction(answer)));
+                QuestionService.setOnQuestionEdited((q) => dispatch(UpdateQuestionAction(q)));
+            }
+            catch(ex){
+                console.log(ex);
+            }
+        })();
+
+        return ()=>{
+            QuestionService.unsubscribe(questionId);
+        }
     },[dispatch,questionId]);
     return {question,loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer};
 

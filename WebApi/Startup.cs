@@ -145,6 +145,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<AvatarService, AvatarService>();
 
             services.AddScoped<INotificationHub, NotificationHubProxy>();
+            services.AddScoped<IQuestionHub, QuestionHubProxy>();
 
 
         }
@@ -170,6 +171,7 @@ namespace KnowledgeBase.WebApi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/api/notificationhub");
+                endpoints.MapHub<QuestionHub>("/api/questionhub");
             });
 
             seeder.Seed();
