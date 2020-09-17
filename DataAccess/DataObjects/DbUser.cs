@@ -29,6 +29,10 @@ namespace KnowledgeBase.DataAccess.DataObjects
 
         public virtual ICollection<DbAnswer> Answers { get; set; }
 
+        public virtual ICollection<DbQuestion> ModeratedQuestions{ get; set; }
+
+        public virtual ICollection<DbAnswer> ModeratedAnswers { get; set; }
+
         public virtual ICollection<DbNotification> Notifications { get; set; }
 
     }

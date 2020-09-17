@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200917121255_Moderation_added.cs" />
+    <Compile Remove="Migrations\20200917121255_Moderation_added.Designer.cs" />
+    <Compile Remove="Migrations\20200917121513_Moderation_added.cs" />
+    <Compile Remove="Migrations\20200917121513_Moderation_added.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

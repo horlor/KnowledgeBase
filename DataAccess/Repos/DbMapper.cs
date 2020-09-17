@@ -16,11 +16,13 @@ namespace KnowledgeBase.DataAccess.Repos
             return new Answer()
             {
                 Id = dbAnswer.Id,
-                Author = dbAnswer.User.UserName,
+                Author = dbAnswer.User?.UserName,
                 Content = dbAnswer.Content,
                 Created = dbAnswer.Created.ToString(dateFormat),
                 LastUpdate = dbAnswer.LastUpdated.ToString(dateFormat),
                 Type = dbAnswer.Type,
+                Moderator = dbAnswer.Moderator?.UserName,
+                ModeratorMessage = dbAnswer.ModeratorMessage
             };
         }
 
@@ -38,6 +40,9 @@ namespace KnowledgeBase.DataAccess.Repos
                 LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
                 Topic = MapDbTopic(dbQuestion.Topic),
                 Closed = dbQuestion.Closed,
+                Type = dbQuestion.Type,
+                Moderator = dbQuestion.Moderator?.UserName,
+                ModeratorMessage = dbQuestion.ModeratorMessage
             };
             return q;
         }
@@ -62,6 +67,9 @@ namespace KnowledgeBase.DataAccess.Repos
                 LastUpdate = dbQuestion.LastUpdated.ToString(dateFormat),
                 Topic = MapDbTopic(dbQuestion.Topic),
                 Closed = dbQuestion.Closed,
+                Type = dbQuestion.Type,
+                Moderator = dbQuestion.Moderator?.UserName,
+                ModeratorMessage = dbQuestion.ModeratorMessage
             };
         }
 

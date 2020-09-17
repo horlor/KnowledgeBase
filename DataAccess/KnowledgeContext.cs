@@ -49,6 +49,29 @@ namespace KnowledgeBase.DataAccess
                 .HasForeignKey(n => n.QuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<DbQuestion>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Questions)
+                .HasForeignKey(q => q.UserId)
+                .OnDelete(DeleteBehavior.NoAction); //We won't delete explicitly a user so we don't have to cascade or use set null
+
+            modelBuilder.Entity<DbQuestion>()
+                .HasOne(n => n.Moderator)
+                .WithMany(u => u.ModeratedQuestions)
+                .HasForeignKey(q => q.ModeratorId)
+                .OnDelete(DeleteBehavior.NoAction); //We won't delete users, and MS SQL does not let to delete to the same class
+
+            modelBuilder.Entity<DbAnswer>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Answers)
+                .HasForeignKey(a =>a.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<DbAnswer>()
+                .HasOne(a => a.Moderator)
+                .WithMany(u => u.ModeratedAnswers)
+                .HasForeignKey(a => a.ModeratorId)
+                .OnDelete(DeleteBehavior.NoAction); //Same as with users
 
 
 

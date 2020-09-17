@@ -20,10 +20,16 @@ namespace KnowledgeBase.DataAccess.DataObjects
         public DateTime LastUpdated { get; set; }
         public AnswerType Type { get; set; } = AnswerType.Simple;
 
+        public string ModeratorId { get; set; }
+        public virtual DbUser Moderator { get; set; }
+        public string ModeratorMessage { get; set; }
+
+        public int QuestionId { get; set; }
         [Required]
+        [ForeignKey("QuestionId")]
         public virtual DbQuestion Question { get; set; }
 
-        [Required]
+        public string UserId { get; set; }
         public virtual DbUser User { get; set; }
     }
 }
