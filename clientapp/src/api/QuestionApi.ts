@@ -47,6 +47,8 @@ export const SearchQuestionsFromApi = async(request: QuestionSearchRequest) =>{
     url.appendWithQueryParam("content",request.content)
     url.appendWithQueryParam("topic",request.topic)
     url.appendWithQueryParam("page",request.page)
+    url.appendWithQueryParam("onlyHidden",request.onlyHidden)
+    url.appendWithQueryParam("myquestions",request.myQuestions);
     console.log(url.get())
     return (await axios.get<QuestionSearchResult>(url.get())).data
 }
@@ -57,6 +59,14 @@ export const CloseQuestion = async (questionId: number, answer: Answer) =>{
 
 export const ReopenQuestion = async (questionId: number, answer: Answer)=>{
     await axios.post(`/api/questions/${questionId}/reopen`,answer);
+}
+
+export const HideQuestion = async(questionId: number, message: string)=>{
+    return (await axios.post<Question>(`/api/questions/${questionId}/hide`, {moderatorMessage:message})).data;
+}
+
+export const UnhideQuestion = async(questionId: number)=>{
+    return (await axios.post<Question>(`/api/questions/${questionId}/unhide`)).data;
 }
 
 

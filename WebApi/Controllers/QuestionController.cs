@@ -28,7 +28,8 @@ namespace KnowledgeBase.WebApi.Controllers
         {
             this.questionService = questionService;
         }
-
+        // elvileg nem használt - kivenni ha biztos
+        /*
         [HttpGet]
         public async Task<QuestionsWithPaging> GetQuestions([FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
         {
@@ -40,7 +41,7 @@ namespace KnowledgeBase.WebApi.Controllers
                 Pages = pages,
                 CurrentPage = pageNum
             };
-        }
+        }*/
 
         [HttpGet("{id}")]
         public async Task<ActionResult<QuestionWithAnswers>> GetQuestion(int id)
@@ -88,6 +89,41 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok( await questionService.ReopenQuestion(id, answer));
         }
 
+        [Authorize]
+        [HttpPost("{id}/hide")]
+        public async Task<ActionResult<Question>> HideQuestion([FromRoute] int id, [FromBody] QuestionHideRequest request)
+        {
+            try
+            {
+                return Ok(await questionService.HideQuestion(id, UserName, Role, request.ModeratorMessage));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch(UnathorizedException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("{id}/unhide")]
+        public async Task<ActionResult<Question>> UnhideQuestion([FromRoute] int id)
+        {
+            try
+            {
+                return Ok(await questionService.UnhideQuestion(id, UserName, Role));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (UnathorizedException)
+            {
+                return Unauthorized();
+            }
+        }
 
         [Authorize]
         [HttpPost("{id}/answers")]
@@ -156,19 +192,21 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<QuestionSearchResponse> SearchQuestions([FromQuery] String anywhere, [FromQuery] String title, [FromQuery] String content,
-            [FromQuery] int? topic, [FromQuery] int page = 1, [FromQuery] int countPerPage = 10)
+        public async Task<IActionResult> SearchQuestions([FromQuery] string anywhere, [FromQuery] string title, [FromQuery] string content,
+            [FromQuery] int? topic, [FromQuery] int page = 1, [FromQuery] int countPerPage = 10,
+            [FromQuery] string username = null, [FromQuery] bool myQuestions = false, [FromQuery] bool onlyHidden = false)
         {
-            return await questionService.Search(new QuestionSearchRequest()
-            {
-                Anywhere = anywhere,
-                Title = title,
-                Content = content,
-                TopicId = topic,
-                Page = page,
-                CountPerPage = countPerPage,
-            });
+                return Ok(await questionService.Search(new QuestionSearchRequest()
+                {
+                    Anywhere = anywhere,
+                    Title = title,
+                    Content = content,
+                    TopicId = topic,
+                    Page = page,
+                    CountPerPage = countPerPage,
+                    OnlyHidden = onlyHidden,
+                    Username = username,
+                }, myQuestions ? UserName : null, Role));
         }
-
     }
 }

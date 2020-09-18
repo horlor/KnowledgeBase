@@ -1,14 +1,14 @@
 import React from 'react';
-import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
-import Question, { QuestionUpdateRequest } from '../../models/Question';
+import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
+import Question, { QuestionType, QuestionUpdateRequest } from '../../models/Question';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete'
 import { useQuestionEditHook } from '../../hooks/QuestionHooks';
-import { register } from '../../serviceWorker';
 import { useForm } from 'react-hook-form';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import { QuestionCloseDialog } from './QuestionCloseDialog';
+import {TextInputDialog} from "../common/TextInputDialog";
+import BlockIcon from '@material-ui/icons/Block';
+import { Block } from '@material-ui/icons';
 
 
 
@@ -22,6 +22,11 @@ const useStyles = makeStyles(theme =>({
         padding:theme.spacing(2),
         border: `3px solid ${theme.palette.primary.main}`
     },
+    moderatorPaper:{
+        padding: theme.spacing(1),
+        border: "gray solid 2px"
+    }
+    ,
     chip:{
         marginLeft: theme.spacing(1),
         marginBottom: "2px",
@@ -44,7 +49,8 @@ const useStyles = makeStyles(theme =>({
 }));
 
 const QuestionView : React.FC<IProps> = props=>{
-    const { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified, closeState} = useQuestionEditHook(props.question);
+    const { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified,
+            hide, close} = useQuestionEditHook(props.question);
     const classes = useStyles();
     const {register, handleSubmit} =useForm<QuestionUpdateRequest>();
     if(edit)
@@ -76,25 +82,46 @@ const QuestionView : React.FC<IProps> = props=>{
                 <Box flexGrow={1}/>
                 {
                     modifyEnabled?
-                    <>
                         <IconButton onClick={editQuestion}>
                             <EditIcon/>
                         </IconButton>
-                        <IconButton onClick={closeState.openDialog}>
+                    :""
+                }
+                {
+                    close.enabled?
+                    <>
+                    <IconButton onClick={close.openDialog}>
                             {props.question.closed?
                             <LockOpenIcon/>:
                             <LockIcon/>}
                         </IconButton>
-                        <QuestionCloseDialog
-                            onOk={closeState.closeQuestion}
-                            onCancel={closeState.closeDialog}
-                            closing={!props.question.closed}
-                            open={closeState.dialogOpen}
-                        />
-                    </>
-                    :""
+                    <TextInputDialog
+                        open={close.dialogOpen}
+                        title={props.question.closed?"Reopening the question":"Closing the question"}
+                        content={props.question.closed?"Enter the message according to the close of the question":"Enter the message according to the reopen of the question"}
+                        onOk={close.handleDialog}
+                        onCancel={close.closeDialog}
+                    />
+                    </>:""
                 }
-            </Box>
+                {
+                    hide.enabled?
+                    <>
+                    <Tooltip title={hide.isHidden?"Unblock":"Block"}>
+                        <IconButton onClick={hide.openDialog}><BlockIcon/></IconButton>
+                    </Tooltip> 
+                    <TextInputDialog
+                        open={hide.dialogOpen}
+                        title={hide.isHidden?"Unblocking Question":"Blocking Question"}
+                        content={hide.isHidden?"Are you sure you want to unblock this question, after it will reappear to the users?":"Please enter the message according to why you want to block this question."}
+                        onOk={hide.handleDialog}
+                        onCancel={hide.closeDialog}
+                        hideTextField={hide.isHidden}
+                    />
+                    </>:""
+                }
+                {}
+                </Box>
             <Box display="flex" flexDirection="row">
                 <Typography variant="subtitle1" >{`by ${props.question.author}`}</Typography>
                 <Chip className={classes.chip} variant="outlined" label={props.question.topic.name}/>
@@ -106,6 +133,15 @@ const QuestionView : React.FC<IProps> = props=>{
             {
                 modified?
                 <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.question.lastUpdate}`}</Typography>
+                :""
+            }
+            {
+                props.question.type === QuestionType.Hidden?
+                <Paper className={classes.moderatorPaper}>
+                    <Typography variant="caption">{`Hidden by ${props.question.moderator}`}</Typography>
+                    <Divider/>
+                    <Typography>{props.question.moderatorMessage}</Typography>
+                </Paper>
                 :""
             }
         </Paper>

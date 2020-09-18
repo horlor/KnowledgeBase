@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using KnowledgeBase.Entities.DataTransferObjects;
 using KnowledgeBase.Domain.Interfaces;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 
 namespace KnowledgeBase.Domain.Services
 {
@@ -99,5 +100,14 @@ namespace KnowledgeBase.Domain.Services
             return userRepo.Search(request);
         }
 
+        internal static bool AuthenticateModerator(string role)
+        {
+            return String.Equals(role, "admin", StringComparison.OrdinalIgnoreCase) || String.Equals(role, "moderator", StringComparison.OrdinalIgnoreCase);
+        }
+
+        internal static bool AuthenticateAdmin(string role)
+        {
+            return String.Equals(role, "admin", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

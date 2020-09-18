@@ -7,9 +7,17 @@ export interface Question{
     content: string;
     author: string;
     closed: boolean,
+    type?: QuestionType,
+    moderator?: string,
+    moderatorMessage?: string,
     created?: string,
     lastUpdate?: string,
     topic: Topic,
+}
+
+export enum QuestionType{
+    Simple = 0,
+    Hidden = 1,
 }
 
 export interface PagedQuestions{
@@ -31,6 +39,9 @@ export interface QuestionSearchRequest{
     title: string | null;
     content: string | null;
     anywhere: string | null;
+    username: string | null;
+    myQuestions: boolean,
+    onlyHidden: boolean,
     topic: number | null;
     page: number
 }

@@ -104,14 +104,23 @@ namespace KnowledgeBase.DataAccess.Repos
             return (ret, DbMapper.MapDbQuestion(dbQuestion));
         }
 
-        public async Task<Question> Update(Question question)
+        public async Task<Question> Update(Question question, bool updateTime = true)
         {
             var q = await dbcontext.Questions.SingleOrDefaultAsync(q => q.Id == question.Id);
             if (q != null)
             {
+                var moderator = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserName == question.Moderator);
+                var topic = await dbcontext.Topics.SingleOrDefaultAsync(t => t.Id == question.Topic.Id);
+                if (topic != null)
+                    q.Topic = topic;
+                q.Moderator = moderator;
+                q.ModeratorMessage = question.ModeratorMessage;
                 q.Content = question.Content;
                 q.Title = question.Title;
-                q.LastUpdated = DateTime.Now;
+                q.Type = question.Type;
+                q.Closed = q.Closed;
+                if(updateTime)
+                    q.LastUpdated = DateTime.Now;
                 await dbcontext.SaveChangesAsync();
             }
             return DbMapper.MapDbQuestion(q);
@@ -150,6 +159,12 @@ namespace KnowledgeBase.DataAccess.Repos
                 query = query.Where(q => EF.Functions.Like(q.Content, $"%{request.Content}%"));
             if (request.TopicId != null)
                 query = query.Where(q => q.Topic.Id == request.TopicId);
+            if (!string.IsNullOrEmpty(request.Username))
+                query = query.Where(q => q.User.UserName == request.Username);
+            if (!request.IncludeHidden)
+                query = query.Where(q => q.Type != QuestionType.HiddenByModerator);
+            if (request.OnlyHidden)
+                query = query.Where(q => q.Type == QuestionType.HiddenByModerator);
             var count = await query.CountAsync();
             query = query
                 .OrderByDescending(q => q.LastUpdated)

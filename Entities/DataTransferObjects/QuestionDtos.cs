@@ -30,6 +30,9 @@ namespace KnowledgeBase.Entities.DataTransferObjects
         public int? TopicId { get; set; }
         public int Page { get; set; }
         public int CountPerPage { get; set; }
+        public string Username { get; set; }
+        public bool IncludeHidden { get; set; }
+        public bool OnlyHidden { get; set; }
     }
 
     public class QuestionSearchResponse
@@ -39,5 +42,10 @@ namespace KnowledgeBase.Entities.DataTransferObjects
         public int PageCount { get; set; }
         public int Count { get; set; }
         public ICollection<Question> Questions { get; set; }
+    }
+
+    public class QuestionHideRequest
+    {
+        public string ModeratorMessage { get; set; }
     }
 }

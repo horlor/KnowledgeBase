@@ -13,7 +13,7 @@ namespace KnowledgeBase.WebApi.Controllers
         protected string UserName { 
             get
             {
-                return User.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                return User.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
             } 
         }
 
@@ -21,7 +21,7 @@ namespace KnowledgeBase.WebApi.Controllers
         {
             get
             {
-                return User.Claims.First(claim => claim.Type ==  ClaimTypes.Role).Value;
+                return User.Claims.FirstOrDefault(claim => claim.Type ==  ClaimTypes.Role)?.Value;
             }
         }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions, Chip, Box, IconButton} from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Question from '../../models/Question';
+import Question, { QuestionType } from '../../models/Question';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -15,8 +15,10 @@ const styles = makeStyles(theme =>({
         background: "white",
         margin: theme.spacing(1),
     },
+    hidden:{
+        border: "gray solid 2px"
+    },
     title:{
-        display:"inline",
         marginRight: theme.spacing(2),
     },
     remove:{
@@ -27,11 +29,13 @@ const styles = makeStyles(theme =>({
 const QuestionCard : React.FC<IQuestionProps> = (props) =>{
     const classes = styles();
     return (
-        <Card variant="outlined" className={classes.card}>
+        <Card variant="outlined" className={props.question.type === QuestionType.Hidden?`${classes.card} ${classes.hidden}`:classes.card} >
             <CardHeader title={
-                <Box>
+                <Box display="flex" flexDirection="row">
                     <Typography variant="h5" className={classes.title}>{props.question.title}</Typography>
                     {props.question.topic?<Chip variant="outlined" color="primary" label={props.question.topic.name}/> : ""}
+                    <Box flexGrow={1}/>
+                    {props.question.type === QuestionType.Hidden?<Typography variant="subtitle1">hidden by moderator</Typography>:"" }
                 </Box>
             } 
             subheader={`by ${props.question.author}`}/>
@@ -40,7 +44,7 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
             </CardContent>
             <Box display="flex">
                 <Button size="small" component={Link} to={`/questions/${props.question.id}`}>Read</Button>
-                <Box flexGrow={11000}/>
+                <Box flexGrow={1}/>
                 {
                     props.delete?
                     <IconButton size="small" onClick={props.delete} className={classes.remove}>

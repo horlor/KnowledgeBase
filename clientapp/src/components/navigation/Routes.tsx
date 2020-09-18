@@ -16,6 +16,7 @@ import NotificationPanel from '../notification/NotificationPanel';
 import AdminPage from '../pages/AdminPage';
 import TopicPage from '../pages/TopicPage';
 import SearchQuestionsPage from '../pages/SearchQuestionsPage';
+import MyQuestionsPage from '../pages/MyQuestionsPage';
 
 
 interface IProps{
@@ -88,6 +89,10 @@ export const Routes : React.FC<IProps> = (props) => {
             <Route
                 path="/search_questions"
                 component={SearchQuestionsPage}
+            />
+            <Route
+                path="/my_questions"
+                component={MyQuestionsPage}
             />
             </NavigationView>
         {<NotificationPanel/>}

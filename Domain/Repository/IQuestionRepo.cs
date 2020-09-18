@@ -11,7 +11,7 @@ namespace KnowledgeBase.Domain.Repository
     {
         Task<Question> FindById(int id);
         Task<Question> Store(Question question);
-        Task<Question> Update(Question question);
+        Task<Question> Update(Question question, bool updateTime = true);
         Task Delete(Question question);
         Task<ICollection<Question>> List();
         Task<QuestionWithAnswers> FindWithAnswersById(int id);

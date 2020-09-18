@@ -29,6 +29,9 @@ const Menu : React.FC<IProps> = (props) => {
               <ListItem button component={Link} to="/notifications">
                 <ListItemText primary={"Notifications"}/>
               </ListItem>
+              <ListItem button component={Link} to="/my_questions">
+                <ListItemText primary={"My questions"}/>
+              </ListItem>
             </>
           ) : (
             <>

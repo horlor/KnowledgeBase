@@ -4,7 +4,7 @@ export class UrlBuilder {
 		this.url = `${url}?`
 	}
 
-	public appendWithQueryParam(name: string, param: string | null | undefined | number){
+	public appendWithQueryParam(name: string, param: string | null | undefined | number | boolean){
 		if(param)
 			this.url = `${this.url}${name}=${param}&`
 	}

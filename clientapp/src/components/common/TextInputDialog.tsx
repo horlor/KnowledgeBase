@@ -10,27 +10,30 @@ const useStyle = makeStyles(theme=>({
 
 interface IProps{
 	open: boolean,
-	closing: boolean,
+	title: string,
+	content: string,
 	onOk: (message: string) => void,
 	onCancel: ()=> void,
+	hideTextField?: boolean,
 }
 
-export const  QuestionCloseDialog: React.FC<IProps> = (props: IProps) =>{
-	const [message, setMessage] = useState("");
+export const  TextInputDialog: React.FC<IProps> = (props: IProps) =>{
+	const [text, setText] = useState("");
 	const classes = useStyle();
+	console.log(props);
 	return (
 		<Dialog open={props.open}>
-			<DialogTitle>{props.closing?"Closing question":"Reopen question"}</DialogTitle>
+			<DialogTitle>{props.title}</DialogTitle>
 			<DialogContent>
-				<DialogContentText>{props.closing?"Enter the message according to the close of the question":"Enter the message according to the reopen of the question"}</DialogContentText>
-				<TextField
+				<DialogContentText>{props.content}</DialogContentText>
+				{!props.hideTextField?<TextField
 				className={classes.textfield}
-					value={message}
-					onChange={e => setMessage(e.target.value)}
-				/>
+					value={text}
+					onChange={e => setText(e.target.value)}
+				/>:""}
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={()=>props.onOk(message)}>Ok</Button>
+				<Button onClick={()=>props.onOk(text)}>Ok</Button>
 				<Button onClick={props.onCancel}>Cancel</Button>
 			</DialogActions>
 		</Dialog>
