@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,9 +65,22 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.FindById(id);
         }
 
-        public async Task<QuestionWithAnswers> GetQuestionWithAnswers(int id)
+        public async Task<QuestionWithAnswers> GetQuestionWithAnswers(int id, string username=null, string role=null)
         {
-            return await questionRepo.FindWithAnswersById(id);
+            var question = await questionRepo.FindWithAnswersById(id);
+            if(!UserService.AuthenticateModerator(role))
+                question.Answers = question.Answers.Select(a =>
+                {
+                    if (a.Type == AnswerType.HiddenByModerator && a.Author != username)
+                    {
+                        a.Content = "";
+                        a.Moderator = "";
+                        a.ModeratorMessage = "";
+                    }
+                       
+                    return a;
+                }).ToList();
+            return question;
         }
 
         public async Task<ICollection<Question>> GetQuestionsPaged(int pagenum, int pagesize)
@@ -157,7 +171,35 @@ namespace KnowledgeBase.Domain.Services
             if (question == null)
                 throw new NotFoundException();
             question.Type = QuestionType.Simple;
+            question.Moderator = null;
+            question.ModeratorMessage = null;
             return await questionRepo.Update(question, false);
+        }
+
+        public async Task<Answer> HideAnswer(int questionId, int answerId, string message, string username, string role)
+        {
+            if (!UserService.AuthenticateModerator(role))
+                throw new UnathorizedException();
+            var answer = await answerRepo.FindById(answerId);
+            if (answer == null)
+                throw new NotFoundException();
+            answer.Type = AnswerType.HiddenByModerator;
+            answer.ModeratorMessage = message;
+            answer.Moderator = username;
+            return await answerRepo.Update(answer, false);
+        }
+
+        public async Task<Answer> UnhideAnswer(int questionId, int answerId, string username, string role)
+        {
+            if (!UserService.AuthenticateModerator(role))
+                throw new UnathorizedException();
+            var answer = await answerRepo.FindById(answerId);
+            if (answer == null)
+                throw new NotFoundException();
+            answer.Type = AnswerType.Simple;
+            answer.ModeratorMessage = "";
+            answer.Moderator = null;
+            return await answerRepo.Update(answer, false);
         }
 
     }

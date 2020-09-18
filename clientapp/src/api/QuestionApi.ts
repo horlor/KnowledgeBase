@@ -3,7 +3,6 @@ import Question, { PagedQuestions, QuestionWithAnswers, QuestionUpdateRequest, Q
 import Answer, { AnswerUpdateRequest } from '../models/Answer';
 import { UrlBuilder } from '../helpers/UrlBuilder';
 import * as SignalR from "@microsoft/signalr"
-import { queries } from '@testing-library/react';
 
 export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
     var response = await axios.get<PagedQuestions>(`/api/questions?pagenum=${pageNum}&pageSize=${pageSize}`);
@@ -69,6 +68,13 @@ export const UnhideQuestion = async(questionId: number)=>{
     return (await axios.post<Question>(`/api/questions/${questionId}/unhide`)).data;
 }
 
+export const HideAnswer = async(questionId: number, answerId: number, message: string)=>{
+    return (await axios.post<Answer>(`/api/questions/${questionId}/answers/${answerId}/hide`,{moderatorMessage:message})).data
+}
+
+export const UnhideAnswer = async(questionId: number, answerId: number)=>{
+    return (await axios.post<Answer>(`/api/questions/${questionId}/answers/${answerId}/unhide`)).data
+}
 
 class QuestionSignalrService{
     private connection? : SignalR.HubConnection;

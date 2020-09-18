@@ -11,7 +11,6 @@ import Question, { QuestionUpdateRequest, QuestionSearchResult, QuestionType } f
 import Answer from "../models/Answer";
 import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
 import { useHistory, useLocation } from "react-router";
-import { StepIcon } from "@material-ui/core";
 
 
 export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{

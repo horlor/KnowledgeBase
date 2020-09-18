@@ -27,7 +27,8 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Answer> FindById(int id)
         {
-            return DbMapper.MapDbAnswer(await dbcontext.Answers.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id));
+            Console.WriteLine("AnswerFind: " + id);
+            return DbMapper.MapDbAnswer(await dbcontext.Answers.Include(a => a.User).Include(a=> a.Moderator).FirstOrDefaultAsync(a => a.Id == id));
         }
 
         public async Task<Answer> Store(Answer answer)
@@ -45,17 +46,23 @@ namespace KnowledgeBase.DataAccess.Repos
             return answer;
         }
 
-        public async Task<Answer> Update(Answer answer)
+        public async Task<Answer> Update(Answer answer, bool updateTime = true)
         {
             var ans = await dbcontext.Answers.FirstAsync(a => a.Id == answer.Id);
             ans.Content = answer.Content;
-            ans.LastUpdated = DateTime.Now;
-            var user = dbcontext.Users.FirstOrDefault(u => u.UserName == answer.Author);
+            if(updateTime)
+                ans.LastUpdated = DateTime.Now;
+            var user = await dbcontext.Users.FirstOrDefaultAsync(u => u.UserName == answer.Author);
             if(user !=null)
             {
                 ans.User = user;
             }
+            var moderator = await dbcontext.Users.FirstOrDefaultAsync(u => u.UserName == answer.Moderator);
+            ans.Type = answer.Type;
+            ans.Moderator = moderator;
+            ans.ModeratorMessage = answer.ModeratorMessage;
             await dbcontext.SaveChangesAsync();
+            Console.WriteLine($"Answer.Update({ans.Type},{ans.Moderator},{ans.ModeratorMessage})");
             return DbMapper.MapDbAnswer(ans);
         }
     }

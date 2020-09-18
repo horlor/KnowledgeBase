@@ -28,8 +28,7 @@ namespace KnowledgeBase.WebApi.Controllers
         {
             this.questionService = questionService;
         }
-        // elvileg nem használt - kivenni ha biztos
-        /*
+
         [HttpGet]
         public async Task<QuestionsWithPaging> GetQuestions([FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
         {
@@ -41,12 +40,12 @@ namespace KnowledgeBase.WebApi.Controllers
                 Pages = pages,
                 CurrentPage = pageNum
             };
-        }*/
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<QuestionWithAnswers>> GetQuestion(int id)
         {
-            return await questionService.GetQuestionWithAnswers(id);
+            return await questionService.GetQuestionWithAnswers(id,UserName,Role);
         }
 
         [Authorize]
@@ -91,7 +90,7 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPost("{id}/hide")]
-        public async Task<ActionResult<Question>> HideQuestion([FromRoute] int id, [FromBody] QuestionHideRequest request)
+        public async Task<ActionResult<Question>> HideQuestion([FromRoute] int id, [FromBody] QuestionAnswerHideRequest request)
         {
             try
             {
@@ -164,6 +163,44 @@ namespace KnowledgeBase.WebApi.Controllers
             await questionService.DeleteAnswer(qId, answer);
             return NoContent();
         }
+
+        [Authorize]
+        [HttpPost("{qId}/answers/{aId}/hide")]
+        public async Task<IActionResult> HideAnswer([FromRoute] int qId, [FromRoute] int aId,[FromBody] QuestionAnswerHideRequest request)
+        {
+            try
+            {
+                return Ok(await questionService.HideAnswer(qId, aId, request.ModeratorMessage, UserName, Role));
+            }
+            catch (UnathorizedException)
+            {
+                return Unauthorized();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("{qId}/answers/{aId}/unhide")]
+        public async Task<IActionResult> UnhideAnswer([FromRoute] int qId, [FromRoute] int aId)
+        {
+            try
+            {
+                return Ok(await questionService.UnhideAnswer(qId, aId, UserName, Role));
+            }
+            catch (UnathorizedException)
+            {
+                return Unauthorized();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+
 
         [Authorize]
         [HttpPut("{id}")]

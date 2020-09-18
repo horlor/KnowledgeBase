@@ -16,6 +16,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return new Answer()
             {
                 Id = dbAnswer.Id,
+                QuestionId = dbAnswer.QuestionId,
                 Author = dbAnswer.User?.UserName,
                 Content = dbAnswer.Content,
                 Created = dbAnswer.Created.ToString(dateFormat),

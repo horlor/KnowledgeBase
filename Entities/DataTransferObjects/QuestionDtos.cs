@@ -44,7 +44,7 @@ namespace KnowledgeBase.Entities.DataTransferObjects
         public ICollection<Question> Questions { get; set; }
     }
 
-    public class QuestionHideRequest
+    public class QuestionAnswerHideRequest
     {
         public string ModeratorMessage { get; set; }
     }

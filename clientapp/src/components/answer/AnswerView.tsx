@@ -1,16 +1,21 @@
 import React from 'react';
-import { Typography, makeStyles, Paper, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider } from '@material-ui/core';
+import { Typography, makeStyles, Paper, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Answer, { AnswerUpdateRequest, AnswerType } from '../../models/Answer';
 import { useAnswerHook } from '../../hooks/AnswerHooks';
 import { useForm } from 'react-hook-form';
+import { TextInputDialog } from '../common/TextInputDialog';
+import BlockIcon from '@material-ui/icons/Block';
 
 const useStyles = makeStyles(theme => ({
     card:{
         background: "white",
         margin: theme.spacing(1),
         padding: theme.spacing(2)
+    },
+    hiddenCard:{
+        background: "gainsboro"
     },
     authorText:{
         fontStyle:"italic",
@@ -31,6 +36,9 @@ const useStyles = makeStyles(theme => ({
     },
     content:{
         whiteSpace:"pre-wrap"
+    },
+    moderatorText:{
+        textAlign: "center"
     }
 }))
 
@@ -40,12 +48,15 @@ interface IProps{
 }
 
 const AnswerView : React.FC<IProps> = (props) =>{
-    const {edit, saveChanges, dropChanges, editAnswer, deleteWithDialog, acceptDelete, dropDelete, deleteDialog, modifyEnabled, modified} = useAnswerHook(props.answer);
+    const {
+        edit, saveChanges, dropChanges, editAnswer, deleteWithDialog,
+         acceptDelete, dropDelete, deleteDialog, modifyEnabled, modified, hide} 
+         = useAnswerHook(props.answer);
     const classes = useStyles();
     const {register, handleSubmit} = useForm<AnswerUpdateRequest>();
     if(edit){
         return (
-        <Paper className={classes.card}>
+        <Paper className={`${classes.card} ${hide.isHidden?classes.hiddenCard:""}`}>
             <form onSubmit={handleSubmit(saveChanges)}>
             <TextField
                 className={classes.textbox}
@@ -65,11 +76,10 @@ const AnswerView : React.FC<IProps> = (props) =>{
         );
     }
     return (
-        <>
-        <Paper className={classes.card}>
+        <Paper className={`${classes.card} ${hide.isHidden?classes.hiddenCard:""}`}>
         <Box display="flex" flexDirection="row">
             <Typography className={classes.authorText}>
-                {`${props.answer.type == AnswerType.Reopener?"Reopened ":props.answer.type == AnswerType.Closer?"Closed ":""}by ${props.answer.author}`}</Typography>
+                {`${props.answer.type === AnswerType.Reopener?"Reopened ":props.answer.type === AnswerType.Closer?"Closed ":""}by ${props.answer.author}`}</Typography>
             <Box flexGrow={1} />
             {
                     modifyEnabled?
@@ -80,33 +90,59 @@ const AnswerView : React.FC<IProps> = (props) =>{
                         <IconButton className={classes.iconbutton} onClick={editAnswer}>
                             <EditIcon/>
                         </IconButton>
+                        <Dialog open={deleteDialog}>
+                            <DialogTitle>Warning!</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>{`Are you sure to delete the following answer: ${props.answer.content.slice(0,50)}...?`}</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={acceptDelete}>Ok</Button>
+                                <Button onClick={dropDelete}>Cancel</Button>
+                            </DialogActions>
+                        </Dialog>
                     </>
                     :
                     ""
                 }
+                {
+                    hide.enabled?
+                    <>
+                    <Tooltip title={hide.isHidden?"Unblock":"Block"}>
+                        <IconButton className={classes.iconbutton} onClick={hide.openDialog}><BlockIcon/></IconButton>
+                    </Tooltip>
+                    <TextInputDialog
+                        open={hide.dialogOpen}
+                        title={hide.isHidden?"Unblocking answer":"Blocking answer"}
+                        content={hide.isHidden?"Are you sure you want to unblock this answer, after it will reappear to the users.":"Please enter the message according to why you want to block this answer."}
+                        onOk={hide.handleDialog}
+                        onCancel={hide.closeDialog}
+                        hideTextField={hide.isHidden}
+                    />
+                    </>:""
+                }
             <Typography className={classes.datetext}>{props.answer.created}</Typography>
-            </Box>
+        </Box>
+        <Divider/>
+        <Typography className={classes.content}>{props.answer.content}</Typography>
+        {
+        hide.cardShown?
+        <Paper>
+            <Typography variant="caption">{`Hidden by ${props.answer.moderator}`}</Typography>
             <Divider/>
-            <Typography className={classes.content}>
-                {props.answer.content}
-            </Typography>
-            {
-                modified?
-                <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.answer.lastUpdate}`}</Typography>
-                :""
-            }
+            <Typography>{props.answer.moderatorMessage}</Typography>
+        </Paper>:""
+        }
+        <Box display="flex">
+        {
+            modified?
+            <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.answer.lastUpdate}`}</Typography>
+            :""
+        }
+            <Box flexGrow={1}/>
+            {   props.answer.type === AnswerType.HiddenByModerator?
+            <Typography className={classes.moderatorText} variant="caption">Hidden by moderator</Typography>:""}
+        </Box>
         </Paper>
-        <Dialog open={deleteDialog}>
-                    <DialogTitle>Warning!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>{`Are you sure to delete the following answer: ${props.answer.content.slice(0,50)}...?`}</DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={acceptDelete}>Ok</Button>
-                        <Button onClick={dropDelete}>Cancel</Button>
-                    </DialogActions>
-                </Dialog>
-        </>
     );
 }
 

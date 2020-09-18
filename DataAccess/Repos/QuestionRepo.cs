@@ -38,8 +38,9 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task<ICollection<Answer>> FindAnswersforQuestionById(int id)
         {
             return await dbcontext.Answers
-                .Where(a => a.Question.Id == id)
+                .Where(a => a.QuestionId == id)
                 .Include(a => a.User)
+                .Include(a => a.Moderator)
                 .Select(a => DbMapper.MapDbAnswer(a)).ToListAsync();
         }
 
@@ -57,6 +58,8 @@ namespace KnowledgeBase.DataAccess.Repos
             var q = await dbcontext.Questions
                 .Include(q => q.Answers)
                     .ThenInclude(a => a.User)
+                .Include(q => q.Answers)
+                    .ThenInclude(a => a.Moderator)
                 .Include(q => q.User)
                 .Include(q => q.Topic)
                 .SingleOrDefaultAsync(q => q.Id == id);

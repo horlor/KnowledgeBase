@@ -40,7 +40,7 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
             } 
             subheader={`by ${props.question.author}`}/>
             <CardContent>
-                <Typography variant="body1">{`${props.question.content.slice(0,400)}...`}</Typography>
+                <Typography variant="body1">{`${props.question.content.slice(0,400)}${props.question.content.length>400?"...":""}`}</Typography>
             </CardContent>
             <Box display="flex">
                 <Button size="small" component={Link} to={`/questions/${props.question.id}`}>Read</Button>

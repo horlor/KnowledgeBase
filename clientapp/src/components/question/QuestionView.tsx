@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
+import { Paper, Typography, makeStyles,  Divider, Chip, Box, IconButton, TextField, Button, Tooltip } from '@material-ui/core';
 import Question, { QuestionType, QuestionUpdateRequest } from '../../models/Question';
 import EditIcon from '@material-ui/icons/Edit';
 import { useQuestionEditHook } from '../../hooks/QuestionHooks';
@@ -8,7 +8,6 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import {TextInputDialog} from "../common/TextInputDialog";
 import BlockIcon from '@material-ui/icons/Block';
-import { Block } from '@material-ui/icons';
 
 
 
