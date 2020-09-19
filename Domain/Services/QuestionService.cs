@@ -130,6 +130,8 @@ namespace KnowledgeBase.Domain.Services
             question.Content = request.Content;
             var ret = await questionRepo.Update(question);
             await questionHub.OnQuestionEdited(ret);
+            if (question.Moderator != null)
+                await notificationService.CreateHiddenQuestionEditedNotification(question);
             return question;
         }
 
@@ -143,6 +145,8 @@ namespace KnowledgeBase.Domain.Services
             answer.Content = request.Content;
             var ret = await answerRepo.Update(answer);
             await questionHub.OnAnswerEdited(answer.QuestionId, answer);
+            if (answer.Moderator != null)
+                await notificationService.CreateHiddenAnswerEditedNotification(answer.QuestionId, answer);
             return ret;
         }
 
@@ -203,7 +207,9 @@ namespace KnowledgeBase.Domain.Services
             question.Type = QuestionType.HiddenByModerator;
             question.Moderator = username;
             question.ModeratorMessage = message;
-            return await questionRepo.Update(question, false);
+            var ret = await questionRepo.Update(question, false);
+            await notificationService.CreateQuestionSetHiddenNotification(ret);
+            return ret;
         }
 
         public async Task<Question> UnhideQuestion(int questionId, string username, string role = "User")
@@ -231,7 +237,9 @@ namespace KnowledgeBase.Domain.Services
             answer.Type = AnswerType.HiddenByModerator;
             answer.ModeratorMessage = message;
             answer.Moderator = username;
-            return await answerRepo.Update(answer, false);
+            var ret = await answerRepo.Update(answer, false);
+            await notificationService.CreateAnswerSetHiddenNotification(ret.QuestionId, ret);
+            return ret;
         }
 
         public async Task<Answer> UnhideAnswer(int questionId, int answerId, string username, string role)

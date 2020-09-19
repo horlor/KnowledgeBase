@@ -48,6 +48,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             var q = await dbcontext.Questions
                 .Include(q =>q.User)
+                .Include(q => q.Moderator)
                 .Include(q => q.Topic)
                 .SingleAsync(q => q.Id == id);
             return DbMapper.MapDbQuestion(q);
@@ -61,6 +62,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 .Include(q => q.Answers)
                     .ThenInclude(a => a.Moderator)
                 .Include(q => q.User)
+                .Include(q => q.Moderator)
                 .Include(q => q.Topic)
                 .SingleOrDefaultAsync(q => q.Id == id);
             return DbMapper.MapDbQuestionWithAnswers(q);
@@ -70,6 +72,7 @@ namespace KnowledgeBase.DataAccess.Repos
         {
             return await dbcontext.Questions
                 .Include(q => q.User)
+                .Include(q => q.Moderator)
                 .Include(q => q.Topic)
                 .Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
         }

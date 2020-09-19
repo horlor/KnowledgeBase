@@ -56,6 +56,46 @@ namespace KnowledgeBase.Domain.Services
                 });
         }
 
+        public async Task CreateHiddenQuestionEditedNotification(Question q)
+        {
+            await CreateNotificationForUser(q.Moderator, new Notification()
+            {
+                Title = $"Hidden question edited",
+                Content = $"{q.Author} edited the question, you blocked: ${q.Title}",
+                QuestionId = q.Id
+            });
+        }
+
+        public async Task CreateHiddenAnswerEditedNotification(int questionId, Answer a)
+        {
+            await CreateNotificationForUser(a.Moderator, new Notification()
+            {
+                Title = $"Hidden answer edited",
+                Content = $"{a.Author} edited the answer, you blocked.",
+                QuestionId = questionId,
+            });
+        }
+
+        public async Task CreateQuestionSetHiddenNotification(Question question)
+        {
+            await CreateNotificationForUser(question.Author, new Notification()
+            {
+                Title = $"Your question've got blocked",
+                Content = $"{question.Moderator} blocked your question, with the following message:\n{question.ModeratorMessage}",
+                QuestionId = question.Id,
+            });
+        }
+
+        public async Task CreateAnswerSetHiddenNotification(int questionId, Answer a)
+        {
+            await CreateNotificationForUser(a.Moderator, new Notification()
+            {
+                Title = $"Your answer've got blocked ",
+                Content = $"{a.Moderator} blocked your question, with the following message:\n{a.ModeratorMessage}",
+                QuestionId = questionId,
+            });
+        }
+
         public async Task<bool> RemoveNotification(string username, int notificationId)
         {
             var notUser = await notificationRepo.GetUserNameForNotification(notificationId);

@@ -28,7 +28,11 @@ namespace KnowledgeBase.DataAccess.Repos
         public async Task<Answer> FindById(int id)
         {
             Console.WriteLine("AnswerFind: " + id);
-            return DbMapper.MapDbAnswer(await dbcontext.Answers.Include(a => a.User).Include(a=> a.Moderator).FirstOrDefaultAsync(a => a.Id == id));
+            return DbMapper.MapDbAnswer(
+                await dbcontext.Answers
+                .Include(a => a.User)
+                .Include(a=> a.Moderator)
+                .FirstOrDefaultAsync(a => a.Id == id));
         }
 
         public async Task<Answer> Store(Answer answer)
