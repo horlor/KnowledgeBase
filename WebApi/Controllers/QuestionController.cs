@@ -13,6 +13,7 @@ using KnowledgeBase.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using KnowledgeBase.Entities.DataTransferObjects;
+using System.Runtime.CompilerServices;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
@@ -52,10 +53,16 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Question>> AddQuestion([FromBody] Question question)
         {
-            if (question.Author != UserName)
+            try
+            {
+                var q = await questionService.AddNewQuestion(question, UserName, Role);
+                return Created("api/questions/" + q.Id, q);
+            }
+            catch (ConflictedDataException)
+            {
                 return Conflict();
-            var q = await questionService.AddNewQuestion(question);
-            return Created("api/questions/" + q.Id, q);
+            }
+
         }
 
         [HttpGet("{id}/answers")]
@@ -68,24 +75,15 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPost("{id}/close")]
         public async Task<IActionResult> CloseQuestion([FromRoute] int id, [FromBody] Answer answer)
         {
-            var question = await questionService.GetQuestion(id);
-            if (question == null)
-                return NotFound();
-            if (!(UserName == answer.Author || question.Author == UserName || AuthenticateModerator()))
-                return Conflict();
-            return Ok( await  questionService.CloseQuestion(id, answer));
+            return await HandleExceptionsWithOk(
+                async () => await questionService.CloseQuestion(id, answer, UserName, Role));
         }
         [Authorize]
         [HttpPost("{id}/reopen")]
         public async Task<IActionResult> ReopenQuestion([FromRoute] int id, [FromBody] Answer answer)
         {
-            var question = await questionService.GetQuestion(id);
-            if (question == null)
-                return NotFound();
-            if (!(UserName == answer.Author || question.Author == UserName || AuthenticateModerator()))
-                return Conflict();
-            Console.WriteLine("Reopen Question: " + AuthenticateModerator());
-            return Ok( await questionService.ReopenQuestion(id, answer));
+            return await HandleExceptionsWithOk(
+                            async () => await questionService.ReopenQuestion(id, answer, UserName, Role));
         }
 
         [Authorize]
@@ -128,40 +126,36 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpPost("{id}/answers")]
         public async Task<ActionResult<Answer>> AddAnswerToQuestion(int id, [FromBody] Answer answer)
         {
-            Console.WriteLine("Http POST to Answers");
-            if (UserName != answer.Author)
+            try
+            {
+                var ans = await questionService.AddAnswerToQuestion(id, answer, UserName, Role);
+                return Created($"/api/questions/{id}/answers/{ans.Id}", ans);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ConflictedDataException)
+            {
                 return Conflict();
-            var question = await questionService.GetQuestion(id);
-            if (question.Closed)
-                return BadRequest();
-            var a = await questionService.AddAnswerToQuestion(id, answer);
-            return Created("api/questions/" + id + "/answers/" + a.Id, a);
+            }
         }
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteQuestion([FromRoute] int id)
+        public async Task<IActionResult> DeleteQuestion([FromRoute] int id)
         {
-            var question = await questionService.GetQuestion(id);
-            if (question == null)
-                return NotFound();
-            if (question.Author != UserName)
-                return Conflict();
-            await questionService.DeleteQuestion(question);
-            return NoContent();
+            return await HandleExceptionsWithNoContent(
+                async () => await questionService.DeleteQuestion(id, UserName, Role));
         }
 
         [Authorize]
         [HttpDelete("{qId}/answers/{id}")]
-        public async Task<ActionResult> DeleteAnswer([FromRoute] int qId, [FromRoute] int id)
+        public async Task<IActionResult> DeleteAnswer([FromRoute] int qId, [FromRoute] int id)
         {
-            var answer = await questionService.GetAnswer(id);
-            if (answer == null)
-                return NotFound();
-            if (answer.Author != UserName)
-                return Conflict();
-            await questionService.DeleteAnswer(qId, answer);
-            return NoContent();
+            return await HandleExceptionsWithNoContent(
+                async () => await questionService.DeleteAnswer(qId, id, UserName, Role)
+                ) ;
         }
 
         [Authorize]
@@ -204,28 +198,20 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<Question>> UpdateQuestion([FromRoute] int id, [FromBody] QuestionUpdateRequest request)
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] QuestionUpdateRequest request)
         {
-            var question = await questionService.GetQuestion(id);
-            if (question == null)
-                return NotFound();
-            if (question.Author != UserName)
-                return Conflict();
-            question.Content = request.Content;
-            return Ok(await questionService.UpdateQuestion(question));
+            return await HandleExceptionsWithOk(
+                async() => await questionService.UpdateQuestion(id, request, UserName, Role)
+                );
         }
 
         [Authorize]
         [HttpPut("{qId}/answers/{id}")]
-        public async Task<ActionResult<Answer>> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
+        public async Task<IActionResult> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
         {
-            var answer = await questionService.GetAnswer(id);
-            if (answer == null)
-                return NotFound();
-            if (answer.Author != UserName)
-                return Conflict();
-            answer.Content = request.Content;
-            return Ok(await questionService.UpdateAnswer(qId,answer));
+            return await HandleExceptionsWithOk(
+                async () => await questionService.UpdateAnswer(qId, id, request, UserName, Role)
+                );
         }
 
         [HttpGet("search")]

@@ -32,14 +32,21 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.List();
         }
 
-        public async Task DeleteQuestion(Question question)
+        public async Task DeleteQuestion(int id, string username, string role)
         {
+            var question = await questionRepo.FindById(id);
+            if (question == null)
+                throw new NotFoundException();
+            if (question.Author != username)
+                throw new ConflictedDataException();
             //All the answers will be deleted because of Cascade delete in MS SQL
             await questionRepo.Delete(question);
         }
 
-        public async Task<Question> AddNewQuestion(Question q)
+        public async Task<Question> AddNewQuestion(Question q, string username, string role)
         {
+            if (q.Author != username)
+                throw new ConflictedDataException();
             var question = await questionRepo.Store(q);
             await notificationService.CreateNewQuestionNotification(question);
             return question;
@@ -50,11 +57,15 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.FindAnswersforQuestionById(id);
         }
 
-        public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer)
+        public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
         {
+            if (answer.Author != username)
+                throw new ConflictedDataException();
             //To made sure that no opener or closer answer will be created without the consisting property
             answer.Type = AnswerType.Simple;
             var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
+            if (q == null)
+                throw new NotFoundException();
             await questionHub.OnNewAnswer(qId, ret);
             await notificationService.CreateNewAnswerNotification(q, ret);
             return ret;
@@ -98,23 +109,40 @@ namespace KnowledgeBase.Domain.Services
             return await answerRepo.FindById(id);
         }
 
-        public async Task DeleteAnswer(int questionId, Answer answer)
+        public async Task DeleteAnswer(int questionId, int answerId, string username, string role)
         {
+            var answer = await answerRepo.FindById(answerId);
+            if (answer == null)
+                throw new NotFoundException();
+            if (answer.Author != username)
+                throw new ConflictedDataException();
             await answerRepo.Delete(answer);
             await questionHub.OnAnswerDeleted(questionId, answer);
         }
 
-        public async Task<Question> UpdateQuestion(Question question)
+        public async Task<Question> UpdateQuestion(int id, QuestionUpdateRequest request, string username, string role)
         {
+            var question = await questionRepo.FindById(id);
+            if (question == null)
+                throw new NotFoundException();
+            if (question.Author != username)
+                throw new ConflictedDataException();
+            question.Content = request.Content;
             var ret = await questionRepo.Update(question);
             await questionHub.OnQuestionEdited(ret);
             return question;
         }
 
-        public async Task<Answer> UpdateAnswer(int questionId, Answer answer)
+        public async Task<Answer> UpdateAnswer(int questionId, int answerId, AnswerUpdateRequest request, string username, string role)
         {
+            var answer = await answerRepo.FindById(answerId);
+            if (answer == null)
+                throw new NotFoundException();
+            if (answer.Author != username)
+                throw new ConflictedDataException();
+            answer.Content = request.Content;
             var ret = await answerRepo.Update(answer);
-            await questionHub.OnAnswerEdited(questionId, answer);
+            await questionHub.OnAnswerEdited(answer.QuestionId, answer);
             return ret;
         }
 
@@ -136,15 +164,29 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.Search(request);
         }
 
-        public async Task<Answer> CloseQuestion(int questionId, Answer answer)
+        public async Task<Answer> CloseQuestion(int questionId, Answer answer, string username, string role)
         {
+            var question = await questionRepo.FindById(questionId);
+            if (question == null)
+                throw new NotFoundException();
+            if (!(username == question.Author || UserService.AuthenticateModerator(role)))
+                throw new UnathorizedException();
+            if (username != answer.Author)
+                throw new ConflictedDataException();
             var ret = await questionRepo.CloseQuestion(questionId, answer);
             await questionHub.OnQuestionClosed(questionId, answer);
             return ret;
         }
 
-        public async Task<Answer> ReopenQuestion(int questionId, Answer answer)
+        public async Task<Answer> ReopenQuestion(int questionId, Answer answer, string username, string role)
         {
+            var question = await questionRepo.FindById(questionId);
+            if (question == null)
+                throw new NotFoundException();
+            if (!(username == question.Author || UserService.AuthenticateModerator(role)))
+                throw new UnathorizedException();
+            if (username != answer.Author)
+                throw new ConflictedDataException();
             var ret = await questionRepo.ReopenQuestion(questionId, answer);
             await questionHub.OnQuestionReopend(questionId, answer);
             return ret;
@@ -157,6 +199,7 @@ namespace KnowledgeBase.Domain.Services
             var question = await questionRepo.FindById(questionId);
             if (question == null)
                 throw new NotFoundException();
+
             question.Type = QuestionType.HiddenByModerator;
             question.Moderator = username;
             question.ModeratorMessage = message;
@@ -170,6 +213,7 @@ namespace KnowledgeBase.Domain.Services
             var question = await questionRepo.FindById(questionId);
             if (question == null)
                 throw new NotFoundException();
+
             question.Type = QuestionType.Simple;
             question.Moderator = null;
             question.ModeratorMessage = null;
@@ -183,6 +227,7 @@ namespace KnowledgeBase.Domain.Services
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
                 throw new NotFoundException();
+
             answer.Type = AnswerType.HiddenByModerator;
             answer.ModeratorMessage = message;
             answer.Moderator = username;
@@ -196,6 +241,7 @@ namespace KnowledgeBase.Domain.Services
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
                 throw new NotFoundException();
+
             answer.Type = AnswerType.Simple;
             answer.ModeratorMessage = "";
             answer.Moderator = null;

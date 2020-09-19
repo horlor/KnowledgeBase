@@ -18,7 +18,11 @@ namespace KnowledgeBase.Entities
     {
         public NotFoundException(string message = "", Exception inner = null) : base(message, inner) { }
     }
-
+    
+    public class ConflictedDataException: KnowledgeBaseException
+    {
+        public ConflictedDataException(string message = "", Exception inner = null) : base(message, inner) { }
+    }
 
 
 }

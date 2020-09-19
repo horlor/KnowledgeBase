@@ -251,7 +251,7 @@ namespace KnowledgeBase.DataAccess.Repos
             if (files.Length > 0)
             {
                 string extension = Path.GetExtension(files.First());
-                return (new FileStream(files.First(), FileMode.Open), extension);
+                return (new FileStream(files.First(), FileMode.Open, FileAccess.Read, FileShare.Read), extension);
                 //return new PhysicalFileResult(files.First(), $"image/{extension.Substring(1)}");
             }
             return (null,null);
