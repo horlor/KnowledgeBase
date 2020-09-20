@@ -2,7 +2,7 @@ import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
 import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion, QuestionService, HideQuestion, UnhideQuestion } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
-import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction, CloseQuestionAction, ReopenQuestionAction } from "../redux/reducers/QuestionReducer";
+import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction, CloseQuestionAction, ReopenQuestionAction, FetchMoreQuestions } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 import { Topic } from "../models/Topic";
@@ -15,7 +15,7 @@ import { UrlBuilder } from "../helpers/UrlBuilder";
 
 
 export const useSearchQuestionsHook = () =>{
-    var result = useSelector((state : RootState) => state.question.result, shallowEqual);
+    var result = useSelector((state : RootState) => state.question.result);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
     var username = useSelector((state: RootState) => state.login.username);
@@ -66,13 +66,21 @@ export const useSearchQuestionsHook = () =>{
         dispatch(DeleteQuestionAction(q));
     }
 
+    async function onLoadMore(pg: number){
+        let res = await SearchQuestionsFromApi(
+            {anywhere: anywhere, title: title, content: content, topic:topic, page: pg, username: null, myQuestions: false, onlyHidden: false}
+            );
+            dispatch(FetchMoreQuestions(res))
+    }
+
     return {result, error, loading, username, deleteQuestion, onPageChanged,
         search:{
             anywhere, title, content, topic,
             isSearch : !!anywhere || !!content || !!title || !!topic,
             onSearch,
             count: result?.count, pageCount: result?.pageCount
-        }
+        },
+        onLoadMore
     };
 
 }
@@ -270,6 +278,13 @@ export const useMyQuestionsHook = () =>{
         builder.appendWithQueryParam("page",to)
         history.push(builder.get())
     }
+
+    async function onLoadMore(pg: number){
+        let res = await SearchQuestionsFromApi(
+            {anywhere: anywhere, title: title, content: content, topic:topic, page: pg, username: null, myQuestions: true, onlyHidden: false}
+            );
+            dispatch(FetchMoreQuestions(res))
+    }
     
     useEffect(function(){
         (async function(){
@@ -288,8 +303,13 @@ export const useMyQuestionsHook = () =>{
         })();
     },[anywhere, content, dispatch, page, title, topic]);
 
+    const deleteQuestion = (q: Question)=>{
+        DeleteQuestion(q);
+        dispatch(DeleteQuestionAction(q));
+    }
+
     return {
-        result, error, loading, username, onPageChanged,
+        result, error, loading, username, onPageChanged, deleteQuestion, onLoadMore,
         search:{
             anywhere, title, content, topic,
             isSearch : !!anywhere || !!content || !!title || !!topic,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Container, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
+import { Container, CircularProgress } from "@material-ui/core";
 import { useSearchQuestionsHook } from "../../hooks/QuestionHooks";
 import QuestionCard from "../question/QuestionCard";
 import ErrorView from "../common/ErrorView";
@@ -9,18 +9,14 @@ import Pagination from "../common/Pagination";
 import { UrlBuilder } from "../../helpers/UrlBuilder";
 import LoadingView from "../common/LoadingView";
 import Question from "../../models/Question";
+import InfiniteScroll from 'react-infinite-scroller';
 
-type IProps = RouteComponentProps<{
+interface IProps{
 
-}>;
+};
 
 const SearchQuestionsPage: React.FC<IProps> = props => {
-	const {result, error, deleteQuestion, username, search, onPageChanged} = useSearchQuestionsHook()
-	const [selected, setSelected] = useState<Question>();
-
-    const DeleteQuestionWithDialog = (q: Question)=>{
-        setSelected(q);
-	}
+	const {result, error, search, onPageChanged, onLoadMore} = useSearchQuestionsHook()
 	
 	if(error)
 		return <ErrorView title={error.code} message={error.description}/>;
@@ -32,28 +28,15 @@ const SearchQuestionsPage: React.FC<IProps> = props => {
 				<SearchPanel count={result.count} pages={result?result.pageCount:0}
 				 anywhere={search.anywhere} content={search.content} title={search.title} topicId={search.topic}
 				  onSearch={search.onSearch} isSearch={search.isSearch}/>
-				{result?.questions.map(q => <QuestionCard key={q.id} question={q} delete={
-            (username === q.author)?
-               ()=>{ DeleteQuestionWithDialog(q)}:
-                undefined
-        }/>)}
-				<Pagination pageChanged={onPageChanged} pageNum={result?result.pageCount:0} current={result?result.page:0}/>
+				<InfiniteScroll
+					hasMore={result.page<result.pageCount}
+					loadMore={onLoadMore}
+					loader={<CircularProgress/>}
+				>
+					{result?.questions.map(q => <QuestionCard key={q.id} question={q} delete={undefined}/>)}
+				</InfiniteScroll>
 			</Container>
-			<Dialog open={!!selected}>
-			<DialogTitle>Warning!</DialogTitle>
-				<DialogContent>
-					<DialogContentText>{`Are you sure to delete the following question: ${selected?.title}?`}</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={()=> {
-							if(selected){
-								deleteQuestion(selected)
-							}
-							setSelected(undefined)}}
-						>Ok</Button>
-					<Button onClick={()=> {setSelected(undefined)}}>Cancel</Button>
-				</DialogActions>
-			</Dialog>
+			
 		</>
 	);
 }

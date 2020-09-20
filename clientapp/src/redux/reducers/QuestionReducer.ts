@@ -28,6 +28,7 @@ export const DeleteAnswerAction = createAction<Answer>("delete-answer")
 
 export const FetchQuestionsStarted = createAction("fetch-questions-started");
 export const FetchQuestionsSuccess = createAction<QuestionSearchResult>("fetch-questions-success");
+export const FetchMoreQuestions = createAction<QuestionSearchResult>("fetch-more-question");
 export const FetchQuestionsFailure = createAction<ErrorModel>("fetch-questions-failure");
 export const FetchQAStarted = createAction("fetch-questionanswer-started");
 export const FetchQASuccess = createAction<QuestionWithAnswers>("fetch-questionanswer-success");
@@ -94,6 +95,12 @@ export const QuestionReducer = createReducer(initialState, builder => builder
         if(state.questionwithanswers){
             state.questionwithanswers.closed = false;
             state.questionwithanswers.answers.push(action.payload);
+        }
+    })
+    .addCase(FetchMoreQuestions, (state, action)=>{
+        if(state.result){
+            state.result.page = action.payload.page
+            state.result.questions = state.result.questions.concat(action.payload.questions);
         }
     })
 
