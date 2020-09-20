@@ -11,14 +11,39 @@ import Question, { QuestionUpdateRequest, QuestionSearchResult, QuestionType } f
 import Answer from "../models/Answer";
 import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
 import { useHistory, useLocation } from "react-router";
+import { UrlBuilder } from "../helpers/UrlBuilder";
 
 
-export const useSearchQuestionsHook = (anywhere: string | null, title: string | null, content: string | null, topic: number | null, page: number) =>{
+export const useSearchQuestionsHook = () =>{
     var result = useSelector((state : RootState) => state.question.result, shallowEqual);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
-    var username = useSelector((state: RootState) => state.login.username)
+    var username = useSelector((state: RootState) => state.login.username);
+    const history = useHistory();
+    const queryParams = new URLSearchParams(history.location.search);
+    const anywhere = queryParams.get("anywhere"), title = queryParams.get("title"), content = queryParams.get("content"), topicstr = queryParams.get("topic"),
+    topic = topicstr?parseInt(topicstr):null, page = parseInt(queryParams.get("page") || "1")
     var dispatch = useDispatch();
+
+    function onSearch(anywhere: string | null, content:string | null,
+        title:string| null, topic:number| null){
+       let builder = new UrlBuilder("/questions");
+       builder.appendWithQueryParam("anywhere", anywhere)
+       builder.appendWithQueryParam("content",content)
+       builder.appendWithQueryParam("title",title)
+       builder.appendWithQueryParam("topic",topic)
+       history.push(builder.get())
+   }
+
+   function onPageChanged(from: number, to: number){
+    let builder = new UrlBuilder("/my_questions")
+    builder.appendWithQueryParam("anywhere",anywhere)
+    builder.appendWithQueryParam("title",title)
+    builder.appendWithQueryParam("content",content)
+    builder.appendWithQueryParam("topic",topic)
+    builder.appendWithQueryParam("page",to)
+    history.push(builder.get())
+}
 
     useEffect(()=>{
         (async()=>{
@@ -41,7 +66,14 @@ export const useSearchQuestionsHook = (anywhere: string | null, title: string | 
         dispatch(DeleteQuestionAction(q));
     }
 
-    return {result, error, loading, username, deleteQuestion};
+    return {result, error, loading, username, deleteQuestion, onPageChanged,
+        search:{
+            anywhere, title, content, topic,
+            isSearch : !!anywhere || !!content || !!title || !!topic,
+            onSearch,
+            count: result?.count, pageCount: result?.pageCount
+        }
+    };
 
 }
 
@@ -103,7 +135,6 @@ export const useQuestionAnswerHook = (questionId: number) => {
     return {question,loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer};
 
 }
-
 
 export const useNewQuestionHook = () => {
     const dispatch = useDispatch();
@@ -208,16 +239,37 @@ export const useQuestionEditHook = (question: Question) =>{
         }
     };
 }
+
 export const useMyQuestionsHook = () =>{
     const dispatch = useDispatch();
     const username = useSelector((state: RootState) => state.login.username)
     var result = useSelector((state : RootState) => state.question.result, shallowEqual);
     var error = useSelector((state: RootState) => state.question.error);
     var loading = useSelector((state: RootState) => state.question.loading);
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
+    const history = useHistory();
+    const queryParams = new URLSearchParams(history.location.search);
     const anywhere = queryParams.get("anywhere"), title = queryParams.get("title"), content = queryParams.get("content"), topicstr = queryParams.get("topic"),
-    topic = topicstr?parseInt(topicstr):null, page = parseInt(queryParams.get("page") || "1") 
+    topic = topicstr?parseInt(topicstr):null, page = parseInt(queryParams.get("page") || "1")
+    
+    function onSearch(anywhere: string | null, content:string | null,
+         title:string| null, topic:number| null){
+        let builder = new UrlBuilder("/my_questions");
+        builder.appendWithQueryParam("anywhere", anywhere)
+        builder.appendWithQueryParam("content",content)
+        builder.appendWithQueryParam("title",title)
+        builder.appendWithQueryParam("topic",topic)
+        history.push(builder.get())
+    }
+
+    function onPageChanged(from: number, to: number){
+        let builder = new UrlBuilder("/my_questions")
+        builder.appendWithQueryParam("anywhere",anywhere)
+        builder.appendWithQueryParam("title",title)
+        builder.appendWithQueryParam("content",content)
+        builder.appendWithQueryParam("topic",topic)
+        builder.appendWithQueryParam("page",to)
+        history.push(builder.get())
+    }
     
     useEffect(function(){
         (async function(){
@@ -236,5 +288,13 @@ export const useMyQuestionsHook = () =>{
         })();
     },[anywhere, content, dispatch, page, title, topic]);
 
-    return {result, error, loading, username}
+    return {
+        result, error, loading, username, onPageChanged,
+        search:{
+            anywhere, title, content, topic,
+            isSearch : !!anywhere || !!content || !!title || !!topic,
+            onSearch,
+            count: result?.count, pageCount: result?.pageCount
+        }
+    }
 }

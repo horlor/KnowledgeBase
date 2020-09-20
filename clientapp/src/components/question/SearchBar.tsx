@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SearchIcon from '@material-ui/icons/Search'
-import { makeStyles, TextField, InputBase, fade } from '@material-ui/core'
+import { makeStyles, TextField, InputBase, fade, Menu } from '@material-ui/core'
 import { useHistory } from 'react-router'
 
 interface IProps{
@@ -53,12 +53,12 @@ const SearchBar : React.FC<IProps> = (props) =>{
     const history = useHistory()
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>)=>{
-        if(e.keyCode === 13)
+        if(e.key === "Enter")
             history.push(`/questions?anywhere=${search}`)
     }
     return (
         <>
-                  <div className={classes.search}>
+          <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>

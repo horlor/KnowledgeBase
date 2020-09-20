@@ -36,6 +36,9 @@ const Pagination : React.FC<IProps> = (props) => {
     const ChangePage = (to: number) => {
         props.pageChanged(props.current, to);
     }
+
+    if(props.pageNum<=1)
+    return <></>;
     if(props.current > props.pageNum)
         return <PageButton onClick={()=>ChangePage(1)} >The selected page dose not exist, return too page 1</PageButton>;
     return (

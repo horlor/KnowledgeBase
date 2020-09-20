@@ -13,6 +13,10 @@ interface IProps{
     title: string| null,
     content: string| null,
     topicId: number |null,
+    isSearch: boolean
+    onSearch: 
+    (anywhere: string | null, content:string | null,
+        title:string| null, topic:number| null)=>void,
 }
 
 const useStyles = makeStyles(theme=>({
@@ -39,21 +43,12 @@ const SearchPanel: React.FC<IProps> = (props) =>{
     const [content, setContent] = useState(props.content)
     const [topic, setTopic] = useState(props.topicId)
     const topics = useTopicState()
-    const history = useHistory();
     const classes = useStyles();
 
     const isSearch = !!anywhere || !!content || !!title || !!topic;
-
-
-
     const onSearch = ()=>{
         setOpen(false)
-        let builder = new UrlBuilder("/questions");
-        builder.appendWithQueryParam("anywhere", anywhere)
-        builder.appendWithQueryParam("content",content)
-        builder.appendWithQueryParam("title",title)
-        builder.appendWithQueryParam("topic",topic)
-        history.push(builder.get())
+        props.onSearch(anywhere,content,title,topic)
     }
 
     if(open)
@@ -98,7 +93,7 @@ const SearchPanel: React.FC<IProps> = (props) =>{
                 </form>
             </Paper>
         );
-    else
+    else if(props.isSearch)
         return(
                 <Box display="flex" className={classes.panel}>
                     <Typography align="center">{`${props.count} question found on ${props.pages} page`}</Typography>
@@ -108,6 +103,14 @@ const SearchPanel: React.FC<IProps> = (props) =>{
                         variant="outlined">{isSearch?"Edit search":"Detailed search"}</Button>
                 </Box>
             );
+    else
+    return (
+        <Box display="flex" className={classes.panel}>
+            <Box flexGrow={1}/>
+            <TextField variant="outlined" size="small" onChange={e => setAnywhere(e.target.value)}></TextField>
+            <Button onClick={()=>props.onSearch(anywhere,null,null,null)}>Search</Button>
+        </Box>
+    );
 }
 
 export default SearchPanel;
