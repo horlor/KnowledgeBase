@@ -48,6 +48,7 @@ export const SearchQuestionsFromApi = async(request: QuestionSearchRequest) =>{
     url.appendWithQueryParam("page",request.page)
     url.appendWithQueryParam("onlyHidden",request.onlyHidden)
     url.appendWithQueryParam("myquestions",request.myQuestions);
+    url.appendWithQueryParam("countPerPage",request.pageSize)
     console.log(url.get())
     return (await axios.get<QuestionSearchResult>(url.get())).data
 }

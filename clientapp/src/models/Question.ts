@@ -36,14 +36,15 @@ export interface QuestionUpdateRequest{
 }
 
 export interface QuestionSearchRequest{
-    title: string | null;
-    content: string | null;
-    anywhere: string | null;
-    username: string | null;
-    myQuestions: boolean,
-    onlyHidden: boolean,
-    topic: number | null;
-    page: number
+    title?: string | null;
+    content?: string | null;
+    anywhere?: string | null;
+    username?: string | null;
+    myQuestions?: boolean,
+    onlyHidden?: boolean,
+    topic?: number | null;
+    page?: number;
+    pageSize?: number
 }
 
 export interface QuestionSearchResult{

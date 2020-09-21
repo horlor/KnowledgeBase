@@ -13,7 +13,7 @@ import LoginButton from './LoginButton';
 import Logo from "../common/logodark.svg"
 import { Link } from 'react-router-dom';
 import { InputBase, TextField } from '@material-ui/core';
-import SearchBar from '../question/SearchBar';
+import SearchBar from '../common/SearchBar';
 
 
 
