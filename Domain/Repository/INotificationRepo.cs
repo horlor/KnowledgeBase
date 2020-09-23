@@ -1,6 +1,7 @@
 ﻿using KnowledgeBase.Entities;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,12 +15,9 @@ namespace KnowledgeBase.Domain.Repository
         Task Remove(Notification notification);
         Task Remove(int id);
         Task<string> GetUserNameForNotification(int id);
-        Task<bool> SetImportant(int id, bool to);
-        Task<bool> CheckUserForNotification(int id, string username);
-        Task<ICollection<Notification>> GetPendingNotifications(string username);
+        Task<ICollection<Notification>> GetUnseenNotifications(string username);
 
-        Task<bool> SetSeen(int id, bool pending);
-
+        Task<Notification> GetById(int nId);
         Task RemoveAll(string username, KnowledgeBase.Entities.DataTransferObjects.NotificationsDeleteOptions options);
 
     }

@@ -96,7 +96,6 @@ namespace KnowledgeBase.WebApi.Controllers
         [HttpDelete("notifications")]
         public async Task<ActionResult> DeleteNotifications([FromQuery] int options)
         {
-            Console.WriteLine(options);
             await notificationService.DeleteAll(UserName, (NotificationsDeleteOptions)options);
 
             return NoContent();
@@ -104,32 +103,24 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPatch("notifications/{id}/important")]
-        public async Task<ActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationPatchDto dto)
+        public async Task<IActionResult> PatchNotificationRead([FromRoute] int id, [FromBody] NotificationPatchDto dto)
         {
-            var res = await notificationService.ChangeImportant(UserName, id, dto.B);
-            if (res)
-                return Ok();
-            else
-                return BadRequest();
+            return await HandleExceptionsWithOk(async () => await notificationService.ChangeImportant(UserName, id, dto.B));
         }
 
         [Authorize]
         [HttpPatch("notifications/{id}/seen")]
-        public async Task<ActionResult> PatchNotificationSeen([FromRoute] int id, [FromBody] NotificationPatchDto dto)
+        public async Task<IActionResult> PatchNotificationSeen([FromRoute] int id, [FromBody] NotificationPatchDto dto)
         {
-            var res = await notificationService.ChangeSeen(UserName, id, dto.B);
-            if (res)
-                return Ok();
-            else
-                return BadRequest();
+            return await HandleExceptionsWithOk(async () => await notificationService.ChangeSeen(UserName, id, dto.B));
         }
 
         [Authorize]
         [HttpGet("notifications/unseen")]
-        public async Task<PendingNotificationsDto> GetPendingNotifications()
+        public async Task<UnseenNotificationsDTO> GetUnseenNotifications()
         {
-            var notifications = await notificationService.GetPendingNotifications(UserName);
-            return new PendingNotificationsDto()
+            var notifications = await notificationService.GetUnseenNotifications(UserName);
+            return new UnseenNotificationsDTO()
             {
                 Count = notifications.Count,
                 Notifications = notifications,

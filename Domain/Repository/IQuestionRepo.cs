@@ -23,11 +23,5 @@ namespace KnowledgeBase.Domain.Repository
         Task<int> Count();
         Task<int> GetPageCount(int pagesize);
         Task<QuestionSearchResponse> Search(QuestionSearchRequest request);
-
-         Task<Answer> ReopenQuestion(int questionId, Answer answer);
-
-        Task<Answer> CloseQuestion(int questionId, Answer answer);
-
-
     }
 }

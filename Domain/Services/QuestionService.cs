@@ -175,9 +175,12 @@ namespace KnowledgeBase.Domain.Services
                 throw new NotFoundException();
             if (!(username == question.Author || UserService.AuthenticateModerator(role)))
                 throw new UnathorizedException();
-            if (username != answer.Author)
+            if (username != answer.Author || question.Closed == true)
                 throw new ConflictedDataException();
-            var ret = await questionRepo.CloseQuestion(questionId, answer);
+            question.Closed = true;
+            answer.Type = AnswerType.Closer;
+            var q = await questionRepo.Update(question, false);
+            var (ret, _) = await questionRepo.StoreAnswerForQuestion(questionId, answer);
             await questionHub.OnQuestionClosed(questionId, answer);
             return ret;
         }
@@ -189,10 +192,13 @@ namespace KnowledgeBase.Domain.Services
                 throw new NotFoundException();
             if (!(username == question.Author || UserService.AuthenticateModerator(role)))
                 throw new UnathorizedException();
-            if (username != answer.Author)
+            if (username != answer.Author || question.Closed == false)
                 throw new ConflictedDataException();
-            var ret = await questionRepo.ReopenQuestion(questionId, answer);
-            await questionHub.OnQuestionReopend(questionId, answer);
+            question.Closed = false;
+            answer.Type = AnswerType.Reopener;
+            await questionRepo.Update(question, false);
+            var (ret, _) = await questionRepo.StoreAnswerForQuestion(questionId, answer);
+            await questionHub.OnQuestionReopened(questionId, answer);
             return ret;
         }
 

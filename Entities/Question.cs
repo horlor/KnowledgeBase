@@ -20,6 +20,12 @@ namespace KnowledgeBase.Entities
 
     }
 
+    public class QuestionWithAnswers : Question
+    {
+        public ICollection<Answer> Answers { get; set; }
+
+    }
+
     public enum QuestionType
     {
         Simple = 0,

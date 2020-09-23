@@ -107,36 +107,38 @@ namespace KnowledgeBase.Domain.Services
 
         }
 
-        public async Task<Notification> CreateNotificationForUser(string username, Notification n)
+        protected async Task<Notification> CreateNotificationForUser(string username, Notification n)
         {
             var notification  = await notificationRepo.CreateForUser(username, n); 
             await notificationHub.SendNotificationToUser(username, notification);
             return notification;
         }
 
-        public async Task<bool> ChangeImportant(string username, int nId, bool finished)
+        public async Task<Notification> ChangeImportant(string username, int nId, bool important)
         {
-            var enabled = await notificationRepo.CheckUserForNotification(nId, username);
-            var success = false;
-            if (enabled)
-            {
-                success = await notificationRepo.SetImportant(nId, finished);
-            }
-            return success;
+            var notification = await notificationRepo.GetById(nId);
+            if (notification == null)
+                throw new NotFoundException();
+            if (username != notification.Username)
+                throw new UnathorizedException();
+            notification.Important = important;
+            return await notificationRepo.Update(notification);
         }
 
-        public async Task<bool> ChangeSeen(string username, int nId, bool seen)
+        public async Task<Notification> ChangeSeen(string username, int nId, bool seen)
         {
-            var enabled = await notificationRepo.CheckUserForNotification(nId, username);
-            var success = false;
-            if (enabled)
-                success = await notificationRepo.SetSeen(nId, seen);
-            return success;
+            var notification = await notificationRepo.GetById(nId);
+            if (notification == null)
+                throw new NotFoundException();
+            if (username != notification.Username)
+                throw new UnathorizedException();
+            notification.Seen = seen;
+            return await notificationRepo.Update(notification);
         }
 
-        public async Task<ICollection<Notification>> GetPendingNotifications(string username)
+        public async Task<ICollection<Notification>> GetUnseenNotifications(string username)
         {
-            var nots = await notificationRepo.GetPendingNotifications(username);
+            var nots = await notificationRepo.GetUnseenNotifications(username);
             return nots;
         }
 

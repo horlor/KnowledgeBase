@@ -6,7 +6,7 @@ using System.Text;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
-    internal class DbMapper
+    internal static class DbMapper
     {
         private static readonly string dateFormat = "yyyy.MM.dd HH:mm:ss";
         internal static Answer MapDbAnswer(DbAnswer dbAnswer)
@@ -149,6 +149,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 QuestionId = dbNotification.QuestionId,
                 Seen = dbNotification.Seen,
                 Important = dbNotification.Important,
+                Username = dbNotification.User?.UserName,
             };
         }
     }

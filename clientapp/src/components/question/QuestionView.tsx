@@ -97,7 +97,7 @@ const QuestionView : React.FC<IProps> = props=>{
                     <TextInputDialog
                         open={close.dialogOpen}
                         title={props.question.closed?"Reopening the question":"Closing the question"}
-                        content={props.question.closed?"Enter the message according to the close of the question":"Enter the message according to the reopen of the question"}
+                        content={props.question.closed?"Enter the message according to the reopen of the question":"Enter the message according to the close of the question"}
                         onOk={close.handleDialog}
                         onCancel={close.closeDialog}
                     />

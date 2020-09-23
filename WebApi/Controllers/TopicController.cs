@@ -57,7 +57,6 @@ namespace KnowledgeBase.WebApi.Controllers
         public async Task<ActionResult<Topic>> UpdateTopic(TopicDetailed topicDetailed)
         {
             var ret = await topicService.Update(topicDetailed);
-            Console.WriteLine(topicDetailed.Ancestor == null? "null":"nemnull");
             if (ret == null)
                 return NotFound();
             else

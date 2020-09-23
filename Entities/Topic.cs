@@ -10,4 +10,8 @@ namespace KnowledgeBase.Entities
 
         public int Id { get; set; }
     }
+    public class TopicDetailed : Topic
+    {
+        public Topic Ancestor { get; set; }
+    }
 }

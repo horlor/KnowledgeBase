@@ -43,12 +43,6 @@ namespace KnowledgeBase.WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpPost("{username}")]
-        public async Task PostNotification([FromRoute] string username, [FromBody] Notification notification)
-        {
-            await notificationService.CreateNotificationForUser(username, notification);
-        }
-
         [HttpGet("search")]
         public async Task<UserSearchResponse> SearchUsers([FromQuery] string anywhere,[FromQuery] string username = null, 
             [FromQuery] string email = null, [FromQuery] int page = 1, [FromQuery] int countPerPage = 16)

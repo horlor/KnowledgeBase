@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
@@ -13,8 +12,8 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     public class QuestionRepo : IQuestionRepo
     {
-        private KnowledgeContext dbcontext;
-        private IAnswerRepo answerRepo;
+        private readonly KnowledgeContext dbcontext;
+        private readonly IAnswerRepo answerRepo;
 
         public QuestionRepo(KnowledgeContext context, IAnswerRepo answerRepo)
         {
@@ -124,7 +123,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 q.Content = question.Content;
                 q.Title = question.Title;
                 q.Type = question.Type;
-                q.Closed = q.Closed;
+                q.Closed = question.Closed;
                 if(updateTime)
                     q.LastUpdated = DateTime.Now;
                 await dbcontext.SaveChangesAsync();

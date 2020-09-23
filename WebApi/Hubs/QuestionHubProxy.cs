@@ -42,7 +42,7 @@ namespace KnowledgeBase.WebApi.Hubs
             await hubContext.Clients.Group(questionId.ToString()).QuestionClosed(answer);
         }
 
-        public async Task OnQuestionReopend(int questionId, Answer answer)
+        public async Task OnQuestionReopened(int questionId, Answer answer)
         {
             await hubContext.Clients.Group(questionId.ToString()).QuestionReopened(answer);
         }

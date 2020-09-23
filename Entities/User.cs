@@ -23,4 +23,10 @@ namespace KnowledgeBase.Entities
 
         public string Role { get; set; }
     }
+
+    public class UserDetailed : User
+    {
+        public string Introduction { get; set; }
+
+    }
 }

@@ -14,5 +14,7 @@ namespace KnowledgeBase.Entities
         public bool Seen { get; set; }
 
         public bool Important { get; set; }
+
+        public string Username { get; set; }
     }
 }

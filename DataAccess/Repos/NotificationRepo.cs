@@ -84,13 +84,16 @@ namespace KnowledgeBase.DataAccess.Repos
             var dbNotification = await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id);
             dbNotification.Content = notification.Content;
             dbNotification.Title = notification.Title;
+            dbNotification.Seen = notification.Seen;
+            dbNotification.Important = notification.Important;
+            dbNotification.QuestionId = notification.QuestionId;
             await dbcontext.SaveChangesAsync();
             return DbMapper.MapDbNotification(dbNotification);
         }
 
         public async Task<Notification> GetById(int id)
         {
-            return DbMapper.MapDbNotification(await dbcontext.Notifications.FirstOrDefaultAsync(n => n.Id == id));
+            return DbMapper.MapDbNotification(await dbcontext.Notifications.Include(n => n.User).FirstOrDefaultAsync(n => n.Id == id));
         }
 
         public async Task<string> GetUserNameForNotification(int id)
@@ -126,12 +129,12 @@ namespace KnowledgeBase.DataAccess.Repos
             return (user == username);
         }
 
-        public async Task<ICollection<Notification>> GetPendingNotifications(string username)
+        public async Task<ICollection<Notification>> GetUnseenNotifications(string username)
         {
             return await dbcontext.Notifications
                 .Include(n => n.User)
                 .Where(n => n.User.UserName == username)
-                .Where(n => n.Seen)
+                .Where(n => !n.Seen)
                 .Select(n => DbMapper.MapDbNotification(n))
                 .ToListAsync();
         }

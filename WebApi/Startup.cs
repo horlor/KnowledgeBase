@@ -125,7 +125,7 @@ namespace KnowledgeBase.WebApi
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ITopicRepo, TopicRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
-            services.AddScoped<IAvatarRepo, UserRepo>();
+            services.AddScoped<IAvatarRepo, AvatarRepo>();
 
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>(x => new JwtTokenGenerator()
             {

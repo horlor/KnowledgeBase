@@ -12,7 +12,7 @@ namespace KnowledgeBase.Domain.Interfaces
         Task OnAnswerEdited(int questionId, Answer answer);
         Task OnAnswerDeleted(int questionId, Answer answer);
         Task OnQuestionEdited(Question question);
-        Task OnQuestionReopend(int questionId, Answer answer);
+        Task OnQuestionReopened(int questionId, Answer answer);
         Task OnQuestionClosed(int questionId, Answer answer);
     }
 }

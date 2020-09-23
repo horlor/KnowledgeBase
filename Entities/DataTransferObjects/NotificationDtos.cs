@@ -9,7 +9,7 @@ namespace KnowledgeBase.Entities.DataTransferObjects
         public bool B { get; set; }
     }
 
-    public class PendingNotificationsDto
+    public class UnseenNotificationsDTO
     {
         public int Count { get; set; }
         public ICollection<Notification> Notifications { get; set; }
