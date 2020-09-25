@@ -4,7 +4,7 @@ import { UserDetailed, User } from '../../models/User';
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelectedUserHook } from '../../hooks/UserHooks';
 import LoadingView from '../common/LoadingView';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import UserDetailView from '../user/UserDetailView';
 
 
@@ -17,7 +17,7 @@ const UserDetailPage : React.FC<IProps> = (props: IProps) =>{
     if(loading)
         return <LoadingView/>;
     if(error!== undefined)
-        return <ErrorView title={error.code} message={error.description}></ErrorView>
+        return <ErrorPage title={error.title} message={error.description}></ErrorPage>
     if(user!==undefined)
         return (
         <Container maxWidth="xl">

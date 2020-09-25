@@ -6,7 +6,7 @@ import Pagination from '../common/Pagination';
 import SearchPanel from '../question/SearchPanel';
 import { Container, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, CircularProgress } from "@material-ui/core";
 import QuestionCard from '../question/QuestionCard';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import LoadingView from '../common/LoadingView';
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -19,7 +19,7 @@ const MyQuestionsPage : React.FC = () =>{
 	}
 	
 	if(error)
-		return <ErrorView title={error.code} message={error.description}/>;
+		return <ErrorPage title={error.title} message={error.description}/>;
 	if(!result)
 		return <LoadingView/>
 	return(

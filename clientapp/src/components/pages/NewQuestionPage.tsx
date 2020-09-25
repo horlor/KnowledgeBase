@@ -101,7 +101,7 @@ const NewQuestionPage : React.FC<IProps> = (props) => {
                             (postError=== undefined)?
                         <Button type="submit" size="medium">Post</Button>
                         :
-                        <Typography color="error">{postError.code}</Typography>)
+                        <Typography color="error">{postError.title}</Typography>)
                         }
                     </Box>
                 </form>

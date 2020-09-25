@@ -3,7 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Container, CircularProgress } from "@material-ui/core";
 import { useSearchQuestionsHook } from "../../hooks/QuestionHooks";
 import QuestionCard from "../question/QuestionCard";
-import ErrorView from "../common/ErrorView";
+import ErrorPage from "../common/ErrorPage";
 import SearchPanel from "../question/SearchPanel";
 import Pagination from "../common/Pagination";
 import { UrlBuilder } from "../../helpers/UrlBuilder";
@@ -19,7 +19,7 @@ const SearchQuestionsPage: React.FC<IProps> = props => {
 	const {result, error, search, onPageChanged, onLoadMore} = useSearchQuestionsHook()
 	
 	if(error)
-		return <ErrorView title={error.code} message={error.description}/>;
+		return <ErrorPage title={error.title} message={error.description}/>;
 	if(!result)
 		return <LoadingView/>
 	return(

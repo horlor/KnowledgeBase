@@ -3,7 +3,7 @@ import { Container, Typography, Paper, List, ListItem, Divider, makeStyles, Box,
 import { useNotifications } from '../../hooks/NotificationHooks';
 import NotificationView from '../notification/NotificationView';
 import LoadingView from '../common/LoadingView';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme =>({
@@ -34,7 +34,7 @@ const NotificationPage : React.FC<IProps> = () =>{
     const [anchorEl, setAnchorEl] = useState<HTMLElement |null>(null);
     const classes = useStyles();
     if(error)
-        return <ErrorView title={error.code} message={error.description}/>
+        return <ErrorPage title={error.title} message={error.description}/>
     if(loading)
         return <LoadingView/>;
     return (

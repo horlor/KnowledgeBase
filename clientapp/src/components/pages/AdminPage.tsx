@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Typography, Box, List, ListItem, ListItemText, Paper, makeStyles, Select, Button, Grid } from '@material-ui/core';
 import { useAdminHook } from '../../hooks/AdminHooks';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import LoadingView from '../common/LoadingView';
 
 interface IProps{
@@ -46,7 +46,7 @@ const AdminPage : React.FC<IProps> = (props: IProps) =>{
     const classes = useStyles();
 
     if(error)
-        return <ErrorView title={error.code} message={error.code}/>;
+        return <ErrorPage title={error.title} message={error.title}/>;
     if(users)
         return (
             <Container>

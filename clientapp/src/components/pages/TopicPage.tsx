@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Box, Paper, makeStyles, List, ListItem, ListItemText, TextField, Button } from "@material-ui/core";
 import { useTopicHook } from "../../hooks/TopicHooks";
-import ErrorView from "../common/ErrorView";
+import ErrorPage from "../common/ErrorPage";
 import LoadingView from "../common/LoadingView";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -89,7 +89,7 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
     }
 
     if(error)
-        return <ErrorView title={error.code} message={error.description}/>;
+        return <ErrorPage title={error.title} message={error.description}/>;
     if(!topics)
         return <LoadingView/>
     return (

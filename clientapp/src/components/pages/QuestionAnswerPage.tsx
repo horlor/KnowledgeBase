@@ -6,9 +6,7 @@ import AnswerInput from '../answer/AnswerInput';
 import { RouteComponentProps } from 'react-router';
 import { useQuestionAnswerHook } from '../../hooks/QuestionHooks';
 import LoadingView from '../common/LoadingView';
-import ErrorView from '../common/ErrorView';
-import ErrorModel from '../../models/ErrorModel'
-import {QuestionWithAnswers} from '../../models/Question'
+import ErrorPage from '../common/ErrorPage';
 
 type IProps = RouteComponentProps<{
     id: string;
@@ -23,7 +21,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     if(loading)
         return <LoadingView/>;
     if(error)
-        return <ErrorView title={error.code} message={error.description}/>
+        return <ErrorPage title={error.title} message={error.description}/>
     return (
         <Container maxWidth="lg">
             {question?

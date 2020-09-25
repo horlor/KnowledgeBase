@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Hidden, Grid } from '@material-ui/core';
 import { useUserListHook } from '../../hooks/UserHooks';
 import LoadingView from '../common/LoadingView';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import UserCard from '../user/UserCard';
 import Pagination from '../common/Pagination';
 import { RouteComponentProps } from 'react-router-dom';
@@ -20,7 +20,7 @@ const UserPage : React.FC<IProps> = (props) =>{
     if(loading)
         return <LoadingView></LoadingView>;
     if(error)
-        return <ErrorView title={error.code} message={error.description}/>;
+        return <ErrorPage title={error.title} message={error.description}/>;
     return (
         <>
         <Grid container>

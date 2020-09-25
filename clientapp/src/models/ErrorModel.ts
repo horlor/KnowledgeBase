@@ -1,5 +1,6 @@
 export interface ErrorModel{
-    code: string,
+    code: number,
+    title: string,
     description: string,
 }
 

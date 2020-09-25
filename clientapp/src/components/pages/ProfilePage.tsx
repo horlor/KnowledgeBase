@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import EditProfileView from '../user/EditProfileView';
-import ErrorView from '../common/ErrorView';
+import ErrorPage from '../common/ErrorPage';
 import LoadingView from '../common/LoadingView';
 import UserDetailView from '../user/UserDetailView';
 import { Snackbar } from '@material-ui/core';
@@ -17,7 +17,7 @@ const ProfilePage : React.FC<IProps> = (props) =>{
     return (
         <>
         {
-            error?<ErrorView title={error.code} message={error.description}/>:
+            error?<ErrorPage title={error.title} message={error.description}/>:
             (!user)?<LoadingView/>:
             (!edit)?<UserDetailView user={user} editable={true} onEditClick={()=> setEdit(true)}/>:
             <EditProfileView user={user} availableTopics={topics?topics:[]} onSubmit={save}
