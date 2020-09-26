@@ -17,7 +17,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     //fetch the id from the path
     let id = parseInt(props.match.params.id);
     //a custom hook to handle logic separetaly
-    const {question, loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer} = useQuestionAnswerHook(id);
+    const {question, loading, error} = useQuestionAnswerHook(id);
     if(loading)
         return <LoadingView/>;
     if(error)
@@ -32,17 +32,6 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
                 }
                     ) }
                     {question.closed?"":<AnswerInput questionId={question.id}/>}
-                
-                <Dialog open={!!selected}>
-                    <DialogTitle>Warning!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>{`Are you sure to delete the following answer: ${selected?.content.slice(0,50)}...?`}</DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={acceptDeleteAnswer}>Ok</Button>
-                        <Button onClick={cancelDeleteAnswer}>Cancel</Button>
-                    </DialogActions>
-                </Dialog>
             </>:
             <Typography>Loading</Typography>}
         </Container>

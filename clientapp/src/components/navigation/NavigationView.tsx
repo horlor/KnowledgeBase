@@ -14,6 +14,7 @@ import Logo from "../common/logodark.svg"
 import { Link } from 'react-router-dom';
 import { InputBase, TextField } from '@material-ui/core';
 import SearchBar from '../common/SearchBar';
+import OperationHandlerView from '../common/OperationHandlerView';
 
 
 
@@ -58,6 +59,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     textDecoration: "none",
   },
+  backdrop:{
+    zIndex:5000,
+  }
 
 }));
 
@@ -137,6 +141,7 @@ const NavigationView : React.FC<IProps> = (props) => {
           </Drawer>
         </Hidden>
       </nav>
+      <OperationHandlerView className={classes.backdrop}/>
       <Box height="100%" width="100%" display="flex" flexDirection="column" justifyContent="start">
         <div className={classes.toolbar}/>
         <Box display="flex" justifyItems="center" justifyContent="center" height="100%"  width="100%">

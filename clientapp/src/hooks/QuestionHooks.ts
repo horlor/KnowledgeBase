@@ -1,6 +1,6 @@
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 import { RootState } from "../redux/Store";
-import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, DeleteAnswer, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion, QuestionService, HideQuestion, UnhideQuestion } from "../api/QuestionApi";
+import { LoadQuestionAnswerFromApi, CreateQuestionToApi, DeleteQuestion, UpdateQuestion, SearchQuestionsFromApi, ReopenQuestion, CloseQuestion, QuestionService, HideQuestion, UnhideQuestion } from "../api/QuestionApi";
 import { useEffect, useState } from "react";
 import { FetchQuestionsStarted, FetchQuestionsSuccess, FetchQuestionsFailure, FetchQAStarted, FetchQASuccess, FetchQAFailure, DeleteQuestionAction, DeleteAnswerAction, UpdateQuestionAction, AddAnswerAction, UpdateAnswerAction, CloseQuestionAction, ReopenQuestionAction, FetchMoreQuestions } from "../redux/reducers/QuestionReducer";
 import ErrorModel from "../models/ErrorModel";
@@ -10,8 +10,9 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import Question, { QuestionUpdateRequest, QuestionSearchResult, QuestionType } from "../models/Question";
 import Answer from "../models/Answer";
 import { LoadQuestionAnswersThunk } from "../redux/reducers/QuestionThunks";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { UrlBuilder } from "../helpers/UrlBuilder";
+import { OperationFailedAction, OperationStartedAction, OperationSuccessAction } from "../redux/reducers/OperationReducer";
 
 
 export const useSearchQuestionsHook = () =>{
@@ -92,29 +93,6 @@ export const useQuestionAnswerHook = (questionId: number) => {
     const question = useSelector((state: RootState) => state.question.questionwithanswers,shallowEqual);
     const error = useSelector((state: RootState) => state.question.error);
     const loading = useSelector((state: RootState) => state.question.loading);
-    const username = useSelector((state: RootState) => state.login.username);
-    const [selected, setSelected] = useState<Answer>();
-
-    const deleteAnswerWithDialog = (answer: Answer) => {
-        if(username !== answer.author)
-            return undefined;
-        return ()=>{
-            setSelected(answer);
-        }
-    }
-
-    const acceptDeleteAnswer = ()=>{
-        if(selected && question){
-            DeleteAnswer(question.id,selected);
-            dispatch(DeleteAnswerAction(selected));
-        }
-            
-        setSelected(undefined);
-    }
-
-    const cancelDeleteAnswer = ()=>{
-        setSelected(undefined)
-    }
 
     useEffect(()=>{
         (async()=>{
@@ -140,7 +118,7 @@ export const useQuestionAnswerHook = (questionId: number) => {
             QuestionService.unsubscribe(questionId);
         }
     },[dispatch,questionId]);
-    return {question,loading, error, selected, deleteAnswerWithDialog, acceptDeleteAnswer, cancelDeleteAnswer};
+    return {question,loading, error};
 
 }
 
@@ -188,15 +166,16 @@ export const useQuestionEditHook = (question: Question) =>{
     const [hideDialogOpen, setHideDialogOpen] = useState(false);
     const modifyEnabled = question.author === user;
     const modified = question.created !== question.lastUpdate;
-    const moderatingEnabled = role === "Admin" || role === "Moderator";
 
     const saveChanges =  async(request: QuestionUpdateRequest) =>{
         try{
+            dispatch(OperationStartedAction("Updating question"))
             let result = await UpdateQuestion(question.id, request);
+            dispatch(OperationSuccessAction())
             dispatch(UpdateQuestionAction(result));
         }
         catch(exc){
-            console.log("Update failed") 
+            dispatch(OperationFailedAction(CatchIntoErrorModel(exc)))
         }
         setEdit(false)
     }
@@ -208,26 +187,42 @@ export const useQuestionEditHook = (question: Question) =>{
     }
 
     const handleCloseDialog = async (content: string) =>{
-        if(user){
-            if(question.closed)
-                await ReopenQuestion(question.id, {id:0, content:content, author: user})
-            else
-                await CloseQuestion(question.id, {id:0, content:content, author: user})
-            dispatch(LoadQuestionAnswersThunk(question.id))
+        try{
+            if(user){
+                setCloseDialogOpen(false);
+                dispatch(OperationStartedAction(""))
+                if(question.closed)
+                    await ReopenQuestion(question.id, {id:0, content:content, author: user})
+                else
+                    await CloseQuestion(question.id, {id:0, content:content, author: user})
+                dispatch(OperationSuccessAction())
+                dispatch(LoadQuestionAnswersThunk(question.id))
+            }
         }
-        setCloseDialogOpen(false);
+        catch(ex){
+            dispatch(OperationFailedAction(CatchIntoErrorModel(ex)));
+        }
     }
 
+
+
     const handleHideDialog = async (message: string)=>{
-        if(user){
-            if(question.type === QuestionType.Simple){
-                dispatch(UpdateQuestionAction(await HideQuestion(question.id, message)));
-            }
-            else{
-                dispatch(UpdateQuestionAction(await UnhideQuestion(question.id)));
+        try{
+            if(user){
+                setHideDialogOpen(false);
+                dispatch(OperationStartedAction(""))
+                if(question.type === QuestionType.Simple){
+                    dispatch(UpdateQuestionAction(await HideQuestion(question.id, message)));
+                }
+                else{
+                    dispatch(UpdateQuestionAction(await UnhideQuestion(question.id)));
+                }
+                dispatch(OperationSuccessAction());
             }
         }
-        setHideDialogOpen(false);
+        catch(ex){
+            dispatch(OperationFailedAction(CatchIntoErrorModel(ex)))
+        }
     }
 
     return { modifyEnabled, edit, saveChanges, dropChanges, editQuestion, modified,
@@ -303,9 +298,17 @@ export const useMyQuestionsHook = () =>{
         })();
     },[anywhere, content, dispatch, page, title, topic]);
 
-    const deleteQuestion = (q: Question)=>{
-        DeleteQuestion(q);
-        dispatch(DeleteQuestionAction(q));
+    const deleteQuestion = async (q: Question)=>{
+        try{
+            dispatch(OperationStartedAction("Deleting question..."));
+            await DeleteQuestion(q);
+            dispatch(OperationSuccessAction())
+            dispatch(DeleteQuestionAction(q));
+        }
+        catch(exc){
+            dispatch(OperationFailedAction(CatchIntoErrorModel(exc)))
+        }
+
     }
 
     return {

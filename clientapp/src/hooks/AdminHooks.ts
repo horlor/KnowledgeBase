@@ -3,12 +3,15 @@ import { GetUsers, GetUserWithRole, PatchUserWithRole } from "../api/AdminApi";
 import { User, UserWithRole } from "../models/User";
 import ErrorModel from "../models/ErrorModel";
 import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
+import { OperationFailedAction, OperationStartedAction, OperationSuccessAction } from "../redux/reducers/OperationReducer";
+import { useDispatch } from "react-redux";
 
 export const useAdminHook = () =>{
 	const [users, setUsers] = useState<User[]>();
 	const [selected,setSelected] = useState<UserWithRole>();
 	const [error, setError] = useState<ErrorModel>();
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+	const dispatch = useDispatch();
 
 	useEffect(()=>{
 		(async() =>{
@@ -34,9 +37,18 @@ export const useAdminHook = () =>{
 	}
 
 	const saveChanges = async()=>{
-		console.log(selected)
-		if(selected)
-		 await PatchUserWithRole(selected.userName,selected.role);
+		try{
+			if(selected){
+				dispatch(OperationStartedAction("Changing role..."))
+				await PatchUserWithRole(selected.userName,selected.role);
+				dispatch(OperationSuccessAction());
+			}
+		}
+		catch(ex){
+			dispatch(OperationFailedAction(CatchIntoErrorModel(ex)));
+		}
+
+		 
 	}
 
 	return {error, users, selectedIndex, onItemSelected, selected, onRoleChange, saveChanges};

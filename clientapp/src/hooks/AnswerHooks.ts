@@ -5,6 +5,8 @@ import Answer, { AnswerUpdateRequest, AnswerType } from '../models/Answer';
 import { CreateAnswerToQuestion, DeleteAnswer, HideAnswer, UnhideAnswer, UpdateAnswer } from '../api/QuestionApi';
 import { AddAnswerAction, DeleteAnswerAction, UpdateAnswerAction } from '../redux/reducers/QuestionReducer';
 import { UserReducer } from '../redux/reducers/UserReducer';
+import { OperationErrorDismissedAction, OperationFailedAction, OperationStartedAction, OperationSuccessAction } from '../redux/reducers/OperationReducer';
+import { CatchIntoErrorModel } from '../helpers/ErrorHelpers';
 
 export const useAnswerInputHook = (id: number)=>{
     const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
@@ -43,12 +45,13 @@ export const useAnswerHook = (answer: Answer) =>{
 
     const saveChanges =  async(request: AnswerUpdateRequest) =>{
         try{
-             let response = await UpdateAnswer(question?.id || 0,answer.id,request);
-            const ans = response;
+            dispatch(OperationStartedAction("Updating your answer"))
+            let ans = await UpdateAnswer(question?.id || 0,answer.id,request);
+            dispatch(OperationSuccessAction())
             dispatch(UpdateAnswerAction(ans));
         }
-        catch(exc){
-            console.log(exc);
+        catch(ex){
+            dispatch(OperationFailedAction(CatchIntoErrorModel(ex)))
         }
         setEdit(false)
     }
@@ -65,11 +68,13 @@ export const useAnswerHook = (answer: Answer) =>{
 
     const acceptDelete = async() =>{
         try{
+            dispatch(OperationStartedAction("Deleting answer..."))
             await DeleteAnswer(question?.id || 0,answer);
+            dispatch(OperationSuccessAction())
             dispatch(DeleteAnswerAction(answer))
         }
         catch(exc){
-            console.log(exc);
+            dispatch(OperationFailedAction(CatchIntoErrorModel(exc)));
         }
 
         setDelete(false);
@@ -80,13 +85,22 @@ export const useAnswerHook = (answer: Answer) =>{
     }
 
     const handleHideDialog = async(message: string)=>{
-        if(user){
-            if(answer.type === AnswerType.Simple)
-                dispatch(UpdateAnswerAction(await HideAnswer(question?.id || 0, answer.id, message)))
-            else
-                dispatch(UpdateAnswerAction(await UnhideAnswer(question?.id || 0, answer.id)))
+        try{
+            if(user){
+                dispatch(OperationStartedAction("Changing question's visibility..."))
+                setHideDialogOpen(false);
+                if(answer.type === AnswerType.Simple)
+                    dispatch(UpdateAnswerAction(await HideAnswer(question?.id || 0, answer.id, message)))
+                else
+                    dispatch(UpdateAnswerAction(await UnhideAnswer(question?.id || 0, answer.id)))
+                dispatch(OperationSuccessAction())
+            }
         }
-        setHideDialogOpen(false);
+        catch(ex){
+            dispatch(OperationFailedAction(CatchIntoErrorModel(ex)));
+        }
+
+        
     }
 
 

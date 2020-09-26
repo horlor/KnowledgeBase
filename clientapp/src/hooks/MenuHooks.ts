@@ -1,8 +1,11 @@
 import {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { SearchQuestionsFromApi } from '../api/QuestionApi';
 import { LoadUsersFromApiSearch } from '../api/UserApi';
 import { SearchRecord, SearchRecordType } from '../models/SearchModels';
+import { OperationErrorDismissedAction } from '../redux/reducers/OperationReducer';
+import { AppDispatch, RootState } from '../redux/Store';
 
 export const useSearchBarHook = ()=>{
 	const [search, setSearch] = useState("");
@@ -44,4 +47,17 @@ export const useSearchBarHook = ()=>{
 	return {
 		value:search, onChange, anchorEl, onClose: ()=>setAnchorEl(null), records
 	}
+}
+
+export const useOperationHook = ()=>{
+	const error = useSelector((state:RootState)=> state.operation.error);
+	const message = useSelector((state:RootState)=> state.operation.message);
+	const isBusy = useSelector((state: RootState)=> state.operation.isBusy);
+	const dispatch  : AppDispatch = useDispatch();
+
+	function CancelError(){
+		dispatch(OperationErrorDismissedAction());
+	}
+
+	return {error, message, isBusy, CancelError};
 }
