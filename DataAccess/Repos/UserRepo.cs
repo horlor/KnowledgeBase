@@ -218,5 +218,25 @@ namespace KnowledgeBase.DataAccess.Repos
                 Users = list,
             };
         }
+
+        public async Task<(User,string)> GetPasswordRecoveryToken(string username)
+        {
+            var dbuser = await dbcontext.Users
+                .Include(u => u.UserTopics)
+                .ThenInclude(ut=>ut.Topic)
+                .FirstOrDefaultAsync(u => u.UserName == username);
+            if (dbuser == null)
+                return (null, null);
+            var token = await userManager.GeneratePasswordResetTokenAsync(dbuser);
+            return (DbMapper.MapDbUser(dbuser), token);
+        }
+
+        public async Task<IdentityResult> ResetPassword(string username, string token, string password)
+        {
+            var dbuser = await userManager.FindByNameAsync(username);
+            if (dbuser == null)
+                return IdentityResult.Failed();
+            return await userManager.ResetPasswordAsync(dbuser, token, password);
+        }
     }
 }

@@ -47,6 +47,34 @@ namespace KnowledgeBase.WebApi.Controllers
 
         }
 
+        [HttpPost("password_recovery")]
+        public async Task<IActionResult> PasswordRecovery([FromBody] PasswordRecoveryRequest recoveryRequest)
+        {
+            try
+            {
+                await userService.PasswordRecovery(recoveryRequest.Username);
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("password_reset")]
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetRequest resetRequest)
+        {
+            try
+            {
+                await userService.ResetPassword(resetRequest.Username, resetRequest.Token, resetRequest.Password);
+                return Ok();
+            }
+            catch(Exception)
+            {
+                return Forbid();
+            }
+        }
+
         [Authorize]
         [HttpPut]
         public async Task<ActionResult> UpdateUser(UserUpdateRequest request)

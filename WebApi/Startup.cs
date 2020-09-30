@@ -66,6 +66,7 @@ namespace KnowledgeBase.WebApi
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddUserManager<UserManager<DbUser>>()
                 .AddSignInManager<SignInManager<DbUser>>()
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<KnowledgeContext>();
 
             services.Configure<IdentityOptions>(options =>
@@ -133,7 +134,15 @@ namespace KnowledgeBase.WebApi
                 Issuer = Configuration["Jwt:Issuer"],
                 Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
                 Expiration = DateTime.Now.AddDays(30),
-            }) ;
+            });
+            services.AddScoped<IEmailHandler, EmailHandler>(x => new EmailHandler(new EmailSettings()
+            {
+                ServerAddress = Configuration["Email:ServerAddress"],
+                ServerPort = Configuration.GetValue<int>("Email:Port"),
+                Username = Configuration["Email:Username"],
+                Password = Configuration["Email:Password"],
+                EmailAddress = Configuration["Email:EmailAddress"],
+            })) ;
 
             services.AddTransient<DataSeeder, DataSeeder>();
 

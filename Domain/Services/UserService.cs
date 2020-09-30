@@ -15,10 +15,12 @@ namespace KnowledgeBase.Domain.Services
     {
         private readonly IUserRepo userRepo;
         private readonly ITokenGenerator tokenGenerator;
-        public UserService(IUserRepo repo, ITokenGenerator tokenGenerator)
+        private readonly IEmailHandler emailHandler;
+        public UserService(IUserRepo repo, ITokenGenerator tokenGenerator, IEmailHandler emailHandler)
         {
             this.userRepo = repo;
             this.tokenGenerator = tokenGenerator;
+            this.emailHandler = emailHandler;
         }
 
         public async Task<RegisterResult> Register(User user, string password)
@@ -98,6 +100,21 @@ namespace KnowledgeBase.Domain.Services
         public Task<UserSearchResponse> Search(UserSearchRequest request)
         {
             return userRepo.Search(request);
+        }
+
+        public async Task PasswordRecovery(string username)
+        {
+            var (user, token) = await userRepo.GetPasswordRecoveryToken(username);
+            if (user == null)
+                throw new NotFoundException();
+            await emailHandler.SendPasswordRecoveryEmail(user, token);
+        }
+
+        public async Task ResetPassword(string username, string token, string password)
+        {
+            var result = await userRepo.ResetPassword(username, token, password);
+            if (result != IdentityResult.Success)
+                throw new UnathorizedException();
         }
 
         internal static bool AuthenticateModerator(string role)
