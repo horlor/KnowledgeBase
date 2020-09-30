@@ -17,6 +17,8 @@ import AdminPage from '../pages/AdminPage';
 import TopicPage from '../pages/TopicPage';
 import SearchQuestionsPage from '../pages/SearchQuestionsPage';
 import MyQuestionsPage from '../pages/MyQuestionsPage';
+import PasswordRecoveryPage from '../pages/PasswordRecoveryPage';
+import PasswordResetPage from '../pages/ResetPasswordPage';
 
 
 interface IProps{
@@ -93,6 +95,14 @@ export const Routes : React.FC<IProps> = (props) => {
             <Route
                 path="/my_questions"
                 component={MyQuestionsPage}
+            />
+            <Route
+                path="/password_recovery"
+                component={PasswordRecoveryPage}
+            />
+            <Route
+                path="/password_reset"
+                component={PasswordResetPage}
             />
             </NavigationView>
         {<NotificationPanel/>}

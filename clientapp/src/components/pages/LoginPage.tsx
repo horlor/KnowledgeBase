@@ -113,7 +113,7 @@ export const LoginPage : React.FC<IProps> = (props) =>{
             </Button>
             <Grid container>
                 <Grid item xs>
-                <Link component={RouterLink} to="#" variant="body2">
+                <Link component={RouterLink} to="/password_recovery" variant="body2">
                     Forgot password?
                 </Link>
                 </Grid>

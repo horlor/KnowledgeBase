@@ -142,6 +142,7 @@ namespace KnowledgeBase.WebApi
                 Username = Configuration["Email:Username"],
                 Password = Configuration["Email:Password"],
                 EmailAddress = Configuration["Email:EmailAddress"],
+                WebAddress = Configuration["Email:WebAddress"],
             })) ;
 
             services.AddTransient<DataSeeder, DataSeeder>();

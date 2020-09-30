@@ -5,6 +5,7 @@ using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace KnowledgeBase.WebApi.ServiceHelpers
@@ -15,6 +16,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
         public string Username { get; set; }
         public string Password { get; set; }
         public string EmailAddress { get; set; }
+        public string WebAddress { get; set; }
     }
 
     public class EmailHandler : IEmailHandler
@@ -24,6 +26,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
         private readonly string username;
         private readonly string password;
         private readonly string email;
+        private readonly string webAddress;
         public EmailHandler(EmailSettings emailSettings)
         {
             serverAddress = emailSettings.ServerAddress;
@@ -31,6 +34,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
             username = emailSettings.Username;
             password = emailSettings.Password;
             email = emailSettings.EmailAddress;
+            webAddress = emailSettings.WebAddress;
         }
         public async Task SendPasswordRecoveryEmail(User user, string token)
         {
@@ -38,13 +42,21 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
             message.From.Add(new MailboxAddress("Viknowledge", email));
             message.To.Add(MailboxAddress.Parse(user.Email));
             message.Subject = "Password recovery";
-
+            var address = @$"{webAddress}?username={user.UserName}&token={token}";
             var body = new TextPart("html");
             body.Text = @$"
-                <h1>Viknowledge</h1>
-                With the following token you can change your password, if you didn't ask for it, please leave this message unattended.
-                <b>{token}</b>
-            ";
+                <div>
+                <h2>Viknowledge</h2>
+                <h3>Dear {user.UserName},</h3>
+                You have gotten this email because someone had requested a password reset, if this wasn't you, please ignore this mail.
+                <br>
+                <a style={'"'}font - size: 24; text - align: center;{'"'} href={'"'}{address}{'"'}>You can change your password by clicking at this link</a>
+                <br>
+                <br>
+                Thanks,<br>
+                <i> The Viknowledge team</i>
+               </div>
+                   ";
             message.Body = body;
             await SendEmailAsync(message);
         }

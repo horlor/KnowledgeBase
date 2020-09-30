@@ -106,3 +106,15 @@ export const UploadAvatar = async(fileList: FileList) =>{
 export const DeleteAvatar = async () =>{
     await axios.delete("/api/profile/avatar");
 }
+
+export const RequestPasswordRecovery = async(username: string)=>{
+    await axios.post("/api/profile/password_recovery",{username:username});
+}
+
+export const RequestPasswordReset = async(username: string, token: string, password: string)=>{
+    await axios.post("/api/profile/password_reset",{
+        username: username,
+        token: token,
+        password: password,
+    });
+}
