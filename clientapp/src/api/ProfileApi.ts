@@ -118,3 +118,9 @@ export const RequestPasswordReset = async(username: string, token: string, passw
         password: password,
     });
 }
+
+export const ChangePassword = async(oldPassword: string, newPassword: string)=>{
+    await axios.post("/api/profile/password_change",{
+        oldPassword, newPassword
+    });
+}

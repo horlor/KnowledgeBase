@@ -6,6 +6,7 @@ import { Topic } from '../../models/Topic';
 import { UserDetailed, UserUpdateRequest } from '../../models/User';
 import ErrorModel from '../../models/ErrorModel';
 import { GetAvatarPathForUser } from '../../api/UserApi';
+import PasswordChangeView from './PasswordChangeView';
 
 const useStyles = makeStyles(theme =>({
     paper:{
@@ -196,6 +197,8 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     <Button color="secondary" variant="outlined" onClick={props.onDrop}>Don't save</Button>
                 </Box>
             </form>
+            <Divider className={classes.divider}/>
+            <PasswordChangeView/>
             </Paper>
             <Dialog open={!!props.saveError} onClose={props.onErrorClose}>
                     <DialogTitle>Error occured during the save</DialogTitle>

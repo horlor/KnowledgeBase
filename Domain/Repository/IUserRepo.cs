@@ -35,6 +35,8 @@ namespace KnowledgeBase.Domain.Repository
 
         Task<IdentityResult> ResetPassword(string username, string token, string password);
         Task<(User, string)> GetPasswordRecoveryToken(string username);
+        Task<IdentityResult> ChangePassword(string username, string oldPassword, string newPassword);
+
     }
 
 }

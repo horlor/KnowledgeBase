@@ -5,7 +5,9 @@ import { LoadTopicsThunk } from "../redux/reducers/TopicThunks";
 import { LoadProfileThunk, UpdateProfileThunk } from "../redux/reducers/ProfileThunk";
 import { UserUpdateRequest } from "../models/User";
 import { ChangeProfileEdit, PutProfileErrorClose } from "../redux/reducers/ProfileReducer";
-import { UploadAvatar, DeleteAvatar } from "../api/ProfileApi";
+import { UploadAvatar, DeleteAvatar, ChangePassword } from "../api/ProfileApi";
+import { OperationFailedAction, OperationStartedAction, OperationSuccessAction } from "../redux/reducers/OperationReducer";
+import { CatchIntoErrorModel } from "../helpers/ErrorHelpers";
 
 
 export const useProfileHook = () =>{
@@ -38,6 +40,8 @@ export const useProfileHook = () =>{
     const closeError = () =>{
         dispatch(PutProfileErrorClose());
     }
+
+
 
     return {topics, save, profile, edit, setEdit, deleteAvatar, closeError};
 }

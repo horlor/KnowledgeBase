@@ -237,5 +237,13 @@ namespace KnowledgeBase.DataAccess.Repos
                 return IdentityResult.Failed();
             return await userManager.ResetPasswordAsync(dbuser, token, password);
         }
+
+        public async Task<IdentityResult> ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            var dbUser = await userManager.FindByNameAsync(username);
+            if (dbUser == null)
+                return IdentityResult.Failed();
+            return await userManager.ChangePasswordAsync(dbUser, oldPassword, newPassword);
+        }
     }
 }

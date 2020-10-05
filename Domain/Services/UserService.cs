@@ -116,6 +116,13 @@ namespace KnowledgeBase.Domain.Services
                 throw new UnathorizedException();
         }
 
+        public async Task ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            var result = await userRepo.ChangePassword(username, oldPassword, newPassword);
+            if (result != IdentityResult.Success)
+                throw new UnathorizedException();
+        }
+
         internal static bool AuthenticateModerator(string role)
         {
             return String.Equals(role, "admin", StringComparison.OrdinalIgnoreCase) || String.Equals(role, "moderator", StringComparison.OrdinalIgnoreCase);

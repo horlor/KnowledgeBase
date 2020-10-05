@@ -76,8 +76,23 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("password_change")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeRequest request)
+        {
+            try
+            {
+                await userService.ChangePassword(UserName, request.OldPassword, request.NewPassword);
+                return Ok();
+            }
+            catch(Exception)
+            {
+                return Forbid();
+            }
+        }
+
+        [Authorize]
         [HttpPut]
-        public async Task<ActionResult> UpdateUser(UserUpdateRequest request)
+        public async Task<ActionResult> UpdateUser([FromBody] UserUpdateRequest request)
         {
             var user = new UserDetailed
             {

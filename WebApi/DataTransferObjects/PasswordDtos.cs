@@ -15,4 +15,10 @@ namespace KnowledgeBase.WebApi.DataTransferObjects
         public string Password { get; set; }
         public string Token { get; set; }
     }
+
+    public class PasswordChangeRequest
+    {
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
+    }
 }
