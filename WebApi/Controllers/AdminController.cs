@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
+using KnowledgeBase.WebApi.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ namespace KnowledgeBase.WebApi.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private UserService userService;
+        private readonly UserService userService;
 
         public AdminController(UserService userService)
         {

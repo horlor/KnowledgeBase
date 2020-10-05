@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
+using KnowledgeBase.WebApi.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,14 +17,12 @@ namespace KnowledgeBase.WebApi.Controllers
     public class UserController : BaseController
     {
 
-        private UserService userService;
-        private NotificationService notificationService;
+        private readonly UserService userService;
         private readonly AvatarService avatarService;
 
-        public UserController(UserService userService, NotificationService notificationService, AvatarService avatarService)
+        public UserController(UserService userService, AvatarService avatarService)
         {
             this.userService = userService;
-            this.notificationService = notificationService;
             this.avatarService = avatarService;
         }
 
@@ -44,10 +42,10 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<UserSearchResponse> SearchUsers([FromQuery] string anywhere,[FromQuery] string username = null, 
+        public async Task<UserSearchParams> SearchUsers([FromQuery] string anywhere,[FromQuery] string username = null, 
             [FromQuery] string email = null, [FromQuery] int page = 1, [FromQuery] int countPerPage = 16)
         {
-            return await userService.Search(new UserSearchRequest()
+            return await userService.Search(new UserSearchResult()
             {
                 Anywhere = anywhere,
                 CountPerPage = countPerPage,

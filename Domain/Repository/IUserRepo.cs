@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace KnowledgeBase.Domain.Repository
@@ -32,7 +31,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<int> PageCount(int pagesize = 16);
         Task<ICollection<User>> GetUsersPaged(int pagenum, int pagesize = 16);
 
-        Task<UserSearchResponse> Search(UserSearchRequest request);
+        Task<UserSearchParams> Search(UserSearchResult request);
 
         Task<IdentityResult> ResetPassword(string username, string token, string password);
         Task<(User, string)> GetPasswordRecoveryToken(string username);

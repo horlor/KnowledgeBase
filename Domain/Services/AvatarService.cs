@@ -1,5 +1,4 @@
 ﻿using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

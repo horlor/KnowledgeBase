@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using KnowledgeBase.Domain.Services;
 
 namespace KnowledgeBase.WebApi.Hubs
@@ -21,14 +21,14 @@ namespace KnowledgeBase.WebApi.Hubs
         [Authorize]
         public async Task SetNotificationSeen(int notificationId, bool to)
         {
-            var result = await notificationService.ChangeSeen(Context.UserIdentifier, notificationId, to);
+            await notificationService.ChangeSeen(Context.UserIdentifier, notificationId, to);
 
         }
 
         [Authorize]
         public async Task SetNotificationImportant(int notificationId, bool to)
         {
-            var result = await notificationService.ChangeImportant(Context.UserIdentifier, notificationId, to);
+            await notificationService.ChangeImportant(Context.UserIdentifier, notificationId, to);
         }
 
     }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KnowledgeBase.Entities
+namespace KnowledgeBase.Domain.Models
 {
-    public class LoginResponse
+    public class LoginResult
     {
         public string Username { get; set; }
         public string Role { get; set; }

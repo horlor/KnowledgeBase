@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.Domain.Interfaces;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;

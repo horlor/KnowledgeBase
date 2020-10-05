@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace KnowledgeBase.WebApi.Controllers
     [ApiController]
     public class TopicController : ControllerBase
     {
-        private TopicService topicService;
+        private readonly TopicService topicService;
 
         public TopicController(TopicService topicService)
         {

@@ -1,7 +1,6 @@
 ﻿using KnowledgeBase.Domain.Interfaces;
 using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

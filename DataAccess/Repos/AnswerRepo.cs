@@ -1,6 +1,6 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     public class AnswerRepo : IAnswerRepo
     {
-        private KnowledgeContext dbcontext;
+        private readonly KnowledgeContext dbcontext;
         public AnswerRepo(KnowledgeContext context)
         {
             dbcontext = context;

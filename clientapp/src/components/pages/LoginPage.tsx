@@ -58,7 +58,7 @@ export const LoginPage : React.FC<IProps> = (props) =>{
     const onSubmit = async (data: IFormData) =>{
         await loginFun(data.username, data.password, data.remember);
     }
-    if(loggedIn) //TODO something more normal handling if the user is loggedin
+    if(loggedIn)
         return <Redirect to="/"/>
     return (
         <Container component="main" maxWidth="xs">

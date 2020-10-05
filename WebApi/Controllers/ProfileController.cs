@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.Domain.Services;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
+using KnowledgeBase.WebApi.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +17,8 @@ namespace KnowledgeBase.WebApi.Controllers
     [ApiController]
     public class ProfileController : BaseController
     {
-        private UserService userService;
-        private NotificationService notificationService;
+        private readonly UserService userService;
+        private readonly NotificationService notificationService;
         private readonly AvatarService avatarService;
 
         public ProfileController(UserService userService, NotificationService notificationService, AvatarService avatarService)
@@ -29,7 +29,7 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<LoginResult>> Login([FromBody] LoginRequest request)
         {
             var session = await userService.Login(request.Username, request.Password);
             if (session.Success)
@@ -90,7 +90,7 @@ namespace KnowledgeBase.WebApi.Controllers
             };
             var ret = await userService.UpdateUser(user);
             if (ret == null)
-                return BadRequest();
+                return NotFound();
             return Ok();
         }
 
@@ -145,10 +145,10 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpGet("notifications/unseen")]
-        public async Task<UnseenNotificationsDTO> GetUnseenNotifications()
+        public async Task<UnseenNotificationsDto> GetUnseenNotifications()
         {
             var notifications = await notificationService.GetUnseenNotifications(UserName);
-            return new UnseenNotificationsDTO()
+            return new UnseenNotificationsDto()
             {
                 Count = notifications.Count,
                 Notifications = notifications,

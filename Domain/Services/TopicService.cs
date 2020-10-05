@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +9,7 @@ namespace KnowledgeBase.Domain.Services
 {
     public class TopicService
     {
-        private ITopicRepo topicRepo;
+        private readonly ITopicRepo topicRepo;
 
         public TopicService(ITopicRepo topicRepo)
         {

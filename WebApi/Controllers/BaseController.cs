@@ -1,4 +1,4 @@
-﻿using KnowledgeBase.Entities;
+﻿using KnowledgeBase.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess.Repos
@@ -152,7 +151,7 @@ namespace KnowledgeBase.DataAccess.Repos
             return (int)(Math.Ceiling((float)(await Count()) / pagesize));
         }
 
-        public async Task<QuestionSearchResponse> Search(QuestionSearchRequest request)
+        public async Task<QuestionSearchResult> Search(QuestionSearchParams request)
         {
             var query = dbcontext.Questions
                 .Include(q => q.User)
@@ -176,7 +175,7 @@ namespace KnowledgeBase.DataAccess.Repos
                 .Skip((request.Page - 1) * request.CountPerPage)
                 .Take(request.CountPerPage);
             var list = await query.Select(q => DbMapper.MapDbQuestion(q)).ToListAsync();
-            return new QuestionSearchResponse()
+            return new QuestionSearchResult()
             {
                 Page = request.Page,
                 PageSize = request.CountPerPage,

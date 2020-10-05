@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

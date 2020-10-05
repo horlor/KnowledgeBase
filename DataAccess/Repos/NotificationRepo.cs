@@ -1,7 +1,6 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
 using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     public class NotificationRepo : INotificationRepo
     {
-        private KnowledgeContext dbcontext;
+        private readonly KnowledgeContext dbcontext;
 
         public NotificationRepo(KnowledgeContext context)
         {
@@ -91,9 +90,9 @@ namespace KnowledgeBase.DataAccess.Repos
             return DbMapper.MapDbNotification(dbNotification);
         }
 
-        public async Task<Notification> GetById(int id)
+        public async Task<Notification> GetById(int nId)
         {
-            return DbMapper.MapDbNotification(await dbcontext.Notifications.Include(n => n.User).FirstOrDefaultAsync(n => n.Id == id));
+            return DbMapper.MapDbNotification(await dbcontext.Notifications.Include(n => n.User).FirstOrDefaultAsync(n => n.Id == nId));
         }
 
         public async Task<string> GetUserNameForNotification(int id)

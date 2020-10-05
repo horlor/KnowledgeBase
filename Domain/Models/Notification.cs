@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KnowledgeBase.Entities
+namespace KnowledgeBase.Domain.Models
 {
     public class Notification
     {
@@ -16,5 +16,12 @@ namespace KnowledgeBase.Entities
         public bool Important { get; set; }
 
         public string Username { get; set; }
+    }
+
+    public enum NotificationsDeleteOptions
+    {
+        All = 0,
+        AllSeen = 1,
+        AllNotImportant = 2,
     }
 }

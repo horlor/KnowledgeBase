@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KnowledgeBase.Entities.DataTransferObjects
+namespace KnowledgeBase.WebApi.DataTransferObjects
 {
     public class LoginRequest
     {

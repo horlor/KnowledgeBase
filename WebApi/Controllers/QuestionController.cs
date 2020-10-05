@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
@@ -12,7 +12,7 @@ using KnowledgeBase.DataAccess.Repos;
 using KnowledgeBase.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.WebApi.DataTransferObjects;
 using System.Runtime.CompilerServices;
 
 namespace KnowledgeBase.WebApi.Controllers
@@ -198,7 +198,7 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] QuestionUpdateRequest request)
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] QuestionUpdateModel request)
         {
             return await HandleExceptionsWithOk(
                 async() => await questionService.UpdateQuestion(id, request, UserName, Role)
@@ -207,7 +207,7 @@ namespace KnowledgeBase.WebApi.Controllers
 
         [Authorize]
         [HttpPut("{qId}/answers/{id}")]
-        public async Task<IActionResult> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateRequest request)
+        public async Task<IActionResult> UpdateAnswer([FromRoute] int qId, [FromRoute] int id, [FromBody] AnswerUpdateModel request)
         {
             return await HandleExceptionsWithOk(
                 async () => await questionService.UpdateAnswer(qId, id, request, UserName, Role)
@@ -219,7 +219,7 @@ namespace KnowledgeBase.WebApi.Controllers
             [FromQuery] int? topic, [FromQuery] int page = 1, [FromQuery] int countPerPage = 10,
             [FromQuery] string username = null, [FromQuery] bool myQuestions = false, [FromQuery] bool onlyHidden = false)
         {
-                return Ok(await questionService.Search(new QuestionSearchRequest()
+                return Ok(await questionService.Search(new QuestionSearchParams()
                 {
                     Anywhere = anywhere,
                     Title = title,

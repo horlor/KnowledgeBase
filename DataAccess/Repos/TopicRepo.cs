@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +12,7 @@ namespace KnowledgeBase.DataAccess.Repos
 {
     public class TopicRepo : ITopicRepo
     {
-        private KnowledgeContext dbcontext;
+        private readonly KnowledgeContext dbcontext;
 
         public TopicRepo(KnowledgeContext context)
         {

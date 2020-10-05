@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 
 namespace KnowledgeBase.Domain.Repository
 {

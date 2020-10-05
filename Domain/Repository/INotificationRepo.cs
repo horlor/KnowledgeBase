@@ -1,4 +1,4 @@
-﻿using KnowledgeBase.Entities;
+﻿using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -18,7 +18,7 @@ namespace KnowledgeBase.Domain.Repository
         Task<ICollection<Notification>> GetUnseenNotifications(string username);
 
         Task<Notification> GetById(int nId);
-        Task RemoveAll(string username, KnowledgeBase.Entities.DataTransferObjects.NotificationsDeleteOptions options);
+        Task RemoveAll(string username, NotificationsDeleteOptions options);
 
     }
 }

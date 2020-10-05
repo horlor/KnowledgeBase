@@ -1,11 +1,10 @@
 ﻿using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using KnowledgeBase.Entities.DataTransferObjects;
 using KnowledgeBase.Domain.Interfaces;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 
@@ -43,10 +42,10 @@ namespace KnowledgeBase.Domain.Services
             return result;
         }
 
-        public async Task<LoginResponse> Login(string username, string password)
+        public async Task<LoginResult> Login(string username, string password)
         {
             var (result, role) = await userRepo.SignIn(username, password);
-            var session = new LoginResponse() { Success = false };
+            var session = new LoginResult() { Success = false };
             if (result == SignInResult.Success)
             {
                 session.Success = true;
@@ -97,7 +96,7 @@ namespace KnowledgeBase.Domain.Services
             return await userRepo.PageCount(pagesize);
         }
 
-        public Task<UserSearchResponse> Search(UserSearchRequest request)
+        public Task<UserSearchParams> Search(UserSearchResult request)
         {
             return userRepo.Search(request);
         }

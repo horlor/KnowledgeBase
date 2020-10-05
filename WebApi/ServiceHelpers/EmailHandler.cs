@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.Domain.Interfaces;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using MailKit.Net.Smtp;
 using MimeKit;
 using System;

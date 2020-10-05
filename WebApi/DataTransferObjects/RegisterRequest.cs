@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using KnowledgeBase.Domain.Models;
 
-namespace KnowledgeBase.Entities.DataTransferObjects
+namespace KnowledgeBase.WebApi.DataTransferObjects
 {
     public class RegisterRequest
     {

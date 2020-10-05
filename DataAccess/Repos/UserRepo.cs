@@ -1,5 +1,5 @@
 ﻿using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
+using KnowledgeBase.Domain.Models;
 using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,6 @@ using KnowledgeBase.DataAccess.DataObjects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KnowledgeBase.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -193,7 +192,7 @@ namespace KnowledgeBase.DataAccess.Repos
             };
         }
 
-        public async Task<UserSearchResponse> Search(UserSearchRequest request)
+        public async Task<UserSearchParams> Search(UserSearchResult request)
         {
             string anywhere = $"%{request.Anywhere}%";
             var query = userManager.Users
@@ -209,7 +208,7 @@ namespace KnowledgeBase.DataAccess.Repos
             query = query.Skip((request.Page - 1) * request.CountPerPage)
                 .Take(request.CountPerPage);
             var list = await query.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
-            return new UserSearchResponse()
+            return new UserSearchParams()
             {
                 Page = request.Page,
                 PageSize = request.CountPerPage,

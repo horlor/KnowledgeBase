@@ -1,7 +1,7 @@
 ﻿using KnowledgeBase.Domain.Interfaces;
 using KnowledgeBase.Domain.Repository;
-using KnowledgeBase.Entities;
-using KnowledgeBase.Entities.DataTransferObjects;
+using KnowledgeBase.Domain.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -120,7 +120,7 @@ namespace KnowledgeBase.Domain.Services
             await questionHub.OnAnswerDeleted(questionId, answer);
         }
 
-        public async Task<Question> UpdateQuestion(int id, QuestionUpdateRequest request, string username, string role)
+        public async Task<Question> UpdateQuestion(int id, QuestionUpdateModel request, string username, string role)
         {
             var question = await questionRepo.FindById(id);
             if (question == null)
@@ -135,7 +135,7 @@ namespace KnowledgeBase.Domain.Services
             return question;
         }
 
-        public async Task<Answer> UpdateAnswer(int questionId, int answerId, AnswerUpdateRequest request, string username, string role)
+        public async Task<Answer> UpdateAnswer(int questionId, int answerId, AnswerUpdateModel request, string username, string role)
         {
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
@@ -150,7 +150,7 @@ namespace KnowledgeBase.Domain.Services
             return ret;
         }
 
-        public async Task<QuestionSearchResponse> Search(QuestionSearchRequest request, string username, string role)
+        public async Task<QuestionSearchResult> Search(QuestionSearchParams request, string username, string role)
         {
             if (username != null)
             {

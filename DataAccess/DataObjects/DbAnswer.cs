@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using KnowledgeBase.Entities;
 using Microsoft.EntityFrameworkCore;
+using KnowledgeBase.Domain.Models;
 
 namespace KnowledgeBase.DataAccess.DataObjects
 {
