@@ -37,6 +37,20 @@ namespace KnowledgeBase.WebApi.Controllers
             return Unauthorized(session);
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
+        {
+            try
+            {
+                Console.WriteLine(request.Username);
+                return Ok(await userService.RefreshAccessToken(request.Username, request.AccessToken, request.RefreshToken));
+            }
+            catch(UnathorizedException)
+            {
+                return Unauthorized();
+            }
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<RegisterResult>> Register([FromBody] RegisterRequest request)
         {

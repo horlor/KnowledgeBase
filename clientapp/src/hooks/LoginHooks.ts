@@ -1,12 +1,13 @@
 import {useSelector, useDispatch} from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { Login, Logout, Register, LoginFromStorage } from "../api/ProfileApi";
 import { LoginAction, LogoutAction } from "../redux/reducers/LoginReducer";
 import ErrorModel from "../models/ErrorModel";
 import { RegisterRequest, RegisterResponse } from "../models/LoginModels";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import { GetAvatarPathForUser } from "../api/UserApi";
+import AuthService from "../api/AuthService";
+import { NotificationService } from "../api/NotificationApi";
 
 export const useLoggedInState = () =>
     useSelector((state : RootState) => state.login.loggedIn);
@@ -31,7 +32,7 @@ export const useLoginHook =  () =>{
         setError(false);
         if(!loggedIn){
             try{
-                let resp = await Login(username, password, stayLoggedIn);
+                let resp = await AuthService.Login(username, password, stayLoggedIn);
                 dispatch(LoginAction(resp));
             }
             catch(exc){
@@ -40,7 +41,7 @@ export const useLoginHook =  () =>{
         }       
     }
     const logoutFun = () => {
-        Logout();
+        AuthService.Logout();
         dispatch(LogoutAction());
     };
     return {loggedIn, loginFun, avatarPath, logoutFun, error};
@@ -80,7 +81,7 @@ export const useRegisterHook = ()=>{
 export const useCheckSavedLoginHook = () =>{
     const dispatch = useDispatch();
     useEffect(()=>{
-            let savedsession = LoginFromStorage();
+            let savedsession = AuthService.LoginFromStorage();
             if(savedsession)
                 dispatch(LoginAction(savedsession));
     },[dispatch])

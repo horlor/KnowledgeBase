@@ -2,8 +2,10 @@ import ErrorModel from "./ErrorModel";
 
 export interface ISession{
     username: string,
-    token: string,
+    accessToken: string,
     role: string,
+    refreshToken: string,
+    
 }
 
 export interface RegisterRequest{

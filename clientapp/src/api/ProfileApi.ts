@@ -1,49 +1,8 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ISession, RegisterRequest, RegisterResponse } from '../models/LoginModels';
 import { UserDetailed, UserUpdateRequest } from '../models/User';
 import { MyNotification, PendingNotificationDto } from '../models/Notification';
 
-
-export const Login = async (username: string, password: string, stayLoggedIn : boolean): Promise<ISession> =>{
-    let resp = await axios.post<ISession>(`/api/profile/login`,{username: username, password: password});
-    if(resp.data.token){
-        axios.defaults.headers.common["Authorization"] = "Bearer " + resp.data.token;
-        if(stayLoggedIn){
-            localStorage.setItem("Viknowledge-token", resp.data.token);
-            localStorage.setItem("Viknowledge-user", resp.data.username)
-            localStorage.setItem("Viknowledge-role", resp.data.role);
-        }
-            
-    }
-    return resp.data;
-}
-
-export const LoginFromStorage = () =>{
-    let token = localStorage.getItem("Viknowledge-token");
-    if(token){
-        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        let username = localStorage.getItem("Viknowledge-user");
-        let role = localStorage.getItem("Viknowledge-role");
-        if(username && role)
-        return {
-                username:username,
-                role: role,
-            };
-    }
-    return null;
-        
-}
-
-
-
-
-
-export const Logout  = () =>{
-    console.log("Logout");
-    axios.defaults.headers.common["Authorization"] = '';
-    localStorage.removeItem("Viknowledge-token");
-    localStorage.removeItem("Viknowledge-user");
-}
 
 export const Register = async( reg: RegisterRequest): Promise<RegisterResponse> =>{
     return (await axios.post<RegisterResponse>("/api/register",reg)).data

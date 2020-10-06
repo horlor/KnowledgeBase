@@ -7,13 +7,13 @@ import Axios from 'axios';
 import Routes from './components/navigation/Routes';
 import {Provider} from "react-redux"
 import {AppStore} from './redux/Store';
-import { LoginFromStorage } from './api/ProfileApi';
+import AuthService from './api/AuthService';
 
 Axios.defaults.headers.common["Access-Control-Allow-Origin"]="*";
 Axios.defaults.baseURL="http://localhost:5001/";
 //To ensure the login before the app Start
 //TODO something better
-LoginFromStorage();
+AuthService.LoginFromStorage();
 
 
 const App = () => {

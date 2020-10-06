@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Net.Http.Headers;
 
@@ -65,15 +64,28 @@ namespace KnowledgeBase.DataAccess.Repos
             return await dbcontext.Users.Select(u => DbMapper.MapDbUser(u)).ToListAsync();
         }
 
-        public async Task<(Microsoft.AspNetCore.Identity.SignInResult, string)> SignIn(string username, string password)
+        public async Task<(SignInResult, string, string)> SignIn(string username, string password)
         {
             var dbUser = await userManager.FindByNameAsync(username);
             if (dbUser == null)
-                return (Microsoft.AspNetCore.Identity.SignInResult.Failed, null);
+                return (Microsoft.AspNetCore.Identity.SignInResult.Failed, null, null);
             var signinresult = await signInManager.CheckPasswordSignInAsync(dbUser, password, false);
             var userrole = await userManager.GetRolesAsync(dbUser);
-            return (signinresult, userrole.First());
+            var token = await userManager.GenerateUserTokenAsync(dbUser, TokenOptions.DefaultProvider, "refresh");
+            return (signinresult, userrole.First(), token);
 
+        }
+
+        public async Task<(bool, string, string)> ValidateRefreshToken(string username, string token)
+        {
+            Console.WriteLine("Validate token for " + username);
+            var dbUser = await userManager.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (dbUser == null)
+                return (false, null, null);
+            var result = await userManager.VerifyUserTokenAsync(dbUser, TokenOptions.DefaultProvider, "refresh", token);
+            var role = await userManager.GetRolesAsync(dbUser);
+            var newToken = await userManager.GenerateUserTokenAsync(dbUser, TokenOptions.DefaultProvider, "refresh");
+            return (result, role.First(), newToken);
         }
 
         public async Task SignOut()

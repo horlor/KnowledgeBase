@@ -44,16 +44,32 @@ namespace KnowledgeBase.Domain.Services
 
         public async Task<LoginResult> Login(string username, string password)
         {
-            var (result, role) = await userRepo.SignIn(username, password);
+            var (result, role, refreshToken) = await userRepo.SignIn(username, password);
             var session = new LoginResult() { Success = false };
             if (result == SignInResult.Success)
             {
                 session.Success = true;
                 session.Role = role;
-                session.Token = tokenGenerator.GenerateToken(username, role);
+                session.AccessToken = tokenGenerator.GenerateToken(username, role);
+                session.RefreshToken = refreshToken;
                 session.Username = username;
             }
             return session;
+        }
+
+        public async Task<LoginResult> RefreshAccessToken(string username, string accessToken, string refreshToken)
+        {
+            var (res, role, token) = await userRepo.ValidateRefreshToken(username, refreshToken);
+            if (!res)
+                throw new UnathorizedException();
+            return new LoginResult()
+            {
+                Success = true,
+                Role = role,
+                AccessToken = tokenGenerator.GenerateToken(username, role),
+                RefreshToken = token,
+                Username = username,
+            };
         }
 
         public async Task<User> GetUser(string username)

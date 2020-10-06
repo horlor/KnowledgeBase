@@ -9,6 +9,7 @@ using KnowledgeBase.Domain.Services;
 
 namespace KnowledgeBase.WebApi.Hubs
 {
+    [Authorize]
     public class NotificationHub : Hub<INotificationClient>
     {
         private readonly NotificationService notificationService;

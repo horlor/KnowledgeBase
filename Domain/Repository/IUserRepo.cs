@@ -14,7 +14,8 @@ namespace KnowledgeBase.Domain.Repository
         Task<User> GetByName(string name);
         Task<ICollection<User>> List();
 
-        Task<(SignInResult, string)> SignIn(string username, string password);
+        Task<(SignInResult, string, string)> SignIn(string username, string password);
+        Task<(bool, string, string)> ValidateRefreshToken(string username, string token);
 
         Task SignOut();
 

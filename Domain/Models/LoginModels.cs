@@ -9,6 +9,7 @@ namespace KnowledgeBase.Domain.Models
         public string Username { get; set; }
         public string Role { get; set; }
         public bool Success { get; set; }
-        public object Token { get; set; }
+        public object AccessToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

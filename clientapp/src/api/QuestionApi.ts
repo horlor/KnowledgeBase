@@ -98,7 +98,7 @@ class QuestionSignalrService{
     }
 
     public async unsubscribe(questionId: number){
-        if(this.connection){
+        if(this.connection && this.connection.state === SignalR.HubConnectionState.Connected){
             await this.connection.invoke("LeaveQuestion", questionId);
             await this.connection.stop();
             this.connection = undefined;

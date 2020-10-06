@@ -1,13 +1,16 @@
 import * as SignalR from "@microsoft/signalr"
 import { MyNotification } from "../models/Notification";
+import AuthService from "./AuthService";
 
 class NotificationApi{
 	private connection? :signalR.HubConnection
 	
-	public async subscribe(token: string) {
+	public async subscribe() {
 		this.connection =
 			new SignalR.HubConnectionBuilder()
-			.withUrl("http://localhost:5001/api/notificationhub", {accessTokenFactory:()=> token})
+			.withUrl("http://localhost:5001/api/notificationhub", {accessTokenFactory:()=>{
+				return AuthService.AccessToken;
+			} })
 			.configureLogging(SignalR.LogLevel.Debug)
 			.withAutomaticReconnect()
 			.build();
@@ -17,7 +20,12 @@ class NotificationApi{
 		catch(ex){
 			console.log(ex);
 		}
-		
+	}
+
+	public async reconnect(){
+		if(this.connection?.state === SignalR.HubConnectionState.Disconnected){
+			await this.connection?.start()
+		}
 	}
 
 	public setRecieveNotification(onNotification:(notification: MyNotification)=> void){

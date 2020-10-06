@@ -133,7 +133,7 @@ namespace KnowledgeBase.WebApi
                 Audience = Configuration["Jwt:Audience"],
                 Issuer = Configuration["Jwt:Issuer"],
                 Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
-                Expiration = DateTime.Now.AddDays(30),
+                Expiration = DateTime.Now.AddMinutes(Configuration.GetValue<double>("Jwt:ExpirationInMinutes")),
             });
             services.AddScoped<IEmailHandler, EmailHandler>(x => new EmailHandler(new EmailSettings()
             {

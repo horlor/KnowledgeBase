@@ -85,6 +85,7 @@ export const useNotifications = () =>{
 }
 
 export const useNotificationsWithUpdate = () =>{
+    const loggedIn = useSelector((state:RootState)=> state.login.loggedIn)
     const [message, setMessage] = useState<string>("");
     const [open, setOpen] = useState(false);
     const [forwardLink, setForward] = useState("#");
@@ -101,18 +102,17 @@ export const useNotificationsWithUpdate = () =>{
 
     useEffect(()=>{
         const onEffect = async()=>{
-            let token = localStorage.getItem("Viknowledge-token")
-            if(token){
-                await NotificationService.subscribe(token)
+            if(loggedIn){
+                await NotificationService.subscribe()
                 NotificationService.setRecieveNotification(onNotification)
-    
             }
         }
         onEffect();
         return ()=>{
-            NotificationService.unsubscribe()
+            if(loggedIn)
+                NotificationService.unsubscribe()
         }
-    },[])
+    },[loggedIn])
 
     const handleClose = ()=>{
         setOpen(false);
