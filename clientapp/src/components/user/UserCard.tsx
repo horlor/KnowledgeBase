@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Typography, makeStyles, Box, Avatar, Divider, Chip } from '@material-ui/core';
+import { Card, Typography, makeStyles, Box, Divider, Chip } from '@material-ui/core';
 import { User } from '../../models/User';
 import { Link } from 'react-router-dom';
-import { GetAvatarPathForUser } from '../../api/UserApi';
+import UserAvatar from './UserAvatar';
 
 const useStyles = makeStyles( theme => ({
   link:{
@@ -36,7 +36,7 @@ const UserCard : React.FC<IProps> = (props) =>{
         <Card className={classes.surface}>
           <Box display="flex" flexDirection="row">
             <Box className={classes.avatar}>
-              <Avatar src={GetAvatarPathForUser(props.user)}>{props.user.userName.toUpperCase().slice(0, 1)}</Avatar>
+              <UserAvatar username={props.user.userName}/>
             </Box>
             <Box display="flex" flexDirection="column" justifyContent="center">
               <Typography variant="h5">{props.user.userName}</Typography>

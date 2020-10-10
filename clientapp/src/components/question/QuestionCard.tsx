@@ -1,9 +1,10 @@
 import React from 'react';
-import {Button, Card, Typography, CardContent, CardActionArea, CardHeader, CardActions, Chip, Box, IconButton} from '@material-ui/core'
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import {Button, Card, Typography, CardContent, Chip, Box, IconButton, CardHeader} from '@material-ui/core'
+import { makeStyles} from '@material-ui/core/styles';
 import Question, { QuestionType } from '../../models/Question';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@material-ui/icons/Delete';
+import UserAvatar from '../user/UserAvatar';
 
 interface IQuestionProps{
     question: Question;
@@ -38,7 +39,9 @@ const QuestionCard : React.FC<IQuestionProps> = (props) =>{
                     {props.question.type === QuestionType.Hidden?<Typography variant="subtitle1">hidden by moderator</Typography>:"" }
                 </Box>
             } 
-            subheader={`by ${props.question.author}`}/>
+            subheader={`by ${props.question.author}`}
+            avatar={<UserAvatar username={props.question.author}/>}
+            />
             <CardContent>
                 <Typography variant="body1">{`${props.question.content.slice(0,400)}${props.question.content.length>400?"...":""}`}</Typography>
             </CardContent>
