@@ -114,10 +114,12 @@ namespace KnowledgeBase.Domain.Services
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
                 throw new NotFoundException();
-            if (answer.Author != username)
+            if (answer.Author != username || answer.Type != AnswerType.Simple)
                 throw new ConflictedDataException();
-            await answerRepo.Delete(answer);
-            await questionHub.OnAnswerDeleted(questionId, answer);
+            answer.Content = "";
+            answer.Type = AnswerType.Deleted;
+            await answerRepo.Update(answer);
+            await questionHub.OnAnswerEdited(questionId, answer);
         }
 
         public async Task<Question> UpdateQuestion(int id, QuestionUpdateModel request, string username, string role)

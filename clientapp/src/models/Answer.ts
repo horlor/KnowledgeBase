@@ -14,6 +14,7 @@ export enum AnswerType{
     Closer = 1,
     Reopener = 2,
     HiddenByModerator =3,
+    Deleted = 4,
 }
 
 export interface AnswerUpdateRequest{

@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import { UrlBuilder } from '../../helpers/UrlBuilder';
 import { useMyQuestionsHook } from '../../hooks/QuestionHooks';
 import Question from '../../models/Question';
-import Pagination from '../common/Pagination';
 import SearchPanel from '../question/SearchPanel';
 import { Container, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, CircularProgress } from "@material-ui/core";
 import QuestionCard from '../question/QuestionCard';
@@ -36,6 +34,8 @@ const MyQuestionsPage : React.FC = () =>{
 					hasMore={result.page<result.pageCount}
 					loadMore={onLoadMore}
 					loader={<CircularProgress/>}
+					initialLoad={false}
+					pageStart={1}
 				>
 					{result?.questions.map(q => <QuestionCard key={q.id} question={q} delete={
 					(username === q.author)?

@@ -75,11 +75,21 @@ const AnswerView : React.FC<IProps> = (props) =>{
         </Paper>
         );
     }
+    const getUserVerb = (type?: AnswerType)=>{
+        switch(type){
+            case AnswerType.Reopener: return "Reopened ";
+            case AnswerType.Closer: return "Closed ";
+            case AnswerType.Deleted: return "Deleted ";
+            default: return "";
+        }
+    }
+
+
     return (
         <Paper className={`${classes.card} ${hide.isHidden?classes.hiddenCard:""}`}>
         <Box display="flex" flexDirection="row">
             <Typography className={classes.authorText}>
-                {`${props.answer.type === AnswerType.Reopener?"Reopened ":props.answer.type === AnswerType.Closer?"Closed ":""}by ${props.answer.author}`}</Typography>
+                {`${getUserVerb(props.answer.type)}by ${props.answer.author}`}</Typography>
             <Box flexGrow={1} />
             {
                     modifyEnabled?

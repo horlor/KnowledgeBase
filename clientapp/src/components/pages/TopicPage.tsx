@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme =>({
         padding:theme.spacing(1)
     },
     root:{
-        height:"95%",
+        height:`calc(100% - 16px)`,
         margin:theme.spacing(1),
     },
     topicSelect:{

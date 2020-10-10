@@ -65,17 +65,17 @@ const NotificationPage : React.FC<IProps> = () =>{
                 <List className={classes.list}>
                     {
                     notifications.map(n =>
-                    <>
+                    <React.Fragment key={n.id}>
                         <Divider/>
                         <ListItem className={classes.listitem}>
-                            <NotificationView key={n.id} notification={n}
+                            <NotificationView  notification={n}
                                     onDelete={()=>deleteNotification(n)}
                                     SetImportant={(b)=>setImportant(n,b)}
                                     SetSeen={(b)=>setSeen(n,b)}
                                     linkTo={`/questions/${n.questionId}`}
                             />
                         </ListItem>
-                    </>
+                    </React.Fragment>
                     )}
                 </List>
             </Paper>

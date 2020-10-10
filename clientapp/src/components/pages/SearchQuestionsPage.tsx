@@ -1,14 +1,10 @@
-import React, { useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import React from "react";
 import { Container, CircularProgress } from "@material-ui/core";
 import { useSearchQuestionsHook } from "../../hooks/QuestionHooks";
 import QuestionCard from "../question/QuestionCard";
 import ErrorPage from "../common/ErrorPage";
 import SearchPanel from "../question/SearchPanel";
-import Pagination from "../common/Pagination";
-import { UrlBuilder } from "../../helpers/UrlBuilder";
 import LoadingView from "../common/LoadingView";
-import Question from "../../models/Question";
 import InfiniteScroll from 'react-infinite-scroller';
 
 interface IProps{
@@ -32,11 +28,13 @@ const SearchQuestionsPage: React.FC<IProps> = props => {
 					hasMore={result.page<result.pageCount}
 					loadMore={onLoadMore}
 					loader={<CircularProgress/>}
+					initialLoad={false}
+					pageStart={1}
+					
 				>
 					{result?.questions.map(q => <QuestionCard key={q.id} question={q} delete={undefined}/>)}
 				</InfiniteScroll>
 			</Container>
-			
 		</>
 	);
 }

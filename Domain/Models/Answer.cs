@@ -23,6 +23,7 @@ namespace KnowledgeBase.Domain.Models
         Closer = 1,
         Reopener = 2,
         HiddenByModerator = 3,
+        Deleted = 4,
     }
 
     public class AnswerUpdateModel

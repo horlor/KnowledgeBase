@@ -38,7 +38,7 @@ export const useAnswerHook = (answer: Answer) =>{
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
     const [deleteDialog, setDelete] = useState(false);
-    const modifyEnabled = answer.author === user && answer.type == AnswerType.Simple;
+    const modifyEnabled = answer.author === user && answer.type === AnswerType.Simple;
     const modified = answer.created !== answer.lastUpdate;
     const [hideDialogOpen, setHideDialogOpen] = useState(false);
 
