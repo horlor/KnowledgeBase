@@ -17,7 +17,7 @@ const MyQuestionsPage : React.FC = () =>{
 	}
 	
 	if(error)
-		return <ErrorPage title={error.title} message={error.description}/>;
+		return <ErrorPage error={error}/>;
 	if(!result)
 		return <LoadingView/>
 	return(

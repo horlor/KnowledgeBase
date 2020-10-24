@@ -46,7 +46,7 @@ const AdminPage : React.FC<IProps> = (props: IProps) =>{
     const classes = useStyles();
 
     if(error)
-        return <ErrorPage title={error.title} message={error.title}/>;
+        return <ErrorPage error={error}/>;
     if(users)
         return (
             <Container>

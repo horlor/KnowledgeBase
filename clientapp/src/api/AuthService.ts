@@ -15,7 +15,7 @@ class AuthServiceClass{
 					let error = ex as AxiosError;
 					const originalRequest : any = error.config
 					console.log(originalRequest);
-					if(error.response?.status === 401 && !originalRequest._retry){
+					if(error.response?.status === 401 && !originalRequest._retry && error.config.url !== "/api/profile/refresh"){
 						originalRequest._retry = true
 						const session = await this.refreshAccessToken();
 						if(session){

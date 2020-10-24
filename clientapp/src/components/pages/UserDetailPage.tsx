@@ -17,7 +17,7 @@ const UserDetailPage : React.FC<IProps> = (props: IProps) =>{
     if(loading)
         return <LoadingView/>;
     if(error!== undefined)
-        return <ErrorPage title={error.title} message={error.description}></ErrorPage>
+        return <ErrorPage error={error}/>;
     if(user!==undefined)
         return (
         <Container maxWidth="xl">

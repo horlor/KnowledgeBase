@@ -20,7 +20,7 @@ const UserPage : React.FC<IProps> = (props) =>{
     if(loading)
         return <LoadingView></LoadingView>;
     if(error)
-        return <ErrorPage title={error.title} message={error.description}/>;
+        return <ErrorPage error={error}/>;
     return (
         <>
         <Grid container>

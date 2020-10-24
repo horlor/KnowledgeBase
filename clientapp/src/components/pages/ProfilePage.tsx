@@ -17,7 +17,7 @@ const ProfilePage : React.FC<IProps> = (props) =>{
     return (
         <>
         {
-            error?<ErrorPage title={error.title} message={error.description}/>:
+            error?<ErrorPage error={error}/>:
             (!user)?<LoadingView/>:
             (!edit)?<UserDetailView user={user} editable={true} onEditClick={()=> setEdit(true)}/>:
             <EditProfileView user={user} availableTopics={topics?topics:[]} onSubmit={save}

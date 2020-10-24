@@ -21,7 +21,7 @@ const QuestionAnswerPage :  React.FC<IProps> = (props) =>{
     if(loading)
         return <LoadingView/>;
     if(error)
-        return <ErrorPage title={error.title} message={error.description}/>
+        return <ErrorPage error={error}/>;
     return (
         <Container maxWidth="lg">
             {question?

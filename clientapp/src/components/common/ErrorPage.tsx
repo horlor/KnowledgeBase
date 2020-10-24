@@ -1,6 +1,8 @@
 import React from "react"
 import { Paper, Typography, Icon, makeStyles, Container, Avatar, Box, Divider } from "@material-ui/core";
 import ErrorIcon from "@material-ui/icons/Error";
+import ErrorModel from "../../models/ErrorModel";
+import { Link } from "react-router-dom";
 
 const useStyles =makeStyles(theme =>({
     paper:{
@@ -20,8 +22,7 @@ const useStyles =makeStyles(theme =>({
 }));
 
 interface IProps{
-    title: string,
-    message: string,
+    error: ErrorModel,
 }
 
 const ErrorPage : React.FC<IProps> = (props) =>{
@@ -32,9 +33,17 @@ const ErrorPage : React.FC<IProps> = (props) =>{
                 <Box display="flex" justifyContent="center">
                     <ErrorIcon fontSize="large" className={classes.avatar}/>
                 </Box>
-                <Typography variant="h4" align="center">{props.title}</Typography>
+                <Typography variant="h4" align="center">{props.error.title}</Typography>
                 <Divider className={classes.divider}/>
-                <Typography variant="body1">{props.message}</Typography>
+                {
+                    props.error.code ===401?
+                    <div>
+                    <span>
+                    You are not logged in or your session has expired, please </span>
+                    <Link to="/login">sign in.</Link>
+                    </div>:
+                    <Typography variant="body1">{props.error.description}</Typography>
+                }
             </Paper>
         </Container>
 

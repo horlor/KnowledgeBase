@@ -89,7 +89,7 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
     }
 
     if(error)
-        return <ErrorPage title={error.title} message={error.description}/>;
+        return <ErrorPage error={error}/>;
     if(!topics)
         return <LoadingView/>
     return (

@@ -34,7 +34,7 @@ const NotificationPage : React.FC<IProps> = () =>{
     const [anchorEl, setAnchorEl] = useState<HTMLElement |null>(null);
     const classes = useStyles();
     if(error)
-        return <ErrorPage title={error.title} message={error.description}/>
+        return <ErrorPage error={error}/>;
     if(loading)
         return <LoadingView/>;
     return (

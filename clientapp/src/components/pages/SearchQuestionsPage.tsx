@@ -15,7 +15,7 @@ const SearchQuestionsPage: React.FC<IProps> = props => {
 	const {result, error, search, onPageChanged, onLoadMore} = useSearchQuestionsHook()
 	
 	if(error)
-		return <ErrorPage title={error.title} message={error.description}/>;
+		return <ErrorPage error={error}/>;
 	if(!result)
 		return <LoadingView/>
 	return(

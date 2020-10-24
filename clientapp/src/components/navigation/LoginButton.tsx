@@ -6,12 +6,13 @@ import {useLoginHook} from "../../hooks/LoginHooks";
 import CloseIcon from "@material-ui/icons/Close"
 import { Menu, MenuItem, Avatar } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import UserAvatar from "../user/UserAvatar";
 interface IProps{
 
 }
 
 const LoginButton : React.FC<IProps> = (props) =>{
-    const {loggedIn, logoutFun, avatarPath} = useLoginHook();
+    const {loggedIn, logoutFun, user} = useLoginHook();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClose = () => {
@@ -26,7 +27,7 @@ const LoginButton : React.FC<IProps> = (props) =>{
                 aria-controls="userdropdown"
                 aria-haspopup={true}
             >
-                {avatarPath?<Avatar src={avatarPath}/>:<AccountCircle/>}
+                {user?<UserAvatar username={user}/>:<AccountCircle/>}
             </IconButton>
             <Menu
                 id="userdropdown"
