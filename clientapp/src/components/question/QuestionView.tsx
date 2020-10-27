@@ -8,6 +8,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import {TextInputDialog} from "../common/TextInputDialog";
 import BlockIcon from '@material-ui/icons/Block';
+import UserAvatar from '../user/UserAvatar';
 
 
 
@@ -20,6 +21,9 @@ const useStyles = makeStyles(theme =>({
         margin:theme.spacing(1),
         padding:theme.spacing(2),
         border: `3px solid ${theme.palette.primary.main}`
+    },
+    header:{
+        width:"100%"
     },
     moderatorPaper:{
         padding: theme.spacing(1),
@@ -76,56 +80,61 @@ const QuestionView : React.FC<IProps> = props=>{
         );
     return(
         <Paper className={classes.surface} variant="outlined">
-            <Box display="flex" flexDirection="row">
-                <Typography variant="h4">{props.question.title}</Typography>
-                <Box flexGrow={1}/>
-                {
-                    modifyEnabled?
-                        <IconButton onClick={editQuestion}>
-                            <EditIcon/>
-                        </IconButton>
-                    :""
-                }
-                {
-                    close.enabled?
-                    <>
-                    <IconButton onClick={close.openDialog}>
-                            {props.question.closed?
-                            <LockOpenIcon/>:
-                            <LockIcon/>}
-                        </IconButton>
-                    <TextInputDialog
-                        open={close.dialogOpen}
-                        title={props.question.closed?"Reopening the question":"Closing the question"}
-                        content={props.question.closed?"Enter the message according to the reopen of the question":"Enter the message according to the close of the question"}
-                        onOk={close.handleDialog}
-                        onCancel={close.closeDialog}
-                    />
-                    </>:""
-                }
-                {
-                    hide.enabled?
-                    <>
-                    <Tooltip title={hide.isHidden?"Unblock":"Block"}>
-                        <IconButton onClick={hide.openDialog}><BlockIcon/></IconButton>
-                    </Tooltip> 
-                    <TextInputDialog
-                        open={hide.dialogOpen}
-                        title={hide.isHidden?"Unblocking Question":"Blocking Question"}
-                        content={hide.isHidden?"Are you sure you want to unblock this question, after it will reappear to the users?":"Please enter the message according to why you want to block this question."}
-                        onOk={hide.handleDialog}
-                        onCancel={hide.closeDialog}
-                        hideTextField={hide.isHidden}
-                    />
-                    </>:""
-                }
-                {}
+            <Box display="flex" flexDirection="row" alignItems="center" className={classes.header}>
+                <UserAvatar username={props.question.author} size="large"/>
+                <Box className={classes.header}>
+                    <Box display="flex" flexDirection="row">
+                    <Typography variant="h4">{props.question.title}</Typography>
+                    <Box flexGrow={1}/>
+                    {
+                        modifyEnabled?
+                            <IconButton onClick={editQuestion}>
+                                <EditIcon/>
+                            </IconButton>
+                        :""
+                    }
+                    {
+                        close.enabled?
+                        <>
+                        <IconButton onClick={close.openDialog}>
+                                {props.question.closed?
+                                <LockOpenIcon/>:
+                                <LockIcon/>}
+                            </IconButton>
+                        <TextInputDialog
+                            open={close.dialogOpen}
+                            title={props.question.closed?"Reopening the question":"Closing the question"}
+                            content={props.question.closed?"Enter the message according to the reopen of the question":"Enter the message according to the close of the question"}
+                            onOk={close.handleDialog}
+                            onCancel={close.closeDialog}
+                        />
+                        </>:""
+                    }
+                    {
+                        hide.enabled?
+                        <>
+                        <Tooltip title={hide.isHidden?"Unblock":"Block"}>
+                            <IconButton onClick={hide.openDialog}><BlockIcon/></IconButton>
+                        </Tooltip> 
+                        <TextInputDialog
+                            open={hide.dialogOpen}
+                            title={hide.isHidden?"Unblocking Question":"Blocking Question"}
+                            content={hide.isHidden?"Are you sure you want to unblock this question, after it will reappear to the users?":"Please enter the message according to why you want to block this question."}
+                            onOk={hide.handleDialog}
+                            onCancel={hide.closeDialog}
+                            hideTextField={hide.isHidden}
+                        />
+                        </>:""
+                    }
+                    {}
+                    </Box>
+                    <Box display="flex" flexDirection="row">
+                        <Typography variant="subtitle1" >{`by ${props.question.author}`}</Typography>
+                        <Chip className={classes.chip} variant="outlined" label={props.question.topic.name}/>
+                        <Box flexGrow={1}/>
+                        <Typography className={classes.date}>{props.question.created}</Typography>
+                    </Box>
                 </Box>
-            <Box display="flex" flexDirection="row">
-                <Typography variant="subtitle1" >{`by ${props.question.author}`}</Typography>
-                <Chip className={classes.chip} variant="outlined" label={props.question.topic.name}/>
-                <Box flexGrow={1}/>
-                <Typography className={classes.date}>{props.question.created}</Typography>
             </Box>
             <Divider/>
             <Typography variant="body1" align="justify" className={classes.text}>{props.question.content}</Typography>

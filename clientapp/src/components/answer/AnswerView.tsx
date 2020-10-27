@@ -7,12 +7,16 @@ import { useAnswerHook } from '../../hooks/AnswerHooks';
 import { useForm } from 'react-hook-form';
 import { TextInputDialog } from '../common/TextInputDialog';
 import BlockIcon from '@material-ui/icons/Block';
+import UserAvatar from '../user/UserAvatar';
 
 const useStyles = makeStyles(theme => ({
     card:{
         background: "white",
         margin: theme.spacing(1),
         padding: theme.spacing(2)
+    },
+    avatar:{
+        margin: theme.spacing(0,1,1,0)
     },
     hiddenCard:{
         background: "gainsboro"
@@ -22,7 +26,8 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(1)
     },
     iconbutton:{
-        padding:"0px"
+        padding:"0px",
+        marginRight: theme.spacing(0.5)
     },
     textbox:{
         width:"100%",
@@ -77,9 +82,9 @@ const AnswerView : React.FC<IProps> = (props) =>{
     }
     const getUserVerb = (type?: AnswerType)=>{
         switch(type){
-            case AnswerType.Reopener: return "Reopened ";
-            case AnswerType.Closer: return "Closed ";
-            case AnswerType.Deleted: return "Deleted ";
+            case AnswerType.Reopener: return "Reopened";
+            case AnswerType.Closer: return "Closed";
+            case AnswerType.Deleted: return "Deleted";
             default: return "";
         }
     }
@@ -87,9 +92,10 @@ const AnswerView : React.FC<IProps> = (props) =>{
 
     return (
         <Paper className={`${classes.card} ${hide.isHidden?classes.hiddenCard:""}`}>
-        <Box display="flex" flexDirection="row">
+        <Box display="flex" flexDirection="row" alignItems="center">
+            <UserAvatar username={props.answer.author} className={classes.avatar} size="small"/>
             <Typography className={classes.authorText}>
-                {`${getUserVerb(props.answer.type)}by ${props.answer.author}`}</Typography>
+                {`${getUserVerb(props.answer.type)} by ${props.answer.author}`}</Typography>
             <Box flexGrow={1} />
             {
                     modifyEnabled?

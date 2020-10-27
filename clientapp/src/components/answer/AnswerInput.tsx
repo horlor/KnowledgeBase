@@ -37,10 +37,11 @@ const AnswerInput : React.FC<IProps> = (props) =>{
             <TextField multiline rows={5}
              className={classes.textfield} variant="outlined"
              onChange={(e)=>setContent(e.target.value)}
+             value={content}
              />
              {loading?
              <CircularProgress/>:
-            <Button size='medium' onClick={()=>{if(content) postAnswer(content)}}>Post</Button>}
+            <Button size='medium' onClick={()=>{if(content) {postAnswer(content); setContent("");}}}>Post</Button>}
         </Card>
     );
 }
