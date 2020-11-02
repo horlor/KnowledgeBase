@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme =>({
         padding:theme.spacing(1)
     },
     root:{
+        padding: theme.spacing(1),
         height:`calc(100% - 16px)`,
         margin:theme.spacing(1),
     },
@@ -138,7 +139,7 @@ const TopicPage : React.FC<IProps> = (props: IProps) =>{
                             getOptionLabel={(topic) => topic?topic.name:""}
                             defaultValue={selected?.ancestor}
                             onChange={((e: any,v: any)=>{setAncestor(v)})}
-                            renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                            renderInput={(params) => <TextField {...params} label="Base topic" variant="outlined" />}
                             />
                         <Button type="submit">
                             Save

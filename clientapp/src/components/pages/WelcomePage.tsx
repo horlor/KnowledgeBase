@@ -7,6 +7,7 @@ const useStyles= makeStyles(theme =>({
     paper:{
         marginTop: theme.spacing(2),
         width: "100%",
+        padding: theme.spacing(1)
     },
     box:{
         display:"flex",

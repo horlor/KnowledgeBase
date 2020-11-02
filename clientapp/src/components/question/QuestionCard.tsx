@@ -13,7 +13,6 @@ interface IQuestionProps{
 
 const styles = makeStyles(theme =>({
     card:{
-        background: "white",
         margin: theme.spacing(1),
     },
     hidden:{

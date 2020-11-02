@@ -6,6 +6,7 @@ import { TopicReducer } from "./reducers/TopicReducer";
 import { ProfileReducer } from "./reducers/ProfileReducer";
 import { NotificationReducer } from "./reducers/NotificationReducer";
 import { OperationReducer } from "./reducers/OperationReducer";
+import { ThemeReducer } from "./reducers/ThemeReducer";
 
 const rootReducer = combineReducers({
     question: QuestionReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     profile: ProfileReducer,
     notification: NotificationReducer,
     operation: OperationReducer,
+    theme: ThemeReducer
 });
 
 

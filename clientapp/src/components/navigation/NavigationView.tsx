@@ -12,6 +12,7 @@ import Box from "@material-ui/core/Box";
 import LoginButton from './LoginButton';
 import Logo from "../common/logodark.svg"
 import { Link } from 'react-router-dom';
+import SwitchThemeButton from "../common/SwitchThemeButton"
 import { InputBase, TextField } from '@material-ui/core';
 import SearchBar from '../common/SearchBar';
 import OperationHandlerView from '../common/OperationHandlerView';
@@ -98,6 +99,7 @@ const NavigationView : React.FC<IProps> = (props) => {
         <Box flexGrow={1} />
           <SearchBar/>
         <LoginButton />
+        <SwitchThemeButton/>
       </Toolbar>
     </AppBar>
   );

@@ -182,9 +182,9 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                     <label htmlFor="avatar">
                         <input style={{display: "none"}} id="avatar" name="avatar" accept="image/*" type="file" ref={register}
                         onChange={handleImage}/>
-                        <Button className={classes.button} component="span" variant="contained" color="primary">Upload avatar</Button>
+                        <Button className={classes.button} component="span" variant="outlined" color="primary">Upload avatar</Button>
                         <Button className={classes.button} onClick={()=>{setAvatarDialog(true)}}
-                            variant="contained" color="secondary">Delete Avatar</Button>
+                            variant="outlined" color="secondary">Delete Avatar</Button>
                     <Typography>{avatarPath?.item(0)?.name}</Typography>
                     </label>
                     
@@ -192,9 +192,9 @@ const EditProfileView : React.FC<IProps> = (props) =>{
                 <Divider/>
                 <Box display="flex" flexDirection="row" className={classes.saveRow}>
                     {props.saveLoading?<CircularProgress/>:
-                    <Button type="submit" color="primary" variant="outlined">Save</Button>}
+                    <Button type="submit" color="primary" variant="contained">Save</Button>}
                     <Box flexGrow={1}></Box>
-                    <Button color="secondary" variant="outlined" onClick={props.onDrop}>Don't save</Button>
+                    <Button color="secondary" variant="contained" onClick={props.onDrop}>Don't save</Button>
                 </Box>
             </form>
             <Divider className={classes.divider}/>

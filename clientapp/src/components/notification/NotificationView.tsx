@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme => ({
         textDecoration: "none",
         
         color: theme.palette.text.primary
+    },
+    seenPaper:{
+        backgroundColor: theme.palette.greyedOut.paper
     }
 }))
 
@@ -35,8 +38,7 @@ const NotificationView : React.FC<IProps> = props =>{
     const n = props.notification;
     console.log(n);
     return (
-        <div className={classes.surface}
-        style={(n.seen)?{background:"gainsboro"}:{}}>
+        <div className={`${classes.surface} ${n.seen?classes.seenPaper:''}`}>
             <Box display="flex" alignItems="center">
             <IconButton onClick={()=>props.SetImportant?.(!n.important)}>
                     <StarIcon color={n.important?"primary":"action"}/>

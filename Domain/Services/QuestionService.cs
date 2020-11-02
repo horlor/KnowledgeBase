@@ -57,19 +57,18 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.FindAnswersforQuestionById(id);
         }
 
-        public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
-        {
-            if (answer.Author != username)
-                throw new ConflictedDataException();
-            //To made sure that no opener or closer answer will be created without the consisting property
-            answer.Type = AnswerType.Simple;
-            var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
-            if (q == null)
-                throw new NotFoundException();
-            await questionHub.OnNewAnswer(qId, ret);
-            await notificationService.CreateNewAnswerNotification(q, ret);
-            return ret;
-        }
+public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
+{
+    if (answer.Author != username)
+        throw new ConflictedDataException();
+    answer.Type = AnswerType.Simple;
+    var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
+    if (q == null)
+        throw new NotFoundException();
+    await questionHub.OnNewAnswer(qId, ret);
+    await notificationService.CreateNewAnswerNotification(q, ret);
+    return ret;
+}
 
         public async Task<Question> GetQuestion(int id)
         {

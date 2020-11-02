@@ -11,7 +11,6 @@ import UserAvatar from '../user/UserAvatar';
 
 const useStyles = makeStyles(theme => ({
     card:{
-        background: "white",
         margin: theme.spacing(1),
         padding: theme.spacing(2)
     },
@@ -19,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(0,1,1,0)
     },
     hiddenCard:{
-        background: "gainsboro"
+        backgroundColor: theme.palette.greyedOut.paper,
     },
     authorText:{
         fontStyle:"italic",
@@ -44,6 +43,9 @@ const useStyles = makeStyles(theme => ({
     },
     moderatorText:{
         textAlign: "center"
+    },
+    moderatorCard:{
+        padding: theme.spacing(1),
     }
 }))
 
@@ -142,7 +144,7 @@ const AnswerView : React.FC<IProps> = (props) =>{
         <Typography className={classes.content}>{props.answer.content}</Typography>
         {
         hide.cardShown?
-        <Paper>
+        <Paper className={classes.moderatorCard}>
             <Typography variant="caption">{`Hidden by ${props.answer.moderator}`}</Typography>
             <Divider/>
             <Typography>{props.answer.moderatorMessage}</Typography>

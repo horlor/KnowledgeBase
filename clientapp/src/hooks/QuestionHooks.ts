@@ -93,33 +93,29 @@ export const useQuestionAnswerHook = (questionId: number) => {
 	const question = useSelector((state: RootState) => state.question.questionwithanswers,shallowEqual);
 	const error = useSelector((state: RootState) => state.question.error);
 	const loading = useSelector((state: RootState) => state.question.loading);
-
 	useEffect(()=>{
 		(async()=>{
 			dispatch(FetchQAStarted());
-			LoadQuestionAnswerFromApi(questionId)
-			.then(resp => dispatch(FetchQASuccess(resp)))
-			.catch(ex => dispatch(FetchQAFailure(CatchIntoErrorModel(ex))));
 			try{
-				await QuestionService.subscribe(questionId);
-				QuestionService.setOnNewAnswer((answer)=> dispatch(AddAnswerAction(answer)));
-				QuestionService.setOnAnswerEdited((answer)=> dispatch(UpdateAnswerAction(answer)));
-				QuestionService.setOnAnswerDeleted((answer)=> dispatch(DeleteAnswerAction(answer)));
-				QuestionService.setOnQuestionEdited((q) => dispatch(UpdateQuestionAction(q)));
-				QuestionService.setOnQuestionClosed((answer) => dispatch(CloseQuestionAction(answer)));
-				QuestionService.setOnQuestionReopened(answer => dispatch(ReopenQuestionAction(answer)));
+				let resp = await LoadQuestionAnswerFromApi(questionId);
+				dispatch(FetchQASuccess(resp))
 			}
 			catch(ex){
-				console.log(ex);
+				dispatch(FetchQAFailure(CatchIntoErrorModel(ex)))
 			}
+			await QuestionService.subscribe(questionId);
+			QuestionService.setOnNewAnswer((answer)=> dispatch(AddAnswerAction(answer)));
+			QuestionService.setOnAnswerEdited((answer)=> dispatch(UpdateAnswerAction(answer)));
+			QuestionService.setOnAnswerDeleted((answer)=> dispatch(DeleteAnswerAction(answer)));
+			QuestionService.setOnQuestionEdited((q) => dispatch(UpdateQuestionAction(q)));
+			QuestionService.setOnQuestionClosed((answer) => dispatch(CloseQuestionAction(answer)));
+			QuestionService.setOnQuestionReopened(answer => dispatch(ReopenQuestionAction(answer)));
 		})();
-
 		return ()=>{
 			QuestionService.unsubscribe(questionId);
 		}
 	},[dispatch,questionId]);
 	return {question,loading, error};
-
 }
 
 export const useNewQuestionHook = () => {

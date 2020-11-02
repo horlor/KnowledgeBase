@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles, TextField } from '@material-ui/core';
+import { Button, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { usePasswordChangeHook } from '../../hooks/PasswordHooks';
@@ -35,6 +35,9 @@ const PasswordChangeView = (props: IProps)=>{
 	return(
 		<form onSubmit={handleSubmit(onSubmit)}>
 		<Grid container>
+			<Grid item xs={12}>
+				<Typography variant="h6">Change your password</Typography>
+			</Grid>
 			<Grid item xs={12} lg={3} className={classes.item}>
 				<TextField 
 					name="oldPassword"

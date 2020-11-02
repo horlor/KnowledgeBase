@@ -28,8 +28,7 @@ const useStyles = makeStyles(theme =>({
     moderatorPaper:{
         padding: theme.spacing(1),
         border: "gray solid 2px"
-    }
-    ,
+    },
     chip:{
         marginLeft: theme.spacing(1),
         marginBottom: "2px",
