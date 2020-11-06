@@ -20,7 +20,6 @@ interface IProps{
 export const  TextInputDialog: React.FC<IProps> = (props: IProps) =>{
 	const [text, setText] = useState("");
 	const classes = useStyle();
-	console.log(props);
 	return (
 		<Dialog open={props.open}>
 			<DialogTitle>{props.title}</DialogTitle>

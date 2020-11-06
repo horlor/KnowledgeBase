@@ -9,7 +9,7 @@ import WelcomePage from '../pages/WelcomePage';
 import UserPage from '../pages/UserPage';
 import Menu from './Menu';
 import UserDetailPage from '../pages/UserDetailPage';
-import { useCheckSavedLoginHook } from '../../hooks/LoginHooks';
+import { useLoginStateManager } from '../../hooks/LoginHooks';
 import ProfilePage from '../pages/ProfilePage';
 import NotificationPage from '../pages/NotificationPage';
 import NotificationPanel from '../notification/NotificationPanel';
@@ -26,7 +26,7 @@ interface IProps{
 }
 
 export const Routes : React.FC<IProps> = (props) => {
-    useCheckSavedLoginHook();
+    useLoginStateManager();
     return (
         <BrowserRouter>
             <NavigationView drawer={<Menu/>}>

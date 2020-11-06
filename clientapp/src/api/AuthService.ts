@@ -4,6 +4,7 @@ import { NotificationService } from "./NotificationApi";
 
 class AuthServiceClass{
 	private staySignedIn : boolean = false
+	private logoutListener: ()=>void = ()=>{}
 
 	constructor(){
 		axios.interceptors.response.use(
@@ -23,6 +24,7 @@ class AuthServiceClass{
 							originalRequest.headers["Authorization"]="Bearer " + session.accessToken;
 							return axios(originalRequest);
 						}
+						this.Logout();
 					}
 				}
 				return Promise.reject(ex);
@@ -112,6 +114,10 @@ class AuthServiceClass{
 		}
 	}
 
+	public setOnLogout = (listener: ()=>void) =>{
+		this.logoutListener = listener
+	}
+
 
 	public Logout = ()=>{
 		axios.defaults.headers.common["Authorization"] = "";
@@ -125,6 +131,7 @@ class AuthServiceClass{
 			localStorage.removeItem("accessToken");
 			localStorage.removeItem("refreshToken");
 		}
+		this.logoutListener();
 	}
 
 }

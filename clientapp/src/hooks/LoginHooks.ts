@@ -76,11 +76,15 @@ export const useRegisterHook = ()=>{
 }
 
 
-export const useCheckSavedLoginHook = () =>{
+export const useLoginStateManager = () =>{
+
 	const dispatch = useDispatch();
 	useEffect(()=>{
-			let savedsession = AuthService.LoginFromStorage();
-			if(savedsession)
-				dispatch(LoginAction(savedsession));
+		AuthService.setOnLogout(()=>{
+			dispatch(LogoutAction());
+		})
+		let savedsession = AuthService.LoginFromStorage();
+		if(savedsession)
+			dispatch(LoginAction(savedsession));
 	},[dispatch])
 }
