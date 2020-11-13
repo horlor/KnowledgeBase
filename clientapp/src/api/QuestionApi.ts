@@ -3,6 +3,7 @@ import Question, { PagedQuestions, QuestionWithAnswers, QuestionUpdateRequest, Q
 import Answer, { AnswerUpdateRequest } from '../models/Answer';
 import { UrlBuilder } from '../helpers/UrlBuilder';
 import * as SignalR from "@microsoft/signalr"
+import { ApiSettings } from './ApiSettings';
 
 export const LoadQuestionsFromApi = async (pageNum = 1, pageSize = 10): Promise<PagedQuestions>=>{
     var response = await axios.get<PagedQuestions>(`/api/questions?pagenum=${pageNum}&pageSize=${pageSize}`);
@@ -83,7 +84,7 @@ class QuestionSignalrService{
     public async subscribe(questionId: number){
         this.connection =
 			new SignalR.HubConnectionBuilder()
-			.withUrl("http://localhost:5001/api/questionhub")
+			.withUrl(ApiSettings.getUrl(["api","questionhub"]))
 			.configureLogging(SignalR.LogLevel.Debug)
 			.withAutomaticReconnect()
             .build();

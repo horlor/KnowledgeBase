@@ -17,10 +17,12 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
         public string Password { get; set; }
         public string EmailAddress { get; set; }
         public string WebAddress { get; set; }
+        public bool Enabled { get; set; }
     }
 
     public class EmailHandler : IEmailHandler
     {
+        private readonly bool enabled;
         private readonly string serverAddress;
         private readonly int serverPort;
         private readonly string username;
@@ -29,6 +31,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
         private readonly string webAddress;
         public EmailHandler(EmailSettings emailSettings)
         {
+            enabled = emailSettings.Enabled;
             serverAddress = emailSettings.ServerAddress;
             serverPort = emailSettings.ServerPort;
             username = emailSettings.Username;
@@ -63,9 +66,11 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
 
         protected async Task SendEmailAsync(MimeMessage mimeMessage)
         {
+            if (!enabled)
+                return;
             using(var client = new SmtpClient())
             {
-                await client.ConnectAsync(serverAddress, serverPort, MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable);
+                await client.ConnectAsync(serverAddress, serverPort, MailKit.Security.SecureSocketOptions.SslOnConnect);
                 await client.AuthenticateAsync(username, password);
                 await client.SendAsync(mimeMessage);
                 await client.DisconnectAsync(true);

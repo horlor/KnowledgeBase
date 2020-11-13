@@ -1,7 +1,10 @@
 ﻿using KnowledgeBase.DataAccess.DataObjects;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,17 +26,19 @@ namespace KnowledgeBase.DataAccess
         public void Seed()
         {
             SeedRoles();
+            SeedAdmin();
         }
 
         public void SeedRoles()
         {
             if (!roleManager.RoleExistsAsync("User").Result)
             {
+                Console.WriteLine("User adding");
                 IdentityRole role = new IdentityRole
                 {
                     Name = "User",
                 };
-                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+                Console.WriteLine(roleManager.CreateAsync(role).Result);
             }
             if (!roleManager.RoleExistsAsync("Moderator").Result)
             {
@@ -41,7 +46,7 @@ namespace KnowledgeBase.DataAccess
                 {
                     Name = "Moderator",
                 };
-                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+                roleManager.CreateAsync(role).Wait();
             }
             if (!roleManager.RoleExistsAsync("Admin").Result)
             {
@@ -49,7 +54,21 @@ namespace KnowledgeBase.DataAccess
                 {
                     Name = "Admin",
                 };
-                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+                roleManager.CreateAsync(role).Wait();
+            }
+        }
+
+        public void SeedAdmin()
+        {
+            if (!dbcontext.Users.Any())
+            {
+                var admin = new DbUser()
+                {
+                    UserName = "admin",
+                };
+                userManager.CreateAsync(admin, "Admin123").Wait();
+
+                userManager.AddToRoleAsync(admin, "Admin").Wait();
             }
         }
 

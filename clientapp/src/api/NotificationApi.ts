@@ -1,5 +1,6 @@
 import * as SignalR from "@microsoft/signalr"
 import { MyNotification } from "../models/Notification";
+import { ApiSettings } from "./ApiSettings";
 import AuthService from "./AuthService";
 
 class NotificationApi{
@@ -8,7 +9,7 @@ class NotificationApi{
 	public async subscribe() {
 		this.connection =
 			new SignalR.HubConnectionBuilder()
-			.withUrl("http://localhost:5001/api/notificationhub", {accessTokenFactory:()=>{
+			.withUrl(ApiSettings.getUrl(["api","notificationhub"]), {accessTokenFactory:()=>{
 				return AuthService.AccessToken;
 			} })
 			.configureLogging(SignalR.LogLevel.Debug)

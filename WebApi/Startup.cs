@@ -48,7 +48,7 @@ namespace KnowledgeBase.WebApi
                 options.AddPolicy(AllowedOrigins,
                  builder =>
             {
-                    builder.WithOrigins("http://localhost:3000");
+                    builder.SetIsOriginAllowed(origin => true);
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
                     builder.AllowCredentials();
@@ -141,13 +141,14 @@ namespace KnowledgeBase.WebApi
             });
             services.AddScoped<IEmailHandler, EmailHandler>(x => new EmailHandler(new EmailSettings()
             {
+                Enabled = Configuration.GetValue<bool>("Email:Enabled"),
                 ServerAddress = Configuration["Email:ServerAddress"],
                 ServerPort = Configuration.GetValue<int>("Email:Port"),
                 Username = Configuration["Email:Username"],
                 Password = Configuration["Email:Password"],
                 EmailAddress = Configuration["Email:EmailAddress"],
                 WebAddress = Configuration["Email:WebAddress"],
-            }));
+            })) ;
 
             services.AddTransient<DataSeeder, DataSeeder>();
 
@@ -180,6 +181,7 @@ namespace KnowledgeBase.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
+            seeder.Seed();
 
             app.UseEndpoints(endpoints =>
             {
@@ -188,7 +190,7 @@ namespace KnowledgeBase.WebApi
                 endpoints.MapHub<QuestionHub>("/api/questionhub");
             });
 
-            seeder.Seed();
+
         }
     }
 }

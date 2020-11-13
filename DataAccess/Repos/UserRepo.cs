@@ -78,7 +78,6 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<(bool, string, string)> ValidateRefreshToken(string username, string token)
         {
-            Console.WriteLine("Validate token for " + username);
             var dbUser = await userManager.Users.FirstOrDefaultAsync(u => u.UserName == username);
             if (dbUser == null)
                 return (false, null, null);

@@ -42,7 +42,6 @@ namespace KnowledgeBase.WebApi.Controllers
         {
             try
             {
-                Console.WriteLine(request.Username);
                 return Ok(await userService.RefreshAccessToken(request.Username, request.AccessToken, request.RefreshToken));
             }
             catch(UnathorizedException)
