@@ -42,10 +42,8 @@ namespace KnowledgeBase.WebApi.Controllers
         public async Task<ActionResult> SetRoleForUser([FromRoute] string username, [FromBody] UserPatchRoleDto dto)
         {
             var user = await userService.GetUser(username);
-            Console.WriteLine("1");
             if (user == null)
                 return NotFound();
-            Console.WriteLine("2");
             var ret = await userService.SetUserRole(user, dto.Role);
             if (ret == null)
                 return BadRequest();

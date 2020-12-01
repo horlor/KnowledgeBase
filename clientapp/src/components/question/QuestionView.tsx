@@ -139,7 +139,7 @@ const QuestionView : React.FC<IProps> = props=>{
             <Typography variant="body1" align="justify" className={classes.text}>{props.question.content}</Typography>
             {
                 modified?
-                <Typography className={classes.modifiedText}>{`The answer was modified at: ${props.question.lastUpdate}`}</Typography>
+                <Typography className={classes.modifiedText}>{`The question was modified at: ${props.question.lastUpdate}`}</Typography>
                 :""
             }
             {

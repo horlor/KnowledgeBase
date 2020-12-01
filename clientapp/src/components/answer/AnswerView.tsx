@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { TextInputDialog } from '../common/TextInputDialog';
 import BlockIcon from '@material-ui/icons/Block';
 import UserAvatar from '../user/UserAvatar';
+import AuthService from '../../api/AuthService';
 
 const useStyles = makeStyles(theme => ({
     card:{

@@ -27,7 +27,6 @@ namespace KnowledgeBase.DataAccess.Repos
 
         public async Task<Answer> FindById(int id)
         {
-            Console.WriteLine("AnswerFind: " + id);
             return DbMapper.MapDbAnswer(
                 await dbcontext.Answers
                 .Include(a => a.User)
@@ -66,7 +65,6 @@ namespace KnowledgeBase.DataAccess.Repos
             ans.Moderator = moderator;
             ans.ModeratorMessage = answer.ModeratorMessage;
             await dbcontext.SaveChangesAsync();
-            Console.WriteLine($"Answer.Update({ans.Type},{ans.Moderator},{ans.ModeratorMessage})");
             return DbMapper.MapDbAnswer(ans);
         }
     }

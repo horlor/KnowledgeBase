@@ -27,6 +27,7 @@ namespace KnowledgeBase.DataAccess
         {
             SeedRoles();
             SeedAdmin();
+            SeedTopics();
         }
 
         public void SeedRoles()
@@ -38,7 +39,7 @@ namespace KnowledgeBase.DataAccess
                 {
                     Name = "User",
                 };
-                Console.WriteLine(roleManager.CreateAsync(role).Result);
+                roleManager.CreateAsync(role).Wait();
             }
             if (!roleManager.RoleExistsAsync("Moderator").Result)
             {
@@ -69,6 +70,19 @@ namespace KnowledgeBase.DataAccess
                 userManager.CreateAsync(admin, "Admin123").Wait();
 
                 userManager.AddToRoleAsync(admin, "Admin").Wait();
+            }
+        }
+
+        public void SeedTopics()
+        {
+            if (!dbcontext.Topics.Any())
+            {
+                var topic = new DbTopic()
+                {
+                    Name = "Other",
+                    Ancestor = null,
+                };
+                dbcontext.Topics.Add(topic);
             }
         }
 

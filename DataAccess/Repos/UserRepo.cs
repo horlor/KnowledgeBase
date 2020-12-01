@@ -179,7 +179,6 @@ namespace KnowledgeBase.DataAccess.Repos
             try
             {
                 var res = await userManager.AddToRoleAsync(dbUser, role);
-            Console.WriteLine(res);
                 return role;
             }
             catch(Exception)

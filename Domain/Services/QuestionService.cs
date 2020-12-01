@@ -57,18 +57,18 @@ namespace KnowledgeBase.Domain.Services
             return await questionRepo.FindAnswersforQuestionById(id);
         }
 
-public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
-{
-    if (answer.Author != username)
-        throw new ConflictedDataException();
-    answer.Type = AnswerType.Simple;
-    var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
-    if (q == null)
-        throw new NotFoundException();
-    await questionHub.OnNewAnswer(qId, ret);
-    await notificationService.CreateNewAnswerNotification(q, ret);
-    return ret;
-}
+        public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
+        {
+            if (answer.Author != username)
+                throw new ConflictedDataException();
+            answer.Type = AnswerType.Simple;
+            var (ret, q) = await questionRepo.StoreAnswerForQuestion(qId, answer);
+            if (q == null)
+                throw new NotFoundException();
+            await questionHub.OnNewAnswer(qId, ret);
+            await notificationService.CreateNewAnswerNotification(q, ret);
+            return ret;
+        }
 
         public async Task<Question> GetQuestion(int id)
         {
@@ -215,6 +215,7 @@ public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string use
             question.Moderator = username;
             question.ModeratorMessage = message;
             var ret = await questionRepo.Update(question, false);
+            await questionHub.OnQuestionEdited(question);
             await notificationService.CreateQuestionSetHiddenNotification(ret);
             return ret;
         }
@@ -230,7 +231,9 @@ public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string use
             question.Type = QuestionType.Simple;
             question.Moderator = null;
             question.ModeratorMessage = null;
-            return await questionRepo.Update(question, false);
+            var ret = await questionRepo.Update(question, false);
+            await questionHub.OnQuestionEdited(question);
+            return ret;
         }
 
         public async Task<Answer> HideAnswer(int questionId, int answerId, string message, string username, string role)
@@ -245,6 +248,7 @@ public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string use
             answer.ModeratorMessage = message;
             answer.Moderator = username;
             var ret = await answerRepo.Update(answer, false);
+            await questionHub.OnAnswerEdited(ret.QuestionId, answer);
             await notificationService.CreateAnswerSetHiddenNotification(ret.QuestionId, ret);
             return ret;
         }
@@ -260,7 +264,9 @@ public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string use
             answer.Type = AnswerType.Simple;
             answer.ModeratorMessage = "";
             answer.Moderator = null;
-            return await answerRepo.Update(answer, false);
+            var ret = await answerRepo.Update(answer, false);
+            await questionHub.OnAnswerEdited(ret.QuestionId, answer);
+            return ret;
         }
 
     }

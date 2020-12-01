@@ -72,9 +72,6 @@ namespace KnowledgeBase.DataAccess.Repos
             var dbTopic = new DbTopic()
             {
                 Name = topic.Name,
-
-
-
                 Ancestor = ancestor,
             };
             var res = await dbcontext.Topics.AddAsync(dbTopic);

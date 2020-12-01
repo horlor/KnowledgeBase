@@ -19,7 +19,6 @@ namespace KnowledgeBase.WebApi.Hubs
 
         public async Task SendNotificationToUser(string username, Notification notification)
         {
-            Console.WriteLine($"{username}:{notification.Title}");
             await hubContext.Clients.User(username).RecieveNotification(notification);
         }
     }

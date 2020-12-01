@@ -66,6 +66,7 @@ namespace KnowledgeBase.WebApi.ServiceHelpers
 
         protected async Task SendEmailAsync(MimeMessage mimeMessage)
         {
+            //If the service is not used then we return so we don't get runtime exceptions
             if (!enabled)
                 return;
             using(var client = new SmtpClient())
