@@ -44,9 +44,9 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return Ok(await userService.RefreshAccessToken(request.Username, request.AccessToken, request.RefreshToken));
             }
-            catch(UnathorizedException)
+            catch(ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
         }
 

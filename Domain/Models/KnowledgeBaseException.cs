@@ -9,9 +9,9 @@ namespace KnowledgeBase.Domain.Models
         public KnowledgeBaseException(string message="", Exception inner = null) : base(message,inner) { }
     }
 
-    public class UnathorizedException: KnowledgeBaseException
+    public class ForbiddenException: KnowledgeBaseException
     {
-        public UnathorizedException(string message = "", Exception inner = null) : base(message, inner) { }
+        public ForbiddenException(string message = "", Exception inner = null) : base(message, inner) { }
     }
 
     public class NotFoundException : KnowledgeBaseException

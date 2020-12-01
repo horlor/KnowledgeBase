@@ -175,7 +175,7 @@ namespace KnowledgeBase.Domain.Services
             if (question == null)
                 throw new NotFoundException();
             if (!(username == question.Author || UserService.AuthenticateModerator(role)))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             if (username != answer.Author || question.Closed == true)
                 throw new ConflictedDataException();
             question.Closed = true;
@@ -192,7 +192,7 @@ namespace KnowledgeBase.Domain.Services
             if (question == null)
                 throw new NotFoundException();
             if (!(username == question.Author || UserService.AuthenticateModerator(role)))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             if (username != answer.Author || question.Closed == false)
                 throw new ConflictedDataException();
             question.Closed = false;
@@ -206,7 +206,7 @@ namespace KnowledgeBase.Domain.Services
         public async Task<Question> HideQuestion(int questionId, string username, string role = "User", string message = "")
         {
             if (!UserService.AuthenticateModerator(role))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             var question = await questionRepo.FindById(questionId);
             if (question == null)
                 throw new NotFoundException();
@@ -223,7 +223,7 @@ namespace KnowledgeBase.Domain.Services
         public async Task<Question> UnhideQuestion(int questionId, string username, string role = "User")
         {
             if (!UserService.AuthenticateModerator(role))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             var question = await questionRepo.FindById(questionId);
             if (question == null)
                 throw new NotFoundException();
@@ -239,7 +239,7 @@ namespace KnowledgeBase.Domain.Services
         public async Task<Answer> HideAnswer(int questionId, int answerId, string message, string username, string role)
         {
             if (!UserService.AuthenticateModerator(role))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
                 throw new NotFoundException();
@@ -256,7 +256,7 @@ namespace KnowledgeBase.Domain.Services
         public async Task<Answer> UnhideAnswer(int questionId, int answerId, string username, string role)
         {
             if (!UserService.AuthenticateModerator(role))
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             var answer = await answerRepo.FindById(answerId);
             if (answer == null)
                 throw new NotFoundException();

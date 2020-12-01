@@ -98,9 +98,9 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return NotFound();
             }
-            catch(UnathorizedException)
+            catch(ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
         }
 
@@ -116,9 +116,9 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return NotFound();
             }
-            catch (UnathorizedException)
+            catch (ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
         }
 
@@ -166,9 +166,9 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return Ok(await questionService.HideAnswer(qId, aId, request.ModeratorMessage, UserName, Role));
             }
-            catch (UnathorizedException)
+            catch (ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
             catch (NotFoundException)
             {
@@ -184,9 +184,9 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return Ok(await questionService.UnhideAnswer(qId, aId, UserName, Role));
             }
-            catch (UnathorizedException)
+            catch (ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
             catch (NotFoundException)
             {

@@ -46,7 +46,7 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return NotFound();
             }
-            catch (UnauthorizedAccessException)
+            catch (ForbiddenException)
             {
                 return Unauthorized();
             }
@@ -67,7 +67,7 @@ namespace KnowledgeBase.WebApi.Controllers
             {
                 return NotFound();
             }
-            catch (UnauthorizedAccessException)
+            catch (ForbiddenException)
             {
                 return Unauthorized();
             }

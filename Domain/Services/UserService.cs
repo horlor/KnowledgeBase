@@ -61,7 +61,7 @@ namespace KnowledgeBase.Domain.Services
         {
             var (res, role, token) = await userRepo.ValidateRefreshToken(username, refreshToken);
             if (!res)
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             return new LoginResult()
             {
                 Success = true,
@@ -129,14 +129,14 @@ namespace KnowledgeBase.Domain.Services
         {
             var result = await userRepo.ResetPassword(username, token, password);
             if (result != IdentityResult.Success)
-                throw new UnathorizedException();
+                throw new ForbiddenException();
         }
 
         public async Task ChangePassword(string username, string oldPassword, string newPassword)
         {
             var result = await userRepo.ChangePassword(username, oldPassword, newPassword);
             if (result != IdentityResult.Success)
-                throw new UnathorizedException();
+                throw new ForbiddenException();
         }
 
         internal static bool AuthenticateModerator(string role)

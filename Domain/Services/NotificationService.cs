@@ -119,7 +119,7 @@ namespace KnowledgeBase.Domain.Services
             if (notification == null)
                 throw new NotFoundException();
             if (username != notification.Username)
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             notification.Important = important;
             return await notificationRepo.Update(notification);
         }
@@ -130,7 +130,7 @@ namespace KnowledgeBase.Domain.Services
             if (notification == null)
                 throw new NotFoundException();
             if (username != notification.Username)
-                throw new UnathorizedException();
+                throw new ForbiddenException();
             notification.Seen = seen;
             return await notificationRepo.Update(notification);
         }
