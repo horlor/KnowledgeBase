@@ -52,9 +52,22 @@ namespace KnowledgeBase.Domain.Services
             return question;
         }
 
-        public async Task<ICollection<Answer>> GetAnswersForQuestion(int id)
+        public async Task<ICollection<Answer>> GetAnswersForQuestion(int id, string username = null, string role = null)
         {
-            return await questionRepo.FindAnswersforQuestionById(id);
+            var answers = await questionRepo.FindAnswersforQuestionById(id);
+            if (!UserService.AuthenticateModerator(role))
+                answers = answers.Select(a =>
+                {
+                    if (a.Type == AnswerType.HiddenByModerator && a.Author != username)
+                    {
+                        a.Content = "";
+                        a.Moderator = "";
+                        a.ModeratorMessage = "";
+                    }
+
+                    return a;
+                }).ToList();
+            return answers;
         }
 
         public async Task<Answer> AddAnswerToQuestion(int qId, Answer answer, string username, string role)
@@ -78,6 +91,8 @@ namespace KnowledgeBase.Domain.Services
         public async Task<QuestionWithAnswers> GetQuestionWithAnswers(int id, string username=null, string role=null)
         {
             var question = await questionRepo.FindWithAnswersById(id);
+            if (question.Type == QuestionType.HiddenByModerator && username != question.Author && !UserService.AuthenticateModerator(role))
+                throw new ForbiddenException();
             if(!UserService.AuthenticateModerator(role))
                 question.Answers = question.Answers.Select(a =>
                 {

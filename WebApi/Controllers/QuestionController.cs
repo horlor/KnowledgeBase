@@ -44,9 +44,10 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<QuestionWithAnswers>> GetQuestion(int id)
+        public async Task<IActionResult> GetQuestion(int id)
         {
-            return await questionService.GetQuestionWithAnswers(id,UserName,Role);
+            
+            return await HandleExceptionsWithOk(async()=> await questionService.GetQuestionWithAnswers(id,UserName,Role));
         }
 
         [Authorize]
@@ -66,9 +67,9 @@ namespace KnowledgeBase.WebApi.Controllers
         }
 
         [HttpGet("{id}/answers")]
-        public async Task<ActionResult<ICollection<Answer>>> GetAnswersForQuestion(int id)
+        public async Task<IActionResult> GetAnswersForQuestion(int id)
         {
-            return Ok(await questionService.GetAnswersForQuestion(id));
+            return await HandleExceptionsWithOk(async()=>await questionService.GetAnswersForQuestion(id, UserName,Role));
         }
 
         [Authorize]

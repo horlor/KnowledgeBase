@@ -48,7 +48,7 @@ namespace KnowledgeBase.WebApi.Controllers
             }
             catch (ForbiddenException)
             {
-                return Unauthorized();
+                return Forbid();
             }
             catch (ConflictedDataException)
             {
@@ -65,7 +65,7 @@ namespace KnowledgeBase.WebApi.Controllers
             }
             catch (NotFoundException)
             {
-                return NotFound();
+                return Forbid();
             }
             catch (ForbiddenException)
             {
