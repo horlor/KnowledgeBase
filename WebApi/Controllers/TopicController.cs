@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
+    /// <summary>
+    /// The controller for accessing the Topics, and with necessary auth editing them
+    /// </summary>
     [Route("api/topics")]
     [ApiController]
     public class TopicController : ControllerBase

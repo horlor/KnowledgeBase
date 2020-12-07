@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
+    /// <summary>
+    /// The controller for accessing the users
+    /// It has no endpoints to edit them as it is in the ProfileController
+    /// </summary>
     [Route("api/users")]
     [ApiController]
     public class UserController : BaseController

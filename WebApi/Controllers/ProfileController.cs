@@ -13,6 +13,10 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
+    /// <summary>
+    /// The Controller for actions for authorization and the change of personal data
+    /// It uses part of the UserService's features.
+    /// </summary>
     [Route("api/profile")]
     [ApiController]
     public class ProfileController : BaseController

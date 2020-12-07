@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess
 {
+    /// <summary>
+    /// The class responsible for the creation of the necessary for the work of your application.
+    /// Creating the necessary roles, the admin user, and the 'other' topic
+    /// </summary>
     public class DataSeeder
     {
         private readonly KnowledgeContext dbcontext;

@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.Domain.Services
 {
+    /// <summary>
+    /// A service which handles the creation of Notification, storing them in the database
+    /// and notifying them realtime through the INotificationHub Interface
+    /// To get the users it uses an IUserRepo instance
+    /// </summary>
     public class NotificationService
     {
         private readonly INotificationRepo notificationRepo;

@@ -17,9 +17,11 @@ using System.Runtime.CompilerServices;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
+    /// <summary>
+    /// The Controller class responsible for the /questions API Endpoint
+    /// </summary>
     [Route("api/questions")]
     [ApiController]
-    //[EnableCors]
     public class QuestionController : BaseController
     {
 
@@ -220,17 +222,20 @@ namespace KnowledgeBase.WebApi.Controllers
             [FromQuery] int? topic, [FromQuery] int page = 1, [FromQuery] int countPerPage = 10,
             [FromQuery] string username = null, [FromQuery] bool myQuestions = false, [FromQuery] bool onlyHidden = false)
         {
-                return Ok(await questionService.Search(new QuestionSearchParams()
-                {
-                    Anywhere = anywhere,
-                    Title = title,
-                    Content = content,
-                    TopicId = topic,
-                    Page = page,
-                    CountPerPage = countPerPage,
-                    OnlyHidden = onlyHidden,
-                    Username = username,
-                }, myQuestions ? UserName : null, Role));
+            //If the request is for the user's own question, and there is no valid JWT sent, then sends back http401
+            if (myQuestions && UserName == null)
+                return Unauthorized();
+            return Ok(await questionService.Search(new QuestionSearchParams()
+            {
+                Anywhere = anywhere,
+                Title = title,
+                Content = content,
+                TopicId = topic,
+                Page = page,
+                CountPerPage = countPerPage,
+                OnlyHidden = onlyHidden,
+                Username = username,
+            }, myQuestions ? UserName : null, Role));
         }
     }
 }

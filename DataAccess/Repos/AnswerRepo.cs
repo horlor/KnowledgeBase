@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// The class for managing the entities for the answers
+    /// </summary>
     public class AnswerRepo : IAnswerRepo
     {
         private readonly KnowledgeContext dbcontext;

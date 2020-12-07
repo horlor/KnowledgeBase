@@ -10,6 +10,9 @@ using KnowledgeBase.DataAccess.DataObjects;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// It handles the operations for the Topics
+    /// </summary>
     public class TopicRepo : ITopicRepo
     {
         private readonly KnowledgeContext dbcontext;

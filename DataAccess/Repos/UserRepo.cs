@@ -13,6 +13,9 @@ using System.Net.Http.Headers;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// The repository handling operations for the users, including the authentication (password checking)
+    /// </summary>
     public class UserRepo : IUserRepo
     {
         private readonly KnowledgeContext dbcontext;

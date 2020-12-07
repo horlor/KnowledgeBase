@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// The repository managing the notification entities.
+    /// </summary>
     public class NotificationRepo : INotificationRepo
     {
         private readonly KnowledgeContext dbcontext;

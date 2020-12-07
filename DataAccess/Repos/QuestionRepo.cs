@@ -9,15 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// The repository for handling the questions
+    /// It also handles a few methods for answers, such as creating them, and accessing them,
+    /// because they are composed to the question they refer.
+    /// </summary>
     public class QuestionRepo : IQuestionRepo
     {
         private readonly KnowledgeContext dbcontext;
-        private readonly IAnswerRepo answerRepo;
 
-        public QuestionRepo(KnowledgeContext context, IAnswerRepo answerRepo)
+        public QuestionRepo(KnowledgeContext context)
         {
             dbcontext = context;
-            this.answerRepo = answerRepo;
         }
 
 

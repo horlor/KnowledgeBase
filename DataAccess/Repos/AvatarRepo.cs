@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// The repo for storing the avatar images, it stores them in the filesystem, not the database.
+    /// </summary>
     public class AvatarRepo : IAvatarRepo
     {
         private readonly string avatarPath;

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.Domain.Services
 {
+    /**
+     * A simple service for handling the avatars, essentially it wraps an avatarrepo instance
+     */
     public class AvatarService
     {
         private readonly IAvatarRepo avatarRepo;

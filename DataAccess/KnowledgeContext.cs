@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace KnowledgeBase.DataAccess
 {
+    /// <summary>
+    /// The dbcontext class to hold the data necessary for the application
+    /// </summary>
     public class KnowledgeContext: IdentityDbContext<DbUser>
     {
         public KnowledgeContext(DbContextOptions options): base(options) { }

@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.Domain.Services
 {
+    /**
+     * This service gives the operations for questions, and answers as well (beacuse answers' only have meaning with a question
+     * It uses the according repository interfaces, and the hub abstraction for realtime communication.
+     * For sending notification to the users it uses the NotificationService.
+     */
     public class QuestionService
     {
         private readonly IQuestionRepo questionRepo;

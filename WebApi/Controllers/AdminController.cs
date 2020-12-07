@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBase.WebApi.Controllers
 {
+    /// <summary>
+    /// The api for editing user privilegies
+    /// </summary>
     [Route("api/admin")]
     [ApiController]
     public class AdminController : ControllerBase

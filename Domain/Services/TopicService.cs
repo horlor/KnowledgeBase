@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace KnowledgeBase.Domain.Services
 {
+    /// <summary>
+    /// Handles operation for topics, by wrapping an ITopicRepo instance.
+    /// </summary>
     public class TopicService
     {
         private readonly ITopicRepo topicRepo;

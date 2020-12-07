@@ -6,6 +6,9 @@ using System.Text;
 
 namespace KnowledgeBase.DataAccess.Repos
 {
+    /// <summary>
+    /// A few methods from changing from db types to domain types
+    /// </summary>
     internal static class DbMapper
     {
         private static readonly string dateFormat = "yyyy.MM.dd HH:mm:ss";

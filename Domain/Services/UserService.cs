@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Http.Features.Authentication;
 
 namespace KnowledgeBase.Domain.Services
 {
+    /// <summary>
+    /// It handles the operation for handling users, and also the authentication.
+    /// </summary>
     public class UserService
     {
         private readonly IUserRepo userRepo;
