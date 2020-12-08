@@ -87,6 +87,7 @@ namespace KnowledgeBase.DataAccess
                     Ancestor = null,
                 };
                 dbcontext.Topics.Add(topic);
+                dbcontext.SaveChanges();
             }
         }
 
